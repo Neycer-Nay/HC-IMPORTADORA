@@ -1,7 +1,7 @@
 <div class="main-sidebar sidebar-style-2">
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
-            <a href="index.html">HC BOBINADO INDUSTRIAL</a>
+            <a href="{{ route("dashboard.index") }}">HC BOBINADO INDUSTRIAL</a>
         </div>
         <div class="sidebar-brand sidebar-brand-sm">
             <a href="index.html">HC</a>
@@ -9,20 +9,21 @@
         <ul class="sidebar-menu">
             
             <li class="dropdown active">
-                <a href="#" class="nav-link "><i class="fas fa-fire"></i><span>Recepción de equipos</span></a>
+                <a href="{{ route("dashboard.index") }}" class="nav-link "><i class="fas fa-fire"></i><span>Dashboard</span></a>
                 
             </li>
             
             <li class="dropdown">
-                <a href="#" class="nav-link " data-toggle="dropdown"><i class="fas fa-columns"></i>
-                    <span>Layout</span></a>
+                <a href="{{ route('recepciones.index') }}" class="nav-link "><i class="fas fa-columns"></i>
+                    <span>Equipos recepcionados</span></a>
                 
             </li>
-            <li><a class="nav-link" href="blank.html"><i class="far fa-square"></i> <span>Blank
-                        Page</span></a></li>
+            <li><a class="nav-link" href="blank.html"><i class="far fa-square"></i> <span>
+                Crear nueva recepción
+            </span></a></li>
             <li class="dropdown">
                 <a href="#" class="nav-link "><i class="fas fa-th"></i>
-                    <span>Bootstrap</span></a>
+                    <span>----</span></a>
                 
             </li>
             
