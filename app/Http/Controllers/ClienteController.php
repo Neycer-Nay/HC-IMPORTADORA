@@ -7,59 +7,57 @@ use Illuminate\Http\Request;
 
 class ClienteController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        
+        $clientes = Cliente::latest()->paginate(10);
+        return view('modules.recepciones.create', compact('clientes'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+   
     public function create()
     {
-        //
+        $clientes = Cliente::all();
+        return view('modules.recepciones.create', compact('clientes'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+   
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'nombre' => 'required|string|max:255',
+            'tipo' => 'required|in:PERSONA,EMPRESA',
+            'tipo_documento' => 'required|in:CI,NIT,PASAPORTE,OTRO',
+            'numero_documento' => 'required|string|unique:clientes,numero_documento|max:50',
+            'telefono_1' => 'required|string|max:20',
+            'telefono_2' => 'nullable|string|max:20',
+            'telefono_3' => 'nullable|string|max:20',
+            'email' => 'nullable|email|max:255',
+            'ciudad' => 'nullable|string|max:100',
+            'direccion' => 'required|string|max:255',
+            ],
+            [
+                'nombre.required' => 'El nombre es obligatorio.',
+                'tipo.required' => 'El tipo de cliente es obligatorio.',
+                'tipo_documento.required' => 'El tipo de documento esta dublicado.',
+                'numero_documento.unique' => 'Este número de documento ya está registrado para otro cliente.',
+                'telefono_1.required' => 'El teléfono 1 es obligatorio.',
+                'direccion.required' => 'La dirección es obligatoria.',
+            ]);
+
+            Cliente::create($validated);
+
+            return redirect()->back()
+                ->with('success', 'Cliente registrado correctamente.');
+
+
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Cliente $cliente)
     {
-        //
+        
+        $clientes = Cliente::all();
+        return response()->json($clientes);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Cliente $cliente)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Cliente $cliente)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Cliente $cliente)
-    {
-        //
-    }
 }

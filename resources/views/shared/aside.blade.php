@@ -18,7 +18,7 @@
                     <span>Equipos recepcionados</span></a>
                 
             </li>
-            <li><a class="nav-link" href="blank.html"><i class="far fa-square"></i> <span>
+            <li><a class="nav-link" href="{{ route('recepciones.create') }}"><i class="far fa-square"></i> <span>
                 Crear nueva recepción
             </span></a></li>
             <li class="dropdown">
