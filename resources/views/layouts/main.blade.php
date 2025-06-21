@@ -80,6 +80,14 @@
     <!-- Template JS File -->
     <script src="{{ asset(path: 'dist/assets/js/scripts.js') }}"></script>
     <script src="{{ asset(path: 'dist/assets/js/custom.js') }}"></script>
+
+    <!-- Swet Alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script src="{{ asset('js/seleccionarCliente.js') }}"></script>
+
+    @yield('scripts')
+
 </body>
 
 </html>

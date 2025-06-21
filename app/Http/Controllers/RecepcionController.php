@@ -21,7 +21,7 @@ class RecepcionController extends Controller
      */
     public function create()
     {
-        //
+        return view('modules.recepciones.create');
     }
 
     /**

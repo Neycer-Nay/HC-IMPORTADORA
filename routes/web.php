@@ -45,6 +45,7 @@ Route::prefix(('clientes'))->group(function () {
     Route::delete('/{cliente}', [ClienteController::class, 'destroy'])->name('clientes.destroy');
 });
 
+ 
 Route::prefix(('equipos'))->group(function () {
     Route::get('/', [EquipoController::class, 'index'])->name('equipos.index');
     Route::get('/create', [EquipoController::class, 'create'])->name('equipos.create');
