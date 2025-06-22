@@ -10,15 +10,13 @@ class ClienteController extends Controller
     public function index()
     {
         
-        $clientes = Cliente::latest()->paginate(10);
-        return view('modules.recepciones.create', compact('clientes'));
+        
     }
 
    
     public function create()
     {
-        $clientes = Cliente::all();
-        return view('modules.recepciones.create', compact('clientes'));
+
     }
 
    
@@ -45,10 +43,10 @@ class ClienteController extends Controller
                 'direccion.required' => 'La dirección es obligatoria.',
             ]);
 
-            Cliente::create($validated);
+            $cliente = Cliente::create($validated);
 
-            return redirect()->back()
-                ->with('success', 'Cliente registrado correctamente.');
+            return redirect()->route('recepciones.create', ['cliente_id' => $cliente->id])
+            ->with('success', 'Cliente registrado correctamente.');
 
 
     }

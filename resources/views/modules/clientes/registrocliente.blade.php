@@ -3,90 +3,82 @@
         <div class="card-header">
             <h4><i class="fas fa-user-tag"></i> Datos del Cliente</h4>
         </div>
-            <div class="card-body">
-                <div class="form-group row">
-                    <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Seleccionar Cliente Existente <span
-                            class="text-danger">*</span></label>
-                    <div class="col-sm-12 col-md-7">
-                        <select class="form-control selectric" id="cliente_id" name="cliente_id" required>
-                            <option value="">Seleccione un cliente...</option>
-                            
-                            <!-- Opciones se llenarán dinámicamente -->
-                        </select>
-                        <div class="invalid-feedback">Por favor seleccione un cliente</div>
-                    </div>
-                    <div class="col-sm-12 col-md-2">
-                        <button type="button" class="btn btn-primary btn-block" data-toggle="modal"
-                            data-target="#nuevoClienteModal">
-                            <i class="fas fa-plus"></i> Registar nuevo cliente
-                        </button>
+        <div class="card-body">
+            <div class="form-group row">
+                <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Seleccionar Cliente Existente <span
+                        class="text-danger">*</span></label>
+                <div class="col-sm-12 col-md-7">
+                    <select class="form-control selectric" id="cliente_id" name="cliente_id" required>
+                        <option value="">Seleccione un cliente...</option>
+                        @foreach($clientes as $cliente)
+                            <option value="{{ $cliente->id }}" @if(request('cliente_id') == $cliente->id) selected @endif
+                                data-documento="{{ $cliente->tipo_documento }}: {{ $cliente->numero_documento }}"
+                                data-telefono="{{ $cliente->telefono_1 }} | {{ $cliente->telefono_2 }} | {{ $cliente->telefono_3 }} "
+                                data-email="{{ $cliente->email ?? '-' }}"
+                                data-direccion="{{ $cliente->direccion }} @if($cliente->ciudad), {{ $cliente->ciudad }} @endif">
+                                {{ $cliente->nombre }} || {{ $cliente->numero_documento }} || {{ $cliente->telefono_1 }}
+                            </option>
+                        @endforeach
+                        <!-- Opciones se llenarán dinámicamente -->
+                    </select>
+                    <div class="invalid-feedback">Por favor seleccione un cliente</div>
+                </div>
+                <div class="col-sm-12 col-md-2">
+                    <button type="button" class="btn btn-primary btn-block" data-toggle="modal"
+                        data-target="#nuevoClienteModal">
+                        <i class="fas fa-plus"></i> Registar nuevo cliente
+                    </button>
+                </div>
+            </div>
+
+            <!-- Información del cliente seleccionado (oculto inicialmente) -->
+            <div class="row mt-3 d-none" id="clienteInfo">
+                <div class="col-12 col-md-3">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="mr-3">
+                            <i class="far fa-id-card text-primary" style="font-size: 1.5rem;"></i>
+                        </div>
+                        <div>
+                            <small class="text-muted d-block">Documento</small>
+                            <span id="clienteDocumento" class="font-weight-bold">-</span>
+                        </div>
                     </div>
                 </div>
-
-                <!-- Información del cliente seleccionado (oculto inicialmente) -->
-                <div class="row mt-3 d-none" id="clienteInfo">
-                    <div class="col-12 col-md-3">
-                        <div class="card card-statistic-1">
-                            <div class="card-icon bg-light">
-                                <i class="far fa-id-card text-primary"></i>
-                            </div>
-                            <div class="card-wrap">
-                                <div class="card-header">
-                                    <h6>Documento</h6>
-                                </div>
-                                <div class="card-body" id="clienteDocumento">
-                                    -
-                                </div>
-                            </div>
+                <div class="col-12 col-md-3">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="mr-3">
+                            <i class="fas fa-phone text-primary" style="font-size: 1.5rem;"></i>
+                        </div>
+                        <div>
+                            <small class="text-muted d-block">Teléfonos</small>
+                            <span id="clienteTelefono" class="font-weight-bold">-</span>
                         </div>
                     </div>
-                    <div class="col-12 col-md-3">
-                        <div class="card card-statistic-1">
-                            <div class="card-icon bg-light">
-                                <i class="fas fa-phone text-primary"></i>
-                            </div>
-                            <div class="card-wrap">
-                                <div class="card-header">
-                                    <h6>Teléfono</h6>
-                                </div>
-                                <div class="card-body" id="clienteTelefono">
-                                    -
-                                </div>
-                            </div>
+                </div>
+                <div class="col-12 col-md-3">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="mr-3">
+                            <i class="fas fa-envelope text-primary" style="font-size: 1.5rem;"></i>
+                        </div>
+                        <div>
+                            <small class="text-muted d-block">Email</small>
+                            <span id="clienteEmail" class="font-weight-bold">-</span>
                         </div>
                     </div>
-                    <div class="col-12 col-md-3">
-                        <div class="card card-statistic-1">
-                            <div class="card-icon bg-light">
-                                <i class="fas fa-envelope text-primary"></i>
-                            </div>
-                            <div class="card-wrap">
-                                <div class="card-header">
-                                    <h6>Email</h6>
-                                </div>
-                                <div class="card-body" id="clienteEmail">
-                                    -
-                                </div>
-                            </div>
+                </div>
+                <div class="col-12 col-md-3">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="mr-3">
+                            <i class="fas fa-map-marker-alt text-primary" style="font-size: 1.5rem;"></i>
                         </div>
-                    </div>
-                    <div class="col-12 col-md-3">
-                        <div class="card card-statistic-1">
-                            <div class="card-icon bg-light">
-                                <i class="fas fa-map-marker-alt text-primary"></i>
-                            </div>
-                            <div class="card-wrap">
-                                <div class="card-header">
-                                    <h6>Dirección</h6>
-                                </div>
-                                <div class="card-body" id="clienteDireccion">
-                                    -
-                                </div>
-                            </div>
+                        <div>
+                            <small class="text-muted d-block">Dirección</small>
+                            <span id="clienteDireccion" class="font-weight-bold">-</span>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
     </div>
 </div>
 
@@ -108,7 +100,7 @@
                                 class="text-danger">*</span></label>
                         <div class="col-sm-12 col-md-9">
                             <input type="text" class="form-control" value="{{ old('nombre') }}" name="nombre" required>
-                            
+
                         </div>
                     </div>
 
@@ -121,7 +113,7 @@
                                 <option value="PERSONA" {{ old('tipo') == 'PERSONA' ? 'selected' : '' }}>Persona</option>
                                 <option value="EMPRESA" {{ old('tipo') == 'EMPRESA' ? 'selected' : '' }}>Empresa</option>
                             </select>
-                            
+
                         </div>
                     </div>
 
@@ -131,12 +123,14 @@
                         <div class="col-sm-12 col-md-9">
                             <select class="form-control" name="tipo_documento" required>
                                 <option value="">-- Seleccione --</option>
-                                <option value="CI"  {{old('tipo_documento') == 'CI' ? 'selected' : ''}}>Carnet de Identidad</option>
+                                <option value="CI" {{old('tipo_documento') == 'CI' ? 'selected' : ''}}>Carnet de Identidad
+                                </option>
                                 <option value="NIT" {{old('tipo_documento') == 'NIT' ? 'selected' : ''}}>NIT</option>
-                                <option value="PASAPORTE" {{old('tipo_documento') == 'PASAPORTE' ? 'selected' : ''}}>Pasaporte</option>
+                                <option value="PASAPORTE" {{old('tipo_documento') == 'PASAPORTE' ? 'selected' : ''}}>
+                                    Pasaporte</option>
                                 <option value="OTRO" {{old('tipo_documento') == 'OTRO' ? 'selected' : ''}}>Otro</option>
                             </select>
-                            
+
                         </div>
                     </div>
 
@@ -144,7 +138,8 @@
                         <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Número Documento <span
                                 class="text-danger">*</span></label>
                         <div class="col-sm-12 col-md-9">
-                            <input type="number" class="form-control @error('numero_documento') is-invalid @enderror" value="{{ old('numero_documento') }}" name="numero_documento" required>
+                            <input type="number" class="form-control @error('numero_documento') is-invalid @enderror"
+                                value="{{ old('numero_documento') }}" name="numero_documento" required>
                             @error('numero_documento')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -155,20 +150,21 @@
                         <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Teléfono Principal <span
                                 class="text-danger">*</span></label>
                         <div class="col-sm-12 col-md-9">
-                            <input type="number" class="form-control" value="{{ old('telefono_1') }}" name="telefono_1" required>
-                            
+                            <input type="number" class="form-control" value="{{ old('telefono_1') }}" name="telefono_1"
+                                required>
+
                         </div>
                         <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Teléfono Secundario <span
                                 class="text-danger">*</span></label>
                         <div class="col-sm-12 col-md-9">
-                            <input type="number" class="form-control" value="{{ old('telefono_2') }}" name="telefono_2" >
-                            
+                            <input type="number" class="form-control" value="{{ old('telefono_2') }}" name="telefono_2">
+
                         </div>
                         <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Teléfono Terciario <span
                                 class="text-danger">*</span></label>
                         <div class="col-sm-12 col-md-9">
                             <input type="number" class="form-control" value="{{ old('telefono_3') }}" name="telefono_3">
-                           
+
                         </div>
                     </div>
 
@@ -176,7 +172,7 @@
                         <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Email</label>
                         <div class="col-sm-12 col-md-9">
                             <input type="email" class="form-control" value="{{ old('email') }}" name="email">
-                            
+
                         </div>
                     </div>
 
@@ -184,14 +180,15 @@
                         <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Ciudad</label>
                         <div class="col-sm-12 col-md-9">
                             <input type="text" class="form-control" name="ciudad" value="Santa Cruz">
-                            
+
                         </div>
                     </div>
 
                     <div class="form-group row">
                         <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Dirección</label>
                         <div class="col-sm-12 col-md-9">
-                            <textarea name="direccion" class="form-control @error('direccion') is-invalid @enderror">{{ old('direccion') }}</textarea>
+                            <textarea name="direccion"
+                                class="form-control @error('direccion') is-invalid @enderror">{{ old('direccion') }}</textarea>
                             @error('direccion')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -212,33 +209,36 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-    const selectCliente = document.getElementById('cliente_id');
-    const clienteInfo = document.getElementById('clienteInfo');
+        document.addEventListener('DOMContentLoaded', function () {
+            const selectCliente = document.getElementById('cliente_id');
+            const clienteInfo = document.getElementById('clienteInfo');
 
-    selectCliente.addEventListener('change', function() {
-        if (this.value === '') {
-            clienteInfo.classList.add('d-none'); // Oculta si no hay selección
-            return;
-        }
+            // Función para mostrar datos del cliente seleccionado
+            function mostrarInfoCliente() {
+                if (selectCliente.value === '') {
+                    clienteInfo.classList.add('d-none');
+                    return;
+                }
 
-        // Obtiene los datos del option seleccionado
-        const selectedOption = this.options[this.selectedIndex];
-        const documento = selectedOption.getAttribute('data-documento') || '-';
-        const telefono = selectedOption.getAttribute('data-telefono') || '-';
-        const email = selectedOption.getAttribute('data-email') || '-';
-        const direccion = selectedOption.getAttribute('data-direccion') || '-';
+                const selectedOption = selectCliente.options[selectCliente.selectedIndex];
 
-        // Actualiza los campos en la tarjeta de información
-        document.getElementById('clienteDocumento').textContent = documento;
-        document.getElementById('clienteTelefono').textContent = telefono;
-        document.getElementById('clienteEmail').textContent = email;
-        document.getElementById('clienteDireccion').textContent = direccion;
+                // Actualiza los campos
+                document.getElementById('clienteDocumento').textContent = selectedOption.dataset.documento || '-';
+                document.getElementById('clienteTelefono').textContent = selectedOption.dataset.telefono || '-';
+                document.getElementById('clienteEmail').textContent = selectedOption.dataset.email || '-';
+                document.getElementById('clienteDireccion').textContent = selectedOption.dataset.direccion || '-';
 
-        // Muestra la sección de información
-        clienteInfo.classList.remove('d-none');
-    });
-});
+                clienteInfo.classList.remove('d-none');
+            }
+
+            // Evento change
+            selectCliente.addEventListener('change', mostrarInfoCliente);
+
+            // Mostrar info si ya hay un cliente seleccionado al cargar la página
+            if (selectCliente.value !== '') {
+                mostrarInfoCliente();
+            }
+        });
     </script>
 
 
@@ -264,5 +264,3 @@
         </script>
     @endif
 @endsection
-
-

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Recepcion;
+use App\Models\Cliente;
 use Illuminate\Http\Request;
 
 class RecepcionController extends Controller
@@ -21,7 +22,9 @@ class RecepcionController extends Controller
      */
     public function create()
     {
-        return view('modules.recepciones.create');
+        $clientes = Cliente::all();
+        
+        return view('modules.recepciones.create', compact('clientes'));
     }
 
     /**

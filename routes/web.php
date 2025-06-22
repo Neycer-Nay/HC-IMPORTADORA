@@ -25,7 +25,7 @@ Route::middleware("auth")->group(function () {
 
 
 
-Route::prefix(('recepciones'))->group(function () {
+Route::prefix('recepciones')->middleware('auth')->group(function () {
     Route::get('/', [RecepcionController::class, 'index'])->name('recepciones.index');
     Route::get('/create', [RecepcionController::class, 'create'])->name('recepciones.create');
     Route::post('/', [RecepcionController::class, 'store'])->name('recepciones.store');
