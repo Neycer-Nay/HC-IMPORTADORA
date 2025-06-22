@@ -1,4 +1,4 @@
-<div class="main-content">
+
     <div class="card">
         <div class="card-header">
             <h4><i class="fas fa-user-tag"></i> Datos del Cliente</h4>
@@ -80,7 +80,7 @@
             </div>
         </div>
     </div>
-</div>
+
 
 <!-- Modal Nuevo Cliente -->
 <div class="modal fade" tabindex="-1" role="dialog" id="nuevoClienteModal">
@@ -92,7 +92,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="formNuevoCliente" method="POST" action="{{ route('clientes.store') }}">
+            <form id="formNuevoCliente" method="POST" action="{{ route('recepciones.store') }}">
                 @csrf
                 <div class="modal-body">
                     <div class="form-group row">

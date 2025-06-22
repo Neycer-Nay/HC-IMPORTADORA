@@ -13,7 +13,8 @@ return new class extends Migration
             $table->string('numero_recepcion')->unique();
             $table->foreignId('cliente_id')->constrained('clientes');
             $table->foreignId('user_id')->constrained('users'); // Usuario que registra
-            $table->dateTime('fecha_hora')->useCurrent();
+            $table->dateTime('fecha_ingreso')->useCurrent();
+            $table->time('hora_ingreso')->useCurrent();
             $table->text('observaciones')->nullable();
             $table->enum('estado', ['RECIBIDO', 'EN_REVISION', 'DIAGNOSTICADO', 'EN_REPARACION', 'REPARADO', 'ENTREGADO'])->default('RECIBIDO');
             $table->timestamps();
