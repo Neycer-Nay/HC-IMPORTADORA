@@ -4,7 +4,7 @@
             <a href="{{ route("dashboard.index") }}">HC BOBINADO INDUSTRIAL</a>
         </div>
         <div class="sidebar-brand sidebar-brand-sm">
-            <a href="index.html">HC</a>
+            <a href="{{ route("dashboard.index") }}">HC</a>
         </div>
         <ul class="sidebar-menu">
             

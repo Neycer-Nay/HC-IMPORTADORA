@@ -1,85 +1,84 @@
-
-    <div class="card">
-        <div class="card-header">
-            <h4><i class="fas fa-user-tag"></i> Datos del Cliente</h4>
+<div class="card">
+    <div class="card-header">
+        <h4><i class="fas fa-user-tag"></i> Datos del Cliente</h4>
+    </div>
+    <div class="card-body">
+        <div class="form-group row">
+            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Seleccionar Cliente Existente <span
+                    class="text-danger">*</span></label>
+            <div class="col-sm-12 col-md-7">
+                <select class="form-control selectric" id="cliente_id" name="cliente_id" required>
+                    <option value="">Seleccione un cliente...</option>
+                    @foreach($clientes as $cliente)
+                        <option value="{{ $cliente->id }}" @if(request('cliente_id') == $cliente->id) selected @endif
+                            data-documento="{{ $cliente->tipo_documento }}: {{ $cliente->numero_documento }}"
+                            data-telefono="{{ $cliente->telefono_1 }} | {{ $cliente->telefono_2 }} | {{ $cliente->telefono_3 }} "
+                            data-email="{{ $cliente->email ?? '-' }}"
+                            data-direccion="{{ $cliente->direccion }} @if($cliente->ciudad), {{ $cliente->ciudad }} @endif">
+                            {{ $cliente->nombre }} || {{ $cliente->numero_documento }} || {{ $cliente->telefono_1 }}
+                        </option>
+                    @endforeach
+                    <!-- Opciones se llenarán dinámicamente -->
+                </select>
+                <div class="invalid-feedback">Por favor seleccione un cliente</div>
+            </div>
+            <div class="col-sm-12 col-md-2">
+                <button type="button" class="btn btn-primary btn-block" data-toggle="modal"
+                    data-target="#nuevoClienteModal">
+                    <i class="fas fa-plus"></i> Registar nuevo cliente
+                </button>
+            </div>
         </div>
-        <div class="card-body">
-            <div class="form-group row">
-                <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Seleccionar Cliente Existente <span
-                        class="text-danger">*</span></label>
-                <div class="col-sm-12 col-md-7">
-                    <select class="form-control selectric" id="cliente_id" name="cliente_id" required>
-                        <option value="">Seleccione un cliente...</option>
-                        @foreach($clientes as $cliente)
-                            <option value="{{ $cliente->id }}" @if(request('cliente_id') == $cliente->id) selected @endif
-                                data-documento="{{ $cliente->tipo_documento }}: {{ $cliente->numero_documento }}"
-                                data-telefono="{{ $cliente->telefono_1 }} | {{ $cliente->telefono_2 }} | {{ $cliente->telefono_3 }} "
-                                data-email="{{ $cliente->email ?? '-' }}"
-                                data-direccion="{{ $cliente->direccion }} @if($cliente->ciudad), {{ $cliente->ciudad }} @endif">
-                                {{ $cliente->nombre }} || {{ $cliente->numero_documento }} || {{ $cliente->telefono_1 }}
-                            </option>
-                        @endforeach
-                        <!-- Opciones se llenarán dinámicamente -->
-                    </select>
-                    <div class="invalid-feedback">Por favor seleccione un cliente</div>
-                </div>
-                <div class="col-sm-12 col-md-2">
-                    <button type="button" class="btn btn-primary btn-block" data-toggle="modal"
-                        data-target="#nuevoClienteModal">
-                        <i class="fas fa-plus"></i> Registar nuevo cliente
-                    </button>
+
+        <!-- Información del cliente seleccionado (oculto inicialmente) -->
+        <div class="row mt-3 d-none" id="clienteInfo">
+            <div class="col-12 col-md-3">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="mr-3">
+                        <i class="far fa-id-card text-primary" style="font-size: 1.5rem;"></i>
+                    </div>
+                    <div>
+                        <small class="text-muted d-block">Documento</small>
+                        <span id="clienteDocumento" class="font-weight-bold">-</span>
+                    </div>
                 </div>
             </div>
-
-            <!-- Información del cliente seleccionado (oculto inicialmente) -->
-            <div class="row mt-3 d-none" id="clienteInfo">
-                <div class="col-12 col-md-3">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="mr-3">
-                            <i class="far fa-id-card text-primary" style="font-size: 1.5rem;"></i>
-                        </div>
-                        <div>
-                            <small class="text-muted d-block">Documento</small>
-                            <span id="clienteDocumento" class="font-weight-bold">-</span>
-                        </div>
+            <div class="col-12 col-md-3">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="mr-3">
+                        <i class="fas fa-phone text-primary" style="font-size: 1.5rem;"></i>
+                    </div>
+                    <div>
+                        <small class="text-muted d-block">Teléfonos</small>
+                        <span id="clienteTelefono" class="font-weight-bold">-</span>
                     </div>
                 </div>
-                <div class="col-12 col-md-3">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="mr-3">
-                            <i class="fas fa-phone text-primary" style="font-size: 1.5rem;"></i>
-                        </div>
-                        <div>
-                            <small class="text-muted d-block">Teléfonos</small>
-                            <span id="clienteTelefono" class="font-weight-bold">-</span>
-                        </div>
+            </div>
+            <div class="col-12 col-md-3">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="mr-3">
+                        <i class="fas fa-envelope text-primary" style="font-size: 1.5rem;"></i>
+                    </div>
+                    <div>
+                        <small class="text-muted d-block">Email</small>
+                        <span id="clienteEmail" class="font-weight-bold">-</span>
                     </div>
                 </div>
-                <div class="col-12 col-md-3">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="mr-3">
-                            <i class="fas fa-envelope text-primary" style="font-size: 1.5rem;"></i>
-                        </div>
-                        <div>
-                            <small class="text-muted d-block">Email</small>
-                            <span id="clienteEmail" class="font-weight-bold">-</span>
-                        </div>
+            </div>
+            <div class="col-12 col-md-3">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="mr-3">
+                        <i class="fas fa-map-marker-alt text-primary" style="font-size: 1.5rem;"></i>
                     </div>
-                </div>
-                <div class="col-12 col-md-3">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="mr-3">
-                            <i class="fas fa-map-marker-alt text-primary" style="font-size: 1.5rem;"></i>
-                        </div>
-                        <div>
-                            <small class="text-muted d-block">Dirección</small>
-                            <span id="clienteDireccion" class="font-weight-bold">-</span>
-                        </div>
+                    <div>
+                        <small class="text-muted d-block">Dirección</small>
+                        <span id="clienteDireccion" class="font-weight-bold">-</span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
 
 <!-- Modal Nuevo Cliente -->
@@ -92,7 +91,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="formNuevoCliente" method="POST" action="{{ route('recepciones.store') }}">
+            <form id="formNuevoCliente" method="POST" action="{{ route('clientes.store') }}">
                 @csrf
                 <div class="modal-body">
                     <div class="form-group row">

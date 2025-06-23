@@ -16,6 +16,10 @@
     <link rel="stylesheet" href="{{ asset(path: 'dist/assets/modules/weather-icon/css/weather-icons-wind.min.css') }}">
     <link rel="stylesheet" href="{{ asset(path: 'dist/assets/modules/summernote/summernote-bs4.css') }}">
 
+    <!-- Selec2 -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+
     <!-- Template CSS -->
     <link rel="stylesheet" href="{{ asset(path: 'dist/assets/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset(path: 'dist/assets/css/components.css') }}">
@@ -45,14 +49,14 @@
             <!-- Main Content -->
 
             <!-- Dasboard comentadot -->
-             
+
             @yield('contenido')
 
 
             <!--End Main Content -->
             @include('shared.footer')
             <!--  Footer -->
-            
+
             <!-- End Footer -->
         </div>
     </div>
@@ -81,12 +85,26 @@
     <script src="{{ asset(path: 'dist/assets/js/scripts.js') }}"></script>
     <script src="{{ asset(path: 'dist/assets/js/custom.js') }}"></script>
 
+    <!-- Select2  jquery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
     <!-- Swet Alert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script src="{{ asset('js/seleccionarCliente.js') }}"></script>
 
     @yield('scripts')
+
+    <script>
+        $(document).ready(function () {
+            $('.select-colores').select2({
+                placeholder: "",
+                maximumSelectionLength: 2,
+                width: '100%'
+            });
+        });
+    </script>
 
 </body>
 
