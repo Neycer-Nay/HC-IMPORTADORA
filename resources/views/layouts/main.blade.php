@@ -35,7 +35,7 @@
     <!-- /END GA -->
 </head>
 
-<body>
+<body >
     <div id="app">
         <div class="main-wrapper main-wrapper-1">
 
@@ -86,25 +86,18 @@
     <script src="{{ asset(path: 'dist/assets/js/custom.js') }}"></script>
 
     <!-- Select2  jquery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <!-- Swet Alert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <script src="{{ asset('js/seleccionarCliente.js') }}"></script>
+    
 
     @yield('scripts')
 
-    <script>
-        $(document).ready(function () {
-            $('.select-colores').select2({
-                placeholder: "",
-                maximumSelectionLength: 2,
-                width: '100%'
-            });
-        });
-    </script>
+    
+    
 
 </body>
 

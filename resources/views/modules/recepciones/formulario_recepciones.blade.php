@@ -33,7 +33,7 @@
                     class="text-danger">*</span></label>
             <div class="col-sm-12 col-md-7">
                 <select class="form-control selectric" id="encargado_id" name="encargado_id" required>
-                    <option value="">Seleccione...</option>
+                    <option value="">{{Auth::user()->nombre}}</option>
                     <!-- Opciones se llenarán dinámicamente -->
                 </select>
                 <div class="invalid-feedback">Seleccione un encargado</div>
