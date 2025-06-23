@@ -160,6 +160,14 @@
             newEquipoElement.innerHTML = newEquipoHTML;
             equiposContainer.appendChild(newEquipoElement.firstElementChild);
 
+            $(document).ready(function () {
+            $('.select-colores').select2({
+                placeholder: "",
+                maximumSelectionLength: 2,
+                width: '100%'
+            });
+        });
+
             // Actualizar contador
             reindexEquipos();
 
@@ -291,12 +299,5 @@
         }
     }
 
-    function limitarSeleccion(select, max) {
-        const seleccionadas = Array.from(select.selectedOptions);
-        if (seleccionadas.length > max) {
-            // Deselecciona el último elemento marcado
-            seleccionadas[seleccionadas.length - 1].selected = false;
-            alert('Solo puedes seleccionar hasta ' + max + ' colores.');
-        }
-    }
+    
 </script>
