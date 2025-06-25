@@ -11,6 +11,7 @@ return new class extends Migration
         Schema::create('equipos', function (Blueprint $table) {
             $table->id();
             $table->foreignId('cliente_id')->constrained('clientes');
+            $table->foreignId('recepcion_id')->nullable()->constrained('recepciones');
             $table->enum('tipo', ['MOTOR_ELECTRICO', 'MAQUINA_SOLDADORA', 'GENERADOR_DINAMO', 'OTROS']);
             $table->string('marca');
             $table->string('color')->nullable();
