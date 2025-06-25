@@ -2,9 +2,41 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Equipo extends Model
 {
-    //
+    use HasFactory, SoftDeletes;
+
+    protected $fillable = [
+        'recepcion_id',
+        'cliente_id',
+        'tipo',
+        'marca',
+        'color',
+        'numero_serie',
+        'potencia',
+        'voltaje',
+        'hp',
+        'rpm',
+        'hz',
+        'amperaje',
+        'cable_positivo',
+        'cable_negativo',
+        'kva_kw'
+    ];
+
+    // Relación con Cliente
+    public function cliente()
+    {
+        return $this->belongsTo(Cliente::class);
+    }
+
+    // Relación con Recepción
+    public function recepcion()
+    {
+        return $this->belongsTo(Recepcion::class);
+    }
 }

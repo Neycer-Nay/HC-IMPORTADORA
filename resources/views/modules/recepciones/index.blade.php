@@ -4,28 +4,25 @@
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>Recepcion de equipos</h1>
-                
+                <h1>Recepción de equipos</h1>
+                <div class="section-header-breadcrumb">
+                    <a href="{{ route('recepciones.create') }}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Nueva Recepción
+                    </a>
+                </div>
             </div>
-
             <div class="section-body">
-                
-
-
                 <div class="row">
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                
-                                    <h4>Tabla de recepciones</h4>
-                                
+                                <h4>Tabla de recepciones</h4>
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
-                                    <table class="table table-striped" id="table-2">
+                                    <table class="table table-striped" id="table-1">
                                         <thead>
                                             <tr>
-                                               
                                                 <th>ID</th>
                                                 <th>N° Recepción</th>
                                                 <th>Fecha</th>
@@ -35,7 +32,41 @@
                                                 <th>Acciones</th>
                                             </tr>
                                         </thead>
-
+                                        <tbody>
+                                            @foreach($recepciones as $recepcion)
+                                            <tr>
+                                                <td>{{ $recepcion->id }}</td>
+                                                <td>{{ $recepcion->numero_recepcion }}</td>
+                                                <td>{{ $recepcion->fecha_ingreso->format('d/m/Y') }}</td>
+                                                <td>{{ $recepcion->cliente->nombre ?? 'N/A' }}</td>
+                                                <td>{{ $recepcion->usuario->nombre ?? 'N/A' }}</td>
+                                                <td>
+                                                    <span class="badge badge-{{ 
+                                                        $recepcion->estado == 'RECIBIDO' ? 'primary' : 
+                                                        ($recepcion->estado == 'EN_REPARACION' ? 'warning' : 
+                                                        ($recepcion->estado == 'REPARADO' ? 'success' : 'secondary'))
+                                                    }}">
+                                                        {{ str_replace('_', ' ', $recepcion->estado) }}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <a href="{{ route('recepciones.show', $recepcion->id) }}" class="btn btn-info btn-sm" title="Ver">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                    <a href="{{ route('recepciones.edit', $recepcion->id) }}" class="btn btn-primary btn-sm" title="Editar">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <form action="{{ route('recepciones.destroy', $recepcion->id) }}" method="POST" style="display: inline-block;">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-danger btn-sm" title="Eliminar" onclick="return confirm('¿Estás seguro?')">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
                                     </table>
                                 </div>
                             </div>
@@ -45,4 +76,30 @@
             </div>
         </section>
     </div>
+@push('scripts')
+<script>
+    $(document).ready(function() {
+        $('#table-1').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json"
+            },
+            "order": [[0, "desc"]]
+        });
+    });
+</script>
+@endpush
+    @if(session('success'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: 'Recepción registrada',
+                text: '{{ session('success') }}',
+                showConfirmButton: true,
+                timer: 3000
+            });
+        });
+    </script>
+    @endif
 @endsection
