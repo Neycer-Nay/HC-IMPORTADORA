@@ -254,9 +254,7 @@
     }
 
     // Inicializar el primer equipo
-    if (equiposContainer.children.length === 0) {
-        document.getElementById('addEquipo').click();
-    }
+    
 
     // Manejar cambio en inputs de archivo
     equiposContainer.addEventListener('change', function (e) {

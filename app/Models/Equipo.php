@@ -13,8 +13,10 @@ class Equipo extends Model
     protected $fillable = [
         'recepcion_id',
         'cliente_id',
+        'nombre',
         'tipo',
         'marca',
+        'modelo',
         'color',
         'numero_serie',
         'potencia',
