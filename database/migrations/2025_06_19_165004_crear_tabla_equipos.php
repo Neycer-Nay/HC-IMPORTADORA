@@ -12,7 +12,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('cliente_id')->constrained('clientes');
             $table->foreignId('recepcion_id')->nullable()->constrained('recepciones');
+            $table->string('nombre');
             $table->enum('tipo', ['MOTOR_ELECTRICO', 'MAQUINA_SOLDADORA', 'GENERADOR_DINAMO', 'OTROS']);
+            $table->string('modelo', 50)->nullable();
             $table->string('marca');
             $table->string('color')->nullable();
             $table->string('numero_serie')->nullable();
