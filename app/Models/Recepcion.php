@@ -16,13 +16,13 @@ class Recepcion extends Model
         'cliente_id',
         'user_id',
         'fecha_ingreso',
-        'hora_ingreso',
-        'observaciones',
+        'hora_ingreso',       
         'estado'
     ];
 
     protected $casts = [
         'fecha_ingreso' => 'datetime',
+        'hora_ingreso',  
     ];
 
     // Relación con Cliente

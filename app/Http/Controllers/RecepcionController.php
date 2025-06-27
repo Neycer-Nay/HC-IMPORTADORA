@@ -32,7 +32,7 @@ class RecepcionController extends Controller
     {
 
         $ultimaRecepcion = Recepcion::latest()->first();
-        $numeroRecepcion = $ultimaRecepcion ? 'REC-' . (str_pad((int) Str::after($ultimaRecepcion->numero_recepcion, 'REC-') + 1, 5, '0', STR_PAD_LEFT)) : 'REC-5555';
+        $numeroRecepcion = $ultimaRecepcion ? 'REC-' . (str_pad((int) Str::after($ultimaRecepcion->numero_recepcion, 'REC-') + 1, 5, '0', STR_PAD_LEFT)) : 'REC-05555';
 
         $usuario = Auth::user();
         $clientes = Cliente::all();

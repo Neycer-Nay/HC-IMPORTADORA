@@ -32,7 +32,9 @@ Route::prefix('clientes')->middleware('auth')->group(function () {
 });
 
 
-
+Route::get('/hora-local', function () {
+    return now(); // Debe mostrar 09:32 si eran las 09:32 reales
+});
 
 Route::prefix('recepciones')->middleware('auth')->group(function () {
     Route::get('/', [RecepcionController::class, 'index'])->name('recepciones.index');

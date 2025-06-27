@@ -27,7 +27,9 @@ class Equipo extends Model
         'amperaje',
         'cable_positivo',
         'cable_negativo',
-        'kva_kw'
+        'kva_kw',
+        'partes_faltantes',
+        'observaciones',
     ];
 
     // Relación con Cliente
