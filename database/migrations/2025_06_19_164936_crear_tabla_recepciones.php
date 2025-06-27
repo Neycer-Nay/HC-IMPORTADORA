@@ -15,8 +15,8 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users'); // Usuario que registra
             $table->dateTime('fecha_ingreso')->useCurrent();
             $table->time('hora_ingreso')->useCurrent();
-            $table->text('observaciones')->nullable();
-            $table->enum('estado', ['RECIBIDO', 'EN_REVISION', 'DIAGNOSTICADO', 'EN_REPARACION', 'REPARADO', 'ENTREGADO'])->default('RECIBIDO');
+            
+            $table->enum('estado', ['RECIBIDO', 'DIAGNOSTICADO', 'EN_REPARACION', 'REPARADO', 'ENTREGADO'])->default('RECIBIDO');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -33,6 +33,9 @@ return new class extends Migration
             
             // Campos específicos para GENERADOR_DINAMO
             $table->string('kva_kw')->nullable();
+
+            $table->text('partes_faltantes')->nullable();
+            $table->text('observaciones')->nullable();
             
             $table->timestamps();
             $table->softDeletes();

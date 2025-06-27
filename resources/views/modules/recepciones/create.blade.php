@@ -7,7 +7,7 @@
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <h5><i class="icon fas fa-ban"></i> Errores de Validación</h5>
+            <h5><i class="icon fas fa-ban"></i> Errores al registar clientes</h5>
             <ul>
                 @foreach($errors->all() as $error)
                     <li>{{ $error }}</li>
