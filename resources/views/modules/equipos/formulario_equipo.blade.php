@@ -27,17 +27,17 @@
             <div class="row">
                 <!-- Campos que siempre se muestran -->
                 <div class="form-group col-md-6">
-                    <label>Nombre del Equipo <span class="text-danger">*</span></label>
+                    <label><strong>Nombre del Equipo</strong> <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" name="equipos[__INDEX__][nombre]" required>
                 </div>
                 <div class="form-group col-md-6">
-                    <label>Número de Serie</label>
+                    <label><strong>Número de Serie</strong></label>
                     <input type="text" class="form-control" name="equipos[__INDEX__][serie]">
                 </div>
 
                 <!-- Selector de tipo de equipo -->
                 <div class="form-group col-md-4">
-                    <label>Tipo de Equipo <span class="text-danger">*</span></label>
+                    <label><strong>Tipo de Equipo </strong><span class="text-danger">*</span></label>
                     <select class="form-control selectric" name="equipos[__INDEX__][tipo]" id="tipoEquipo__INDEX__"
                         required onchange="mostrarCamposPorTipo('__INDEX__')">
                         <option value="">Seleccione...</option>
@@ -50,15 +50,15 @@
 
                 <!-- Campos comunes que se muestran según el tipo -->
                 <div class="form-group col-md-4" id="marca__INDEX__" style="display: none;">
-                    <label>Marca</label>
+                    <label><strong>Marca</strong></label>
                     <input type="text" class="form-control" name="equipos[__INDEX__][marca]" required>
                 </div>
                 <div class="form-group col-md-4" id="modelo__INDEX__" style="display: none;">
-                    <label>Modelo</label>
+                    <label><strong>Modelo</strong></label>
                     <input type="text" class="form-control" name="equipos[__INDEX__][modelo]">
                 </div>
                 <div class="form-group col-md-4" id="color__INDEX__" style="display: none;">
-                    <label>Colores</label>
+                    <label><strong>Colores</strong></label>
                     <select class="form-control select-colores" name="equipos[__INDEX__][color][]" multiple>
                         <option value="rojo">Rojo</option>
                         <option value="azul">Azul</option>
@@ -76,64 +76,64 @@
                     <small class="form-text text-muted">Puedes seleccionar hasta 2 colores.</small>
                 </div>
                 <div class="form-group col-md-3" id="voltaje__INDEX__" style="display: none;">
-                    <label>Voltaje</label>
+                    <label><strong>Voltaje</strong></label>
                     <input type="text" class="form-control" name="equipos[__INDEX__][voltaje]">
                 </div>
 
                 <!-- Campos específicos para cada tipo -->
                 <!-- Motor Eléctrico -->
                 <div class="form-group col-md-3" id="hp__INDEX__" style="display: none;">
-                    <label>HP (Caballos de fuerza)</label>
+                    <label><strong>HP (Caballos de fuerza)</strong></label>
                     <input type="text" class="form-control" name="equipos[__INDEX__][hp]">
                 </div>
                 <div class="form-group col-md-3" id="rpm__INDEX__" style="display: none;">
-                    <label>RPM</label>
+                    <label><strong>RPM</strong></label>
                     <input type="text" class="form-control" name="equipos[__INDEX__][rpm]">
                 </div>
                 <div class="form-group col-md-3" id="hz__INDEX__" style="display: none;">
-                    <label>Hz (Hercios)</label>
+                    <label><strong>Hz (Hercios)</strong></label>
                     <input type="text" class="form-control" name="equipos[__INDEX__][hz]">
                 </div>
 
                 <!-- Máquina Soldadora -->
                 <div class="form-group col-md-3" id="amp__INDEX__" style="display: none;">
-                    <label>AMP (Amperio)</label>
+                    <label><strong>AMP (Amperio)</strong></label>
                     <input type="text" class="form-control" name="equipos[__INDEX__][amp]">
                 </div>
                 <div class="form-group col-md-3" id="cablePositivo__INDEX__" style="display: none;">
-                    <label>Cable +</label>
+                    <label><strong>Cable +</strong></label>
                     <input type="text" class="form-control" name="equipos[__INDEX__][cable_positivo]">
                 </div>
                 <div class="form-group col-md-3" id="cableNegativo__INDEX__" style="display: none;">
-                    <label>Cable -</label>
+                    <label><strong>Cable -</strong></label>
                     <input type="text" class="form-control" name="equipos[__INDEX__][cable_negativo]">
                 </div>
 
                 <!-- Generador/Dinamo -->
                 <div class="form-group col-md-3" id="kvaKw__INDEX__" style="display: none;">
-                    <label>Kva/Kw</label>
+                    <label><strong>Kva/Kw</strong></label>
                     <input type="text" class="form-control" name="equipos[__INDEX__][kva_kw]">
                 </div>
 
                 <!-- Otros -->
                 <div class="form-group col-md-3" id="potencia__INDEX__" style="display: none;">
-                    <label>Potencia</label>
+                    <label><strong>Potencia</strong></label>
                     <input type="text" class="form-control" name="equipos[__INDEX__][potencia]">
                 </div>
 
                 <!-- Campos que siempre se muestran -->
                 <div class="form-group col-12">
-                    <label>Partes Faltantes</label>
+                    <label><strong>Partes Faltantes</strong></label>
                     <textarea class="form-control" name="equipos[__INDEX__][partes_faltantes]" rows="2"></textarea>
                 </div>
 
                 <div class="form-group col-12">
-                    <label>Observaciones</label>
+                    <label><strong>Observaciones</strong></label>
                     <textarea class="form-control" name="equipos[__INDEX__][observaciones]" rows="2"></textarea>
                 </div>
 
                 <div class="form-group col-12">
-                    <label>Fotos del Equipo</label>
+                    <label><strong>Fotos del Equipo</strong></label>
                     <div class="custom-file">
                         <input type="file" class="custom-file-input" name="equipos[__INDEX__][fotos][]" multiple
                             accept="image/jpeg,image/png,image/jpg,image/gif">
