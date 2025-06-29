@@ -15,7 +15,7 @@
             </ul>
         </div>
         @endif
-        <form action="{{ route('recepciones.store') }}" method="POST" class="needs-validation" novalidate>
+        <form action="{{ route('recepciones.store') }}" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
             @csrf
             <div class="card">
                 <div class="card-header">
@@ -23,7 +23,7 @@
                 </div>
                 <div class="card-body">
                     <div class="form-group row">
-                        <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Seleccionar Cliente Existente
+                        <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3"><strong>Seleccionar Cliente Existente</strong>
                             <span class="text-danger">*</span></label>
                         <div class="col-sm-12 col-md-7">
                             <select class="form-control selectric" id="cliente_id" name="cliente_id" required>
@@ -104,7 +104,7 @@
                 </div>
                 <div class="card-body">
                     <div class="form-group row">
-                        <label class="col-form-label text-md-right col-12 col-md-3 col-lg-2">Número de Recepción <span
+                        <label class="col-form-label text-md-right col-12 col-md-3 col-lg-2"><strong>Número de Recepción </strong><span
                                 class="text-danger">*</span></label>
                         <div class="col-sm-12 col-md-7">
                             <input type="text" class="form-control" id="numero_recepcion" name="numero_recepcion"
@@ -114,7 +114,7 @@
                     </div>
 
                     <div class="form-group row">
-                        <label class="col-form-label text-md-right col-12 col-md-3 col-lg-2">Fecha <span
+                        <label class="col-form-label text-md-right col-12 col-md-3 col-lg-2"><strong>Fecha </strong><span
                                 class="text-danger">*</span></label>
                         <div class="col-sm-12 col-md-3">
                             <input type="date" class="form-control" id="fecha_ingreso" name="fecha_ingreso"
@@ -122,7 +122,7 @@
                             <div class="invalid-feedback">Seleccione la fecha</div>
                         </div>
 
-                        <label class="col-form-label text-md-right col-12 col-md-2 col-lg-1">Hora <span
+                        <label class="col-form-label text-md-right col-12 col-md-2 col-lg-1"><strong>Hora </strong><span
                                 class="text-danger">*</span></label>
                         <div class="col-sm-12 col-md-3">
                             <input type="time" class="form-control" id="hora_ingreso" name="hora_ingreso"
@@ -132,7 +132,7 @@
                     </div>
 
                     <div class="form-group row">
-                        <label class="col-form-label text-md-right col-12 col-md-3 col-lg-2">Encargado <span
+                        <label class="col-form-label text-md-right col-12 col-md-3 col-lg-2"><strong>Encargado </strong><span
                                 class="text-danger">*</span></label>
                         <div class="col-sm-12 col-md-7">
                             <select class="form-control selectric" id="encargado_id" name="encargado_id" required>
@@ -146,7 +146,7 @@
                     </div>
 
                     <div class="form-group row">
-                        <label class="col-form-label text-md-right col-12 col-md-3 col-lg-2">Observaciones</label>
+                        <label class="col-form-label text-md-right col-12 col-md-3 col-lg-2"><strong>Observaciones</strong></label>
                         <div class="col-sm-12 col-md-7">
                             <textarea class="form-control" id="observaciones" name="observaciones" rows="3"></textarea>
                         </div>
@@ -182,7 +182,7 @@
                     @csrf
                     <div class="modal-body">
                         <div class="form-group row">
-                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Nombre/Razón Social <span
+                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3"><strong>Nombre/Razón Social </strong><span
                                     class="text-danger">*</span></label>
                             <div class="col-sm-12 col-md-9">
                                 <input type="text" class="form-control" value="{{ old('nombre') }}" name="nombre" required>
@@ -191,7 +191,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Tipo <span
+                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3"><strong>Tipo</strong> <span
                                     class="text-danger">*</span></label>
                             <div class="col-sm-12 col-md-9">
                                 <select class="form-control" name="tipo" required>
@@ -204,7 +204,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Tipo Documento <span
+                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3"><strong>Tipo Documento </strong><span
                                     class="text-danger">*</span></label>
                             <div class="col-sm-12 col-md-9">
                                 <select class="form-control" name="tipo_documento" required>
@@ -221,7 +221,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Número Documento <span
+                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3"><strong>Número Documento</strong> <span
                                     class="text-danger">*</span></label>
                             <div class="col-sm-12 col-md-9">
                                 <input type="number" class="form-control @error('numero_documento') is-invalid @enderror"
@@ -233,20 +233,20 @@
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Teléfono Principal <span
+                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3"><strong>Teléfono Principal</strong> <span
                                     class="text-danger">*</span></label>
                             <div class="col-sm-12 col-md-9">
                                 <input type="number" class="form-control" value="{{ old('telefono_1') }}" name="telefono_1"
                                     required>
 
                             </div>
-                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Teléfono Secundario <span
+                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3"><strong>Teléfono Secundario </strong><span
                                     class="text-danger">*</span></label>
                             <div class="col-sm-12 col-md-9">
                                 <input type="number" class="form-control" value="{{ old('telefono_2') }}" name="telefono_2">
 
                             </div>
-                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Teléfono Terciario <span
+                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3"><strong>Teléfono Terciario </strong><span
                                     class="text-danger">*</span></label>
                             <div class="col-sm-12 col-md-9">
                                 <input type="number" class="form-control" value="{{ old('telefono_3') }}" name="telefono_3">
@@ -255,7 +255,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Email</label>
+                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3"><strong>Email</strong></label>
                             <div class="col-sm-12 col-md-9">
                                 <input type="email" class="form-control" value="{{ old('email') }}" name="email">
 
@@ -263,7 +263,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Ciudad</label>
+                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3"><strong>Ciudad</strong></label>
                             <div class="col-sm-12 col-md-9">
                                 <input type="text" class="form-control" name="ciudad" value="Santa Cruz">
 
@@ -271,7 +271,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Dirección</label>
+                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3"><strong>Dirección</strong></label>
                             <div class="col-sm-12 col-md-9">
                                 <textarea name="direccion"
                                     class="form-control @error('direccion') is-invalid @enderror">{{ old('direccion') }}</textarea>

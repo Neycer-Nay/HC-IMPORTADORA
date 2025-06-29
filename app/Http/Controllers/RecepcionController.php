@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Log;
 
 class RecepcionController extends Controller
@@ -19,10 +20,11 @@ class RecepcionController extends Controller
     public function index()
     {
         $recepciones = Recepcion::with(['cliente', 'usuario'])
-        ->orderBy('created_at', 'desc')
-        ->get();
+            ->orderBy('created_at', 'desc')
+            ->get();
         return view('modules.recepciones.index', [
-        'recepciones' => $recepciones]);
+            'recepciones' => $recepciones
+        ]);
     }
 
     /**
@@ -42,7 +44,7 @@ class RecepcionController extends Controller
 
     public function store(Request $request)
     {
-        
+
 
         // Validación de datos
         $validated = $request->validate([
@@ -55,6 +57,9 @@ class RecepcionController extends Controller
             'equipos.*.tipo' => 'required|in:MOTOR_ELECTRICO,MAQUINA_SOLDADORA,GENERADOR_DINAMO,OTROS',
             'equipos.*.marca' => 'required|string|max:255',
             'equipos.*.nombre' => 'required|string|max:255',
+
+            //Aca poner validaciones para las fotos
+            
         ]);
 
         // Crear la recepción
@@ -69,7 +74,7 @@ class RecepcionController extends Controller
         ]);
 
         // Guardar los equipos
-        foreach ($request->equipos as $equipoData) {
+        foreach ($request->equipos as $index => $equipoData) {
             $equipo = new Equipo([
                 'recepcion_id' => $recepcion->id,
                 'cliente_id' => $request->cliente_id,
@@ -81,37 +86,39 @@ class RecepcionController extends Controller
                 'color' => isset($equipoData['color']) ? implode(',', (array) $equipoData['color']) : null,
                 'voltaje' => $equipoData['voltaje'] ?? null,
                 'hp' => $equipoData['hp'] ?? null,
-                'rpm'=> $equipoData['rpm'] ?? null,
-                'hz'=> $equipoData['hz'] ?? null,
-                'amp'=> $equipoData['amp'] ?? null,
-                'cable_positivo'=> $equipoData['cable_positivo'] ?? null,
-                'cable_negativo'=> $equipoData['cable_negativo'] ?? null,
-                'kva_kw'=> $equipoData['kva_kw'] ?? null,
-                'potencia'=> $equipoData['potencia'] ?? null,
-                'partes_faltantes'=> $equipoData['partes_faltantes'] ?? null,
-                'observaciones'=> $equipoData['observaciones'] ?? null,
+                'rpm' => $equipoData['rpm'] ?? null,
+                'hz' => $equipoData['hz'] ?? null,
+                'amp' => $equipoData['amp'] ?? null,
+                'cable_positivo' => $equipoData['cable_positivo'] ?? null,
+                'cable_negativo' => $equipoData['cable_negativo'] ?? null,
+                'kva_kw' => $equipoData['kva_kw'] ?? null,
+                'potencia' => $equipoData['potencia'] ?? null,
+                'partes_faltantes' => $equipoData['partes_faltantes'] ?? null,
+                'observaciones' => $equipoData['observaciones'] ?? null,
 
                 // ... resto de campos
             ]);
 
             $equipo->save();
+            // Procesar fotos subidas como archivos
+           
         }
 
         return redirect()->route('recepciones.index')
-        ->with('success', 'Recepción registrada correctamente'); 
+            ->with('success', 'Recepción registrada correctamente');
     }
 
     /**
      * Display the specified resource.
      */
     public function show(Recepcion $recepcion)
-{
-    // Carga las relaciones (esto se puede hacer directamente en el modelo con $with si siempre las necesitas)
-    $recepcion->load(['cliente', 'usuario', 'equipos']);
-    
-    // Retorna la vista de DETALLE (show) con los datos
-    return view('modules.recepciones.show', ['recepcion' => $recepcion]);
-}
+    {
+        // Carga las relaciones (esto se puede hacer directamente en el modelo con $with si siempre las necesitas)
+        $recepcion->load(['cliente', 'usuario', 'equipos']);
+
+        // Retorna la vista de DETALLE (show) con los datos
+        return view('modules.recepciones.show', ['recepcion' => $recepcion]);
+    }
     /**
      * Show the form for editing the specified resource.
      */
