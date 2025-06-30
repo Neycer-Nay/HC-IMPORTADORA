@@ -259,6 +259,25 @@
                                                         <p class="form-control-static">{{ $equipo->observaciones ?? 'N/A' }}</p>
                                                     </div>
                                                 </div>
+                                                @if($equipo->fotos->count() > 0)
+                                                <div class="row mt-3">
+                                                    <div class="col-md-12">
+                                                        <p><strong>Fotos del Equipo:</strong></p>
+                                                        <div class="row">
+                                                            @foreach($equipo->fotos as $foto)
+                                                                <div class="col-md-3 mb-3">
+                                                                    <a href="{{ Storage::url($foto->ruta) }}" data-lightbox="equipo-{{ $equipo->id }}" data-title="{{ $equipo->nombre }}">
+                                                                        <img src="{{ asset('storage/' . $foto->ruta) }}" class="img-thumbnail">
+                                                                    </a>
+                                                                    @if($foto->descripcion)
+                                                                        <p class="small text-muted mt-1">{{ $foto->descripcion }}</p>
+                                                                    @endif
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endif
                                             </div>
                                         </div>
                                     </div>

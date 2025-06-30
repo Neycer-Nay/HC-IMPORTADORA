@@ -40,7 +40,7 @@ class AuthController extends Controller
 
         if (!$usuario) {
             User::create([
-                'nombre' => 'Admin',
+                'nombre' => 'Neythan',
                 'email' => 'Admin@gmail.com',
                 'password' => Hash::make('Admin1234'), 
                 'rol' => 'Gerente',
