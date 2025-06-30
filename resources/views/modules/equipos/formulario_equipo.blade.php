@@ -134,13 +134,18 @@
 
                 <div class="form-group col-12">
                     <label><strong>Fotos del Equipo</strong></label>
-                    <div class="custom-file">
-                        <input type="file" class="custom-file-input" name="equipos[__INDEX__][fotos][]" multiple
-                            accept="image/jpeg,image/png,image/jpg,image/gif">
+
+                    <!-- Subida tradicional de fotos -->
+                    <div class="custom-file mb-3">
+                        <input type="file" class="custom-file-input" id="fileInput__INDEX__"
+                            name="equipos[__INDEX__][fotos][]" multiple
+                            accept="image/jpeg,image/png,image/jpg,image/gif" >
                         <label class="custom-file-label">Seleccionar archivos</label>
+                        <div id="filePreviews__INDEX__" class="d-flex flex-wrap mt-2"></div>
                     </div>
-                    <small class="form-text text-muted">Puede seleccionar hasta 5 fotos (JPEG, PNG, JPG, GIF) - Máx. 8MB
-                        cada una</small>
+
+                    <!-- Captura desde cámara -->
+
                 </div>
             </div>
         </div>
@@ -149,213 +154,245 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-    let equipoCount = 0;
-    const equiposContainer = document.getElementById('equiposContainer');
-    const equipoTemplate = document.getElementById('equipoTemplate').innerHTML;
+        let equipoCount = 0;
+        const equiposContainer = document.getElementById('equiposContainer');
+        const equipoTemplate = document.getElementById('equipoTemplate').innerHTML;
 
-    // Agregar nuevo equipo
-    document.getElementById('addEquipo').addEventListener('click', function () {
-        const newEquipoHTML = equipoTemplate.replace(/__INDEX__/g, equipoCount);
-        const newEquipoElement = document.createElement('div');
-        newEquipoElement.innerHTML = newEquipoHTML;
-        equiposContainer.appendChild(newEquipoElement.firstElementChild);
+        // Funciones para la cámara
+        function previewFiles(input, index) {
+            const previewContainer = document.getElementById(`filePreviews${index}`);
+            previewContainer.innerHTML = '';
 
-        // Inicializar Select2 para colores
-        $(`select[name="equipos[${equipoCount}][color][]"]`).select2({
-            placeholder: "Seleccione colores",
-            maximumSelectionLength: 2,
-            width: '100%'
-        });
+            if (input.files) {
+                Array.from(input.files).forEach(file => {
+                    const reader = new FileReader();
 
-        // Mostrar campos básicos inicialmente
-        mostrarCamposPorTipo(equipoCount);
-        
-        // Incrementar contador
-        equipoCount++;
-        
-        // Reindexar equipos
-        reindexEquipos();
+                    reader.onload = function (e) {
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.width = 100;
+                        img.className = 'mr-2 mb-2 img-thumbnail';
+                        previewContainer.appendChild(img);
+                    }
 
-        // Inicializar selectric (si está definido)
-        if (typeof $.fn.selectric !== 'undefined') {
-            $('.selectric').selectric('destroy');
-            $('.selectric').selectric();
+                    reader.readAsDataURL(file);
+                });
+
+                // Actualizar label
+                const label = input.nextElementSibling;
+                label.textContent = input.files.length > 1 ?
+                    `${input.files.length} archivos seleccionados` :
+                    input.files[0].name;
+            }
         }
 
-        // Animación de aparición
-        const lastEquipo = equiposContainer.lastElementChild;
-        lastEquipo.style.opacity = '0';
-        let opacity = 0;
-        const fadeIn = setInterval(() => {
-            opacity += 0.1;
-            lastEquipo.style.opacity = opacity;
-            if (opacity >= 1) clearInterval(fadeIn);
-        }, 50);
-    });
+        // Agregar nuevo equipo
+        document.getElementById('addEquipo').addEventListener('click', function () {
+            const newEquipoHTML = equipoTemplate.replace(/__INDEX__/g, equipoCount);
+            const newEquipoElement = document.createElement('div');
+            newEquipoElement.innerHTML = newEquipoHTML;
+            equiposContainer.appendChild(newEquipoElement.firstElementChild);
 
-    // Eliminar equipo (delegación de eventos)
-    equiposContainer.addEventListener('click', function (e) {
-        if (e.target.closest('.remove-equipo')) {
-            const equipoItem = e.target.closest('.equipo-item');
-            equipoItem.style.opacity = '1';
-            let opacity = 1;
-            const fadeOut = setInterval(() => {
-                opacity -= 0.1;
-                equipoItem.style.opacity = opacity;
-                if (opacity <= 0) {
-                    clearInterval(fadeOut);
-                    equipoItem.remove();
-                    reindexEquipos();
-                }
+            // Inicializar Select2 para colores
+            $(`select[name="equipos[${equipoCount}][color][]"]`).select2({
+                placeholder: "Seleccione colores",
+                maximumSelectionLength: 2,
+                width: '100%'
+            });
+
+            // Mostrar campos básicos inicialmente
+            mostrarCamposPorTipo(equipoCount);
+
+            
+            // Incrementar contador
+            equipoCount++;
+
+            // Reindexar equipos
+            reindexEquipos();
+
+
+            // Inicializar selectric (si está definido)
+            if (typeof $.fn.selectric !== 'undefined') {
+                $('.selectric').selectric('destroy');
+                $('.selectric').selectric();
+            }
+
+            // Animación de aparición
+            const lastEquipo = equiposContainer.lastElementChild;
+            lastEquipo.style.opacity = '0';
+            let opacity = 0;
+            const fadeIn = setInterval(() => {
+                opacity += 0.1;
+                lastEquipo.style.opacity = opacity;
+                if (opacity >= 1) clearInterval(fadeIn);
             }, 50);
-        }
-    });
+        });
 
-    // Función para reindexar equipos
-    function reindexEquipos() {
-        const equipos = equiposContainer.querySelectorAll('.equipo-item');
-        equipos.forEach((equipo, index) => {
-            // Actualizar número de equipo
-            equipo.querySelector('.equipo-count').textContent = index + 1;
-
-            // Actualizar todos los names de los inputs
-            equipo.querySelectorAll('[name^="equipos["]').forEach(input => {
-                const currentName = input.name;
-                const newName = currentName.replace(/equipos\[\d+\]/, `equipos[${index}]`);
-                input.name = newName;
-                
-                // Actualizar IDs para campos dinámicos
-                if (input.id && input.id.includes('__INDEX__')) {
-                    input.id = input.id.replace(/__INDEX__/, index);
+        // Eliminar equipo (delegación de eventos)
+        equiposContainer.addEventListener('click', function (e) {
+            if (e.target.closest('.remove-equipo')) {
+                const equipoItem = e.target.closest('.equipo-item');
+                // Detener la transmisión de la cámara
+                const video = equipoItem.querySelector('video');
+                if (video && video.srcObject) {
+                    video.srcObject.getTracks().forEach(track => track.stop());
                 }
-            });
-            
-            // Actualizar IDs de los divs contenedores
-            const tipos = ['marca', 'modelo', 'color', 'voltaje', 'hp', 'rpm', 'hz', 'amp', 
-                          'cablePositivo', 'cableNegativo', 'kvaKw', 'potencia'];
-            
-            tipos.forEach(tipo => {
-                const div = equipo.querySelector(`#${tipo}__INDEX__`);
-                if (div) {
-                    div.id = `${tipo}${index}`;
-                }
-            });
-            
-            // Actualizar el evento onchange del select de tipo
-            const tipoSelect = equipo.querySelector('[name^="equipos["][name$="[tipo]"]');
-            if (tipoSelect) {
-                tipoSelect.onchange = function() {
-                    mostrarCamposPorTipo(index);
-                };
+                equipoItem.style.opacity = '1';
+                let opacity = 1;
+                const fadeOut = setInterval(() => {
+                    opacity -= 0.1;
+                    equipoItem.style.opacity = opacity;
+                    if (opacity <= 0) {
+                        clearInterval(fadeOut);
+                        equipoItem.remove();
+                        reindexEquipos();
+                    }
+                }, 50);
             }
         });
-        
-        equipoCount = equipos.length;
-    }
 
-    // Inicializar el primer equipo
-    
-
-    // Manejar cambio en inputs de archivo
-    equiposContainer.addEventListener('change', function (e) {
-        if (e.target.matches('.custom-file-input')) {
-            const label = e.target.nextElementSibling;
-            const files = e.target.files;
-            if (files.length > 0) {
-                if (files.length > 1) {
-                    label.textContent = `${files.length} archivos seleccionados`;
-                } else {
-                    label.textContent = files[0].name;
-                }
-            } else {
-                label.textContent = 'Seleccionar archivos';
-            }
-        }
-    });
-    
-    // Validación antes de enviar el formulario
-    const form = document.querySelector('form');
-    if (form) {
-        form.addEventListener('submit', function(e) {
-            let isValid = true;
+        // Función para reindexar equipos
+        function reindexEquipos() {
             const equipos = equiposContainer.querySelectorAll('.equipo-item');
-            
-            if (equipos.length === 0) {
-                Swal.fire('Error', 'Debe agregar al menos un equipo', 'error');
-                isValid = false;
-            }
-            
             equipos.forEach((equipo, index) => {
-                const tipo = equipo.querySelector('[name^="equipos["][name$="[tipo]"]').value;
-                const marca = equipo.querySelector('[name^="equipos["][name$="[marca]"]');
-                
-                if (!tipo) {
-                    Swal.fire('Error', `El tipo del equipo #${index + 1} es requerido`, 'error');
-                    isValid = false;
+                // Actualizar número de equipo
+                equipo.querySelector('.equipo-count').textContent = index + 1;
+
+                // Actualizar todos los names de los inputs
+                equipo.querySelectorAll('[name^="equipos["]').forEach(input => {
+                    const currentName = input.name;
+                    const newName = currentName.replace(/equipos\[\d+\]/, `equipos[${index}]`);
+                    input.name = newName;
+
+                    // Actualizar IDs para campos dinámicos
+                    if (input.id && input.id.includes('__INDEX__')) {
+                        input.id = input.id.replace(/__INDEX__/, index);
+                    }
+                });
+
+                // Actualizar IDs de los divs contenedores
+                const tipos = ['marca', 'modelo', 'color', 'voltaje', 'hp', 'rpm', 'hz', 'amp',
+                    'cablePositivo', 'cableNegativo', 'kvaKw', 'potencia'];
+
+                tipos.forEach(tipo => {
+                    const div = equipo.querySelector(`#${tipo}__INDEX__`);
+                    if (div) {
+                        div.id = `${tipo}${index}`;
+                    }
+                });
+
+                // Actualizar el evento onchange del select de tipo
+                const tipoSelect = equipo.querySelector('[name^="equipos["][name$="[tipo]"]');
+                if (tipoSelect) {
+                    tipoSelect.onchange = function () {
+                        mostrarCamposPorTipo(index);
+                    };
                 }
                 
-                if (marca && !marca.value) {
-                    Swal.fire('Error', `La marca del equipo #${index + 1} es requerida`, 'error');
+
+                
+            });
+
+            equipoCount = equipos.length;
+        }
+
+        // Inicializar el primer equipo
+
+
+        // Manejar cambio en inputs de archivo
+        equiposContainer.addEventListener('change', function (e) {
+            if (e.target.matches('.custom-file-input')) {
+                const index = e.target.id.replace('fileInput', '');
+                previewFiles(e.target, index);
+            }
+        });
+
+        // Validación antes de enviar el formulario
+        const form = document.querySelector('form');
+        if (form) {
+            form.addEventListener('submit', function (e) {
+                let isValid = true;
+                const equipos = equiposContainer.querySelectorAll('.equipo-item');
+
+                if (equipos.length === 0) {
+                    Swal.fire('Error', 'Debe agregar al menos un equipo', 'error');
                     isValid = false;
+                }
+
+                equipos.forEach((equipo, index) => {
+                    const tipo = equipo.querySelector('[name^="equipos["][name$="[tipo]"]').value;
+                    const marca = equipo.querySelector('[name^="equipos["][name$="[marca]"]');
+
+                    if (!tipo) {
+                        Swal.fire('Error', `El tipo del equipo #${index + 1} es requerido`, 'error');
+                        isValid = false;
+                    }
+
+                    if (marca && !marca.value) {
+                        Swal.fire('Error', `La marca del equipo #${index + 1} es requerida`, 'error');
+                        isValid = false;
+                    }
+                });
+
+                if (!isValid) {
+                    e.preventDefault();
                 }
             });
-            
-            if (!isValid) {
-                e.preventDefault();
-            }
-        });
-    }
-});
-
-// Función mejorada para mostrar campos según tipo
-function mostrarCamposPorTipo(index) {
-    const tipo = document.getElementById(`tipoEquipo${index}`)?.value;
-    if (!tipo) return;
-
-    // Definir qué campos mostrar para cada tipo
-    const campos = {
-        comunes: ['marca', 'modelo', 'color', 'voltaje'],
-        MOTOR_ELECTRICO: ['hp', 'rpm', 'hz'],
-        MAQUINA_SOLDADORA: ['amp', 'cablePositivo', 'cableNegativo'],
-        GENERADOR_DINAMO: ['kvaKw', 'hz', 'rpm'],
-        OTROS: ['potencia']
-    };
-
-    // Ocultar todos los campos específicos primero
-    const todosCampos = [...campos.comunes, ...campos.MOTOR_ELECTRICO, ...campos.MAQUINA_SOLDADORA, 
-                        ...campos.GENERADOR_DINAMO, ...campos.OTROS];
-    
-    todosCampos.forEach(campo => {
-        const elemento = document.getElementById(`${campo}${index}`);
-        if (elemento) {
-            elemento.style.display = 'none';
-            // Quitar requerido al ocultar (excepto marca)
-            if (campo !== 'marca') {
-                const input = elemento.querySelector('input, select, textarea');
-                if (input) input.required = false;
-            }
         }
     });
 
-    // Mostrar campos comunes
-    campos.comunes.forEach(campo => {
-        const elemento = document.getElementById(`${campo}${index}`);
-        if (elemento) {
-            elemento.style.display = 'block';
-            // Marcar marca como requerida
-            if (campo === 'marca') {
-                const input = elemento.querySelector('input');
-                if (input) input.required = true;
-            }
-        }
-    });
+    // Función mejorada para mostrar campos según tipo
+    function mostrarCamposPorTipo(index) {
+        const tipo = document.getElementById(`tipoEquipo${index}`)?.value;
+        if (!tipo) return;
 
-    // Mostrar campos específicos según tipo
-    if (campos[tipo]) {
-        campos[tipo].forEach(campo => {
+        // Definir qué campos mostrar para cada tipo
+        const campos = {
+            comunes: ['marca', 'modelo', 'color', 'voltaje'],
+            MOTOR_ELECTRICO: ['hp', 'rpm', 'hz'],
+            MAQUINA_SOLDADORA: ['amp', 'cablePositivo', 'cableNegativo'],
+            GENERADOR_DINAMO: ['kvaKw', 'hz', 'rpm'],
+            OTROS: ['potencia']
+        };
+
+        // Ocultar todos los campos específicos primero
+        const todosCampos = [...campos.comunes, ...campos.MOTOR_ELECTRICO, ...campos.MAQUINA_SOLDADORA,
+        ...campos.GENERADOR_DINAMO, ...campos.OTROS];
+
+        todosCampos.forEach(campo => {
             const elemento = document.getElementById(`${campo}${index}`);
-            if (elemento) elemento.style.display = 'block';
+            if (elemento) {
+                elemento.style.display = 'none';
+                // Quitar requerido al ocultar (excepto marca)
+                if (campo !== 'marca') {
+                    const input = elemento.querySelector('input, select, textarea');
+                    if (input) input.required = false;
+                }
+            }
         });
+
+        // Mostrar campos comunes
+        campos.comunes.forEach(campo => {
+            const elemento = document.getElementById(`${campo}${index}`);
+            if (elemento) {
+                elemento.style.display = 'block';
+                // Marcar marca como requerida
+                if (campo === 'marca') {
+                    const input = elemento.querySelector('input');
+                    if (input) input.required = true;
+                }
+            }
+        });
+
+        // Mostrar campos específicos según tipo
+        if (campos[tipo]) {
+            campos[tipo].forEach(campo => {
+                const elemento = document.getElementById(`${campo}${index}`);
+                if (elemento) elemento.style.display = 'block';
+            });
+        }
     }
-}
+
+
+
 </script>

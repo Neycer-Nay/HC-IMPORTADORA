@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Cache\Events\ForgettingKey;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Equipo extends Model
@@ -42,5 +44,10 @@ class Equipo extends Model
     public function recepcion()
     {
         return $this->belongsTo(Recepcion::class);
+    }
+
+    public function fotos(): HasMany
+    {
+        return $this->hasMany(FotoEquipo::class, 'equipo_id');
     }
 }

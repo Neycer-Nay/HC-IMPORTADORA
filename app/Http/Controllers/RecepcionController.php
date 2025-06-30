@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Recepcion;
 use App\Models\Cliente;
 use App\Models\Equipo;
+use App\Models\FotoEquipo;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use App\Http\Controllers\Log;
+
 
 class RecepcionController extends Controller
 {
@@ -59,7 +60,12 @@ class RecepcionController extends Controller
             'equipos.*.nombre' => 'required|string|max:255',
 
             //Aca poner validaciones para las fotos
-            
+            'equipos.*.fotos.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:8192',
+            'equipos.*.camera_photos' => 'nullable|array',
+
+        ], [
+            'equipos.required' => 'Debes seleccionar al menos un equipo.',
+
         ]);
 
         // Crear la recepción
@@ -100,8 +106,21 @@ class RecepcionController extends Controller
             ]);
 
             $equipo->save();
-            // Procesar fotos subidas como archivos
-           
+            if (isset($equipoData['fotos'])) {
+                foreach ($equipoData['fotos'] as $foto) {
+                    $path = $this->storeImage($foto, $equipo->id);
+
+                    FotoEquipo::create([
+                        'equipo_id' => $equipo->id,
+                        'ruta' => $path,
+                        'descripcion' => 'Foto subida'
+                    ]);
+                }
+            }
+
+            // Guardar fotos de la cámara
+            
+
         }
 
         return redirect()->route('recepciones.index')
@@ -142,4 +161,14 @@ class RecepcionController extends Controller
     {
         //
     }
+
+    private function storeImage($file, $equipoId)
+    {
+        $filename = 'equipo_' . $equipoId . '_' . time() . '_' . Str::random(8) . '.' . $file->extension();
+        $path = $file->storeAs('equipos_fotos', $filename, 'public');
+        return $path;
+    }
+
+    // Método para guardar imágenes base64
+    
 }
