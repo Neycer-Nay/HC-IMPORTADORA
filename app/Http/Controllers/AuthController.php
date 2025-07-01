@@ -21,8 +21,11 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        $user=User::where('email', $request->email)->first();
-        if (!$user || !Hash::check($request->password, $user->password)) {
+        $user = User::where('email', $request->email)->first();
+        if (!$user) {
+            return back()->withErrors(['email' => 'Credencial incorrectas.'])->withInput();
+        }
+        if (!Hash::check($request->password, (string) $user->password)) {
             return back()->withErrors(['email' => 'Credencial incorrectas.'])->withInput();
         }
         
