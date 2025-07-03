@@ -158,10 +158,10 @@
             @include('modules.equipos.formulario_equipo')
             <div class="d-flex justify-content-center mt-4 ">
                 <a href="{{ route('recepciones.index') }}" class="btn btn-outline-secondary mr-2">
-                    <i class="bi bi-arrow-left mr-2"></i>Cancelar
+                    Cancelar
                 </a>
-                <button type="submit" class="btn btn-primary px-4  ">
-                    <i class="bi bi-save mr-2"></i>Guardar Recepción
+                <button type="submit" class="btn btn-primary px-2">
+                    <i class="fas fa-save"></i>Guardar Recepción
                 </button>
             </div>
         </form>

@@ -139,10 +139,13 @@
                     <div class="custom-file mb-3">
                         <input type="file" class="custom-file-input" id="fileInput__INDEX__"
                             name="equipos[__INDEX__][fotos][]" multiple
-                            accept="image/jpeg,image/png,image/jpg,image/gif" >
+                            accept="image/jpeg,image/png,image/jpg,image/gif">
                         <label class="custom-file-label">Seleccionar archivos</label>
-                        <div id="filePreviews__INDEX__" class="d-flex flex-wrap mt-2"></div>
                     </div>
+
+                    <!-- Contenedor de previsualizaciones con altura fija -->
+                    <div id="filePreviews__INDEX__" class="d-flex flex-wrap mt-2 mb-4"
+                        style="max-height: 200px; overflow-y: auto; gap: 8px;"></div>
 
                     <!-- Captura desde cámara -->
 
@@ -151,6 +154,24 @@
         </div>
     </div>
 </template>
+
+<style>
+    @media (max-width: 768px) {
+        #filePreviews__INDEX__ {
+            max-height: 150px !important;
+        }
+
+        #filePreviews__INDEX__ img {
+            width: 80px !important;
+            height: 80px !important;
+        }
+    }
+
+    /* Espaciado adicional para los botones */
+    .mt-4 {
+        margin-top: 2rem !important;
+    }
+</style>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -170,8 +191,10 @@
                     reader.onload = function (e) {
                         const img = document.createElement('img');
                         img.src = e.target.result;
-                        img.width = 100;
-                        img.className = 'mr-2 mb-2 img-thumbnail';
+                        img.style.width = '100px';
+                        img.style.height = '100px';
+                        img.style.objectFit = 'cover';
+                        img.className = 'img-thumbnail';
                         previewContainer.appendChild(img);
                     }
 
@@ -203,7 +226,7 @@
             // Mostrar campos básicos inicialmente
             mostrarCamposPorTipo(equipoCount);
 
-            
+
             // Incrementar contador
             equipoCount++;
 
@@ -288,9 +311,9 @@
                         mostrarCamposPorTipo(index);
                     };
                 }
-                
 
-                
+
+
             });
 
             equipoCount = equipos.length;
