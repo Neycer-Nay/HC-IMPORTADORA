@@ -32,10 +32,6 @@ Route::prefix('clientes')->middleware('auth')->group(function () {
 });
 
 
-Route::get('/hora-local', function () {
-    return now(); // Debe mostrar 09:32 si eran las 09:32 reales
-});
-
 Route::prefix('recepciones')->middleware('auth')->group(function () {
     Route::get('/', [RecepcionController::class, 'index'])->name('recepciones.index');
     Route::get('/create', [RecepcionController::class, 'create'])->name('recepciones.create');
@@ -58,4 +54,13 @@ Route::prefix(('equipos'))->middleware('auth')->group(function () {
     Route::delete('/{equipo}', [EquipoController::class, 'destroy'])->name('equipos.destroy');
 });
 
+Route::prefix('usuarios')->middleware('auth')->group(function () {
+    Route::get('/', [\App\Http\Controllers\UsuariosController::class, 'index'])->name('usuarios.index');
+    Route::get('/create', [\App\Http\Controllers\UsuariosController::class, 'create'])->name('usuarios.create');
+    Route::post('/', [\App\Http\Controllers\UsuariosController::class, 'store'])->name('usuarios.store');
+    Route::get('/{usuario}', [\App\Http\Controllers\UsuariosController::class, 'show'])->name('usuarios.show');
+    Route::get('/{usuario}/edit', [\App\Http\Controllers\UsuariosController::class, 'edit'])->name('usuarios.edit');
+    Route::put('/{usuario}', [\App\Http\Controllers\UsuariosController::class, 'update'])->name('usuarios.update');
+    Route::delete('/{usuario}', [\App\Http\Controllers\UsuariosController::class, 'destroy'])->name('usuarios.destroy');
+});
 

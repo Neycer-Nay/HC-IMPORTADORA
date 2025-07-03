@@ -22,8 +22,12 @@
                 Crear nueva recepción
             </span></a></li>
             <li class="dropdown">
+                <a href="{{ route('usuarios.index') }}" class="nav-link "><i class="far fa-user"></i> <span>Usuarios</span></a>
+                
+            </li>
+            <li class="dropdown">
                 <a href="#" class="nav-link "><i class="fas fa-th"></i>
-                    <span>----</span></a>
+                <span>----</span></a>
                 
             </li>
             
@@ -48,10 +52,6 @@
                 
             </li>
             
-            <li class="dropdown">
-                <a href="#" class="nav-link "><i class="far fa-user"></i> <span>Auth</span></a>
-                
-            </li>
             <li class="dropdown">
                 <a href="#" class="nav-link "><i class="fas fa-exclamation"></i>
                     <span>Errors</span></a>
