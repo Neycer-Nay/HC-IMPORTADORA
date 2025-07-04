@@ -70,14 +70,41 @@ class UsuariosController extends Controller
         // Lógica para mostrar un usuario específico
     }
 
-    public function edit($usuario)
+    public function edit($id)
     {
-        // Lógica para mostrar el formulario de edición de un usuario
+        $user = User::findOrFail($id);
+        return view('modules.usuarios.edit_password', compact('user'));
     }
 
-    public function update(Request $request, $usuario)
+    public function update(Request $request, $id)
     {
-        // Lógica para actualizar un usuario existente
+        $request->validate([
+            'password' => 'required|string|min:8|confirmed',
+        ], [
+            'password.required' => 'La contraseña es obligatoria.',
+            'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
+            'password.confirmed' => 'Las contraseñas no coinciden.',
+        ]);
+
+        try {
+            $user = User::findOrFail($id);
+            $user->password = \Hash::make($request->password);
+            $user->save();
+
+            return redirect()->route('usuarios.index')
+                ->with('swal', [
+                    'icon' => 'success',
+                    'title' => 'Contraseña actualizada',
+                    'text' => 'La contraseña del usuario se actualizó correctamente.'
+                ]);
+        } catch (\Exception $e) {
+            return back()->withInput()
+                ->with('swal', [
+                    'icon' => 'error',
+                    'title' => 'Error',
+                    'text' => 'No se pudo actualizar la contraseña: ' . $e->getMessage()
+                ]);
+        }
     }
 
     public function destroy(string $id)
@@ -100,15 +127,23 @@ class UsuariosController extends Controller
             $user->delete();
 
             return redirect()->route('usuarios.index')
-                ->with('success', 'Usuario eliminado correctamente');
+                ->with('swal', [
+                    'icon' => 'success',
+                    'title' => '¡Eliminado!',
+                    'text' => 'Usuario eliminado correctamente'
+                ]);
 
         } catch (\Exception $e) {
             return redirect()->route('usuarios.index')
-                ->with('error', 'Error al eliminar el usuario: ' . $e->getMessage());
+                ->with('swal', [
+                    'icon' => 'error',
+                    'title' => 'Error',
+                    'text' => 'Error al eliminar el usuario: ' . $e->getMessage()
+                ]);
         }
     }
 
-    
+
     public function __construct()
     {
         $this->middleware(function ($request, $next) {

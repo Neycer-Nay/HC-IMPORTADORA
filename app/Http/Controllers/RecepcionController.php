@@ -119,7 +119,7 @@ class RecepcionController extends Controller
             }
 
             // Guardar fotos de la cámara
-            
+
 
         }
 
@@ -143,7 +143,9 @@ class RecepcionController extends Controller
      */
     public function edit(Recepcion $recepcion)
     {
-        //
+        // Carga las relaciones necesarias
+        $estados = ['RECIBIDO', 'DIAGNOSTICADO', 'EN_REPARACION', 'REPARADO', 'ENTREGADO'];
+        return view('modules.recepciones.edit_estado', compact('recepcion', 'estados'));
     }
 
     /**
@@ -151,7 +153,14 @@ class RecepcionController extends Controller
      */
     public function update(Request $request, Recepcion $recepcion)
     {
-        //
+        $request->validate(['estado' => 'required|in:RECIBIDO,DIAGNOSTICADO,EN_REPARACION,REPARADO,ENTREGADO']);
+        $recepcion->estado = $request->estado;
+        $recepcion->save();
+        return redirect()->route('recepciones.index')->with('swal', [
+            'icon' => 'success',
+            'title' => '¡Actualizado!',
+            'text' => 'Estado de la recepción actualizado correctamente.'
+        ]);
     }
 
     /**
@@ -170,5 +179,5 @@ class RecepcionController extends Controller
     }
 
     // Método para guardar imágenes base64
-    
+
 }
