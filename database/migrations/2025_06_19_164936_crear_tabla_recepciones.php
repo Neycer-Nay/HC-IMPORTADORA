@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('numero_recepcion')->unique();
             $table->foreignId('cliente_id')->constrained('clientes');
-            $table->foreignId('user_id')->constrained('users'); // Usuario que registra
+            $table->foreignId('user_id') ->onDelete('set null'); // Usuario que registra
             $table->dateTime('fecha_ingreso')->useCurrent();
             $table->time('hora_ingreso')->useCurrent();
             

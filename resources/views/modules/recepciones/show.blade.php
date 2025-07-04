@@ -49,7 +49,7 @@
                                     </tr>
                                     <tr>
                                         <th>Atendido por:</th>
-                                        <td>{{ $recepcion->usuario->nombre }}</td>
+                                        <td>{{ optional($recepcion->usuario)->nombre ?? 'N/A' }}</td>
                                     </tr>
                                 </table>
                             </div>

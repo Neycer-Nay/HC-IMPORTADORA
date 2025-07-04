@@ -102,4 +102,30 @@
         });
     </script>
     @endif
+    @push('scripts')
+<script>
+    $(document).ready(function() {
+        $('#table-1').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json"
+            },
+            "order": [[0, "desc"]]
+        });
+    });
+</script>
+@endpush
+
+@if(session('swal'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                icon: '{{ session('swal.icon') }}',
+                title: '{{ session('swal.title') }}',
+                text: '{{ session('swal.text') }}',
+                confirmButtonText: 'OK'
+            });
+        });
+    </script>
+@endif
+    
 @endsection

@@ -130,22 +130,22 @@
 @endsection
 
 @section('scripts')
+
 <script>
-    // Asegurarse que el DOM está completamente cargado
     document.addEventListener('DOMContentLoaded', function() {
-
-
-
+        // Mostrar alertas de sesión (éxito/error)
         @if(session('swal'))
         Swal.fire({
             icon: '{{ session('swal')['icon'] }}',
             title: '{{ session('swal')['title'] }}',
             text: '{{ session('swal')['text'] }}',
             confirmButtonColor: '#3085d6',
-            timer: 5000,
-            timerProgressBar: true
+            timer: 3000,
+            timerProgressBar: true,
+            showConfirmButton: true
         });
         @endif
+
         // Confirmación para eliminar usuarios
         document.querySelectorAll('.delete-btn').forEach(button => {
             button.addEventListener('click', function(e) {
@@ -171,26 +171,10 @@
             });
         });
 
-        // Mostrar alerta de éxito/error después de operaciones
-        @if(session('swal'))
-            Swal.fire({
-                icon: '{{ session('swal')['icon'] }}',
-                title: '{{ session('swal')['title'] }}',
-                text: '{{ session('swal')['text'] }}',
-                timer: 3000,
-                timerProgressBar: true,
-                showConfirmButton: true
-            });
-        @endif
-
-        // Abrir automáticamente el modal si hay errores
+        // Abrir modal si hay errores
         @if($errors->any())
-            $(function() {
-                $('#usuarioModal').modal('show');
-                
-                // Hacer scroll al primer campo con error
-                $('.is-invalid').first().focus();
-            });
+            $('#usuarioModal').modal('show');
+            $('.is-invalid').first().focus();
         @endif
     });
 </script>
