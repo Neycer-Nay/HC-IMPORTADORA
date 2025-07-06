@@ -7,11 +7,21 @@ use Illuminate\Http\Request;
 
 class ClienteController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        
-        
+        $query = Cliente::orderBy('id', 'desc');
+
+        // Si hay búsqueda, filtra por nombre
+        if ($request->filled('buscar')) {
+            $query->where('nombre', 'like', '%' . $request->buscar . '%');
+        }
+
+        // Mantén el término de búsqueda en la paginación
+        $clientes = $query->paginate(10)->appends($request->only('buscar'));
+
+        return view('modules.clientes.showClientes', compact('clientes'));
     }
+    
 
    
     public function create()
@@ -54,8 +64,7 @@ class ClienteController extends Controller
     public function show(Cliente $cliente)
     {
         
-        $clientes = Cliente::all();
-        return response()->json($clientes);
+        
     }
 
 }

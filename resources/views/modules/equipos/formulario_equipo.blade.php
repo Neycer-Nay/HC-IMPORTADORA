@@ -140,7 +140,8 @@
                         <input type="file" class="custom-file-input" id="fileInput__INDEX__"
                             name="equipos[__INDEX__][fotos][]" multiple
                             accept="image/jpeg,image/png,image/jpg,image/gif">
-                        <label class="custom-file-label">Seleccionar archivos</label>
+                        <label class="custom-file-label">Seleccionar fotos</label>
+                        <div class="form-text">Puede seleccionar hasta 8 fotos (JPEG, PNG, JPG, GIF) - Máx. 8MB cada una</div>
                     </div>
 
                     <!-- Contenedor de previsualizaciones con altura fija -->
@@ -178,36 +179,76 @@
         let equipoCount = 0;
         const equiposContainer = document.getElementById('equiposContainer');
         const equipoTemplate = document.getElementById('equipoTemplate').innerHTML;
-
+        
         // Funciones para la cámara
         function previewFiles(input, index) {
-            const previewContainer = document.getElementById(`filePreviews${index}`);
-            previewContainer.innerHTML = '';
+    const previewContainer = document.getElementById(`filePreviews${index}`);
+    previewContainer.innerHTML = '';
+    const MAX_SIZE_MB = 8; // Tamaño máximo en MB
+    const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024; // Convertir a bytes
 
-            if (input.files) {
-                Array.from(input.files).forEach(file => {
-                    const reader = new FileReader();
+    // Validar cantidad máxima de archivos (8)
+    if (input.files && input.files.length > 8) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No puedes seleccionar más de 8 fotos. Por favor, selecciona hasta 8 archivos.',
+            confirmButtonText: 'Entendido'
+        });
+        input.value = '';
+        const label = input.nextElementSibling;
+        label.textContent = 'Seleccionar fotos';
+        return;
+    }
 
-                    reader.onload = function (e) {
-                        const img = document.createElement('img');
-                        img.src = e.target.result;
-                        img.style.width = '100px';
-                        img.style.height = '100px';
-                        img.style.objectFit = 'cover';
-                        img.className = 'img-thumbnail';
-                        previewContainer.appendChild(img);
-                    }
-
-                    reader.readAsDataURL(file);
-                });
-
-                // Actualizar label
-                const label = input.nextElementSibling;
-                label.textContent = input.files.length > 1 ?
-                    `${input.files.length} archivos seleccionados` :
-                    input.files[0].name;
+    // Validar tamaño de cada archivo
+    if (input.files) {
+        let hasInvalidSize = false;
+        
+        Array.from(input.files).forEach(file => {
+            if (file.size > MAX_SIZE_BYTES) {
+                hasInvalidSize = true;
             }
+        });
+
+        if (hasInvalidSize) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: `Una o más fotos superan el tamaño máximo de ${MAX_SIZE_MB}MB. Por favor, selecciona archivos más pequeños.`,
+                confirmButtonText: 'Entendido'
+            });
+            input.value = '';
+            const label = input.nextElementSibling;
+            label.textContent = 'Seleccionar fotos';
+            return;
         }
+
+        // Procesar archivos si pasan todas las validaciones
+        Array.from(input.files).forEach(file => {
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.style.width = '100px';
+                img.style.height = '100px';
+                img.style.objectFit = 'cover';
+                img.className = 'img-thumbnail';
+                previewContainer.appendChild(img);
+            }
+
+            reader.readAsDataURL(file);
+        });
+
+        // Actualizar label
+        const label = input.nextElementSibling;
+        label.textContent = input.files.length > 1 ?
+            `${input.files.length} archivos seleccionados` :
+            input.files[0].name;
+    }
+}
+        
 
         // Agregar nuevo equipo
         document.getElementById('addEquipo').addEventListener('click', function () {

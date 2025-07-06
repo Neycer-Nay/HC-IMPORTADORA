@@ -10,10 +10,19 @@ use Illuminate\Routing\Controller;
 
 class UsuariosController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::orderBy('id', 'desc')->paginate(10);
-        return view('modules.usuarios.index', compact('users'));
+        $query = User::orderBy('id', 'desc');
+
+    // Si hay búsqueda, filtra por nombre
+    if ($request->filled('buscar')) {
+        $query->where('nombre', 'like', '%' . $request->buscar . '%');
+    }
+
+    // Mantén el término de búsqueda en la paginación
+    $users = $query->paginate(10)->appends($request->only('buscar'));
+
+    return view('modules.usuarios.index', compact('users'));
     }
 
     public function create()

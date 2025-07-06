@@ -67,7 +67,8 @@
                                 <div class="col-12 mb-4">
                                     <div class="card card-info">
                                         <div class="card-header">
-                                            <h5>{{ $equipo->nombre }} <small class="text-muted">({{ $equipo->tipo }})</small></h5>
+                                            
+                                            <h5>{{ $equipo->nombre }} <small class="  mt-1 d-block">{{ $equipo->tipo }}</small></h5>
                                         </div>
                                         <div class="card-body">
                                             <div class="row">

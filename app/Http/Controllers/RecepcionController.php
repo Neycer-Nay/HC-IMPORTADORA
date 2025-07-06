@@ -18,11 +18,25 @@ class RecepcionController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $recepciones = Recepcion::with(['cliente', 'usuario'])
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $query = Recepcion::with(['cliente', 'usuario'])->orderBy('created_at', 'desc');
+
+         if ($request->filled('buscar')) {
+        $busqueda = $request->buscar;
+        $query->where(function($q) use ($busqueda) {
+            $q->where('numero_recepcion', 'like', "%$busqueda%")
+              ->orWhereHas('cliente', function($qc) use ($busqueda) {
+                  $qc->where('nombre', 'like', "%$busqueda%");
+              })
+              ->orWhereHas('usuario', function($qu) use ($busqueda) {
+                  $qu->where('nombre', 'like', "%$busqueda%");
+              });
+        });
+    }
+
+        $recepciones = $query->paginate(10)->appends($request->only('buscar', 'cliente', 'usuario'));
+
         return view('modules.recepciones.index', [
             'recepciones' => $recepciones
         ]);
@@ -60,11 +74,13 @@ class RecepcionController extends Controller
             'equipos.*.nombre' => 'required|string|max:255',
 
             //Aca poner validaciones para las fotos
+            'equipos.*.fotos' => 'nullable|array|max:8',
             'equipos.*.fotos.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:8192',
             'equipos.*.camera_photos' => 'nullable|array',
 
         ], [
             'equipos.required' => 'Debes seleccionar al menos un equipo.',
+            'equipos.*.fotos.max' => 'Cada equipo solo puede tener hasta 8 fotos.',
 
         ]);
 

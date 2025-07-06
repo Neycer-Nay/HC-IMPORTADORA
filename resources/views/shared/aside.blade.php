@@ -26,8 +26,8 @@
                 
             </li>
             <li class="dropdown">
-                <a href="#" class="nav-link "><i class="fas fa-th"></i>
-                <span>----</span></a>
+                <a href="{{ route('clientes.index') }}" class="nav-link "><i class="fas fa-th"></i>
+                <span>Clientes</span></a>
                 
             </li>
             
