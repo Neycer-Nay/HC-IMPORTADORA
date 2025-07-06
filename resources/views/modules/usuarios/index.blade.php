@@ -18,8 +18,18 @@
                             <div class="card-header">
                                 <h4>Lista de Usuarios</h4>
                             </div>
+
                             <div class="card-body">
                                 <div class="table-responsive">
+                                    <form method="GET" action="{{ route('usuarios.index') }}" class="form-inline mb-3">
+                                        <input type="text" name="buscar" class="form-control mr-2"
+                                            placeholder="Buscar por nombre" value="{{ request('buscar') }}">
+                                        <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i>
+                                            Buscar</button>
+                                        @if(request('buscar'))
+                                            <a href="{{ route('usuarios.index') }}" class="btn btn-secondary ml-2">Limpiar</a>
+                                        @endif
+                                    </form>
                                     <table class="table table-striped" id="table-1">
                                         <thead>
                                             <tr>
@@ -51,6 +61,9 @@
                                             @endforeach
                                         </tbody>
                                     </table>
+                                    <div class="d-flex justify-content-center">
+                                        {{ $users->links('pagination::bootstrap-4') }}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -131,51 +144,64 @@
 
 @section('scripts')
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Mostrar alertas de sesión (éxito/error)
-        @if(session('swal'))
-        Swal.fire({
-            icon: '{{ session('swal')['icon'] }}',
-            title: '{{ session('swal')['title'] }}',
-            text: '{{ session('swal')['text'] }}',
-            confirmButtonColor: '#3085d6',
-            timer: 3000,
-            timerProgressBar: true,
-            showConfirmButton: true
-        });
-        @endif
-
-        // Confirmación para eliminar usuarios
-        document.querySelectorAll('.delete-btn').forEach(button => {
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-                const form = this.closest('form');
-                const userName = this.getAttribute('data-name');
-                
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Mostrar alertas de sesión (éxito/error)
+            @if(session('swal'))
                 Swal.fire({
-                    title: '¿Estás seguro?',
-                    text: `Vas a eliminar a ${userName}. Esta acción no se puede deshacer.`,
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#3085d6',
-                    confirmButtonText: 'Sí, eliminar',
-                    cancelButtonText: 'Cancelar',
-                    reverseButtons: true
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        form.submit();
-                    }
+                    icon: '{{ session('swal')['icon'] }}',
+                    title: '{{ session('swal')['title'] }}',
+                    text: '{{ session('swal')['text'] }}',
+                    confirmButtonColor: '#3085d6',
+                    timer: 3000,
+                    timerProgressBar: true,
+                    showConfirmButton: true
+                });
+            @endif
+
+            // Confirmación para eliminar usuarios
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const form = this.closest('form');
+                    const userName = this.getAttribute('data-name');
+
+                    Swal.fire({
+                        title: '¿Estás seguro?',
+                        text: `Vas a eliminar a ${userName}. Esta acción no se puede deshacer.`,
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Sí, eliminar',
+                        cancelButtonText: 'Cancelar',
+                        reverseButtons: true
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
                 });
             });
-        });
 
-        // Abrir modal si hay errores
-        @if($errors->any())
-            $('#usuarioModal').modal('show');
-            $('.is-invalid').first().focus();
-        @endif
-    });
-</script>
+            // Abrir modal si hay errores
+            @if($errors->any())
+                $('#usuarioModal').modal('show');
+                $('.is-invalid').first().focus();
+            @endif
+        });
+    </script>
+
+    @if($users->isEmpty() && request('buscar'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Sin resultados',
+                text: 'No se encontraron usuarios que coincidan con la búsqueda.',
+                confirmButtonText: 'OK'
+            });
+        });
+    </script>
+@endif
 @endsection

@@ -18,26 +18,24 @@
         <form method="POST" action="{{ route('logear') }}"s class="needs-validation" novalidate="">
         @csrf
           <div class="form-group">
-          <label for="email">Email</label>
-          <input id="email" type="email" class="form-control" name="email" tabindex="1" required autofocus>
+          <label for="email">Correo</label>
+          <input id="email" type="email" class="form-control" name="email" tabindex="1" placeholder="Por favor coloque su correo" required autofocus>
           <div class="invalid-feedback">
             Porfavor coloca tu email
           </div>
           </div>
           <div class="form-group">
           <div class="d-block">
-            <label for="password" class="control-label">Password</label>
-            <div class="float-right">
-            </div>
+            <label for="password" class="control-label">Contraseña
           </div>
-          <input id="password" type="password" class="form-control" name="password" tabindex="2" required>
+          <input id="password" type="password" class="form-control" name="password" tabindex="2" placeholder="Por favor coloque su contraseña" required>
           <div class="invalid-feedback">
             Por favor coloca tu contraseña
           </div>
           </div>
           <div class="form-group">
           <button type="submit" class="btn btn-primary btn-lg btn-block" tabindex="4">
-            Login
+            Ingresar
           </button>
           </div>
         </form>
@@ -55,7 +53,7 @@
         </div>
       </div>
       <div class="simple-footer">
-        Copyright &copy; Ing Neycer Nay 2025
+        Copyright &copy; Design By Software Production
       </div>
       </div>
     </div>
