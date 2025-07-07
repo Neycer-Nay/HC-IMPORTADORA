@@ -34,9 +34,9 @@
                                                 <th>Tipo</th>
                                                 <th>N° Documento</th>
                                                 <th>telefonos</th>
-                                                
                                                 <th>Correo</th>
                                                 <th>Direcion</th>
+                                                <th>Acciones</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -50,6 +50,12 @@
                                                     {{ $cliente->telefono_3}} </td>
                                                     <td>{{ $cliente->email}} </td>
                                                     <td>{{ $cliente->ciudad }}-{{ $cliente->direccion}} </td>
+                                                    <td> <a href="{{ route('clientes.show', $cliente->id) }}"
+                                                            class="btn btn-info btn-sm" title="Ver">
+                                                            <i class="fas fa-eye"></i>
+                                                        </a>
+                                                        
+                                                    </td>
                                                 </tr>
                                             @endforeach
                                         </tbody>

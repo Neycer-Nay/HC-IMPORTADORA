@@ -191,7 +191,7 @@
     if (input.files && input.files.length > 8) {
         Swal.fire({
             icon: 'error',
-            title: 'Error',
+            title: 'Error cantidad de fotos superada',
             text: 'No puedes seleccionar más de 8 fotos. Por favor, selecciona hasta 8 archivos.',
             confirmButtonText: 'Entendido'
         });
@@ -214,7 +214,7 @@
         if (hasInvalidSize) {
             Swal.fire({
                 icon: 'error',
-                title: 'Error',
+                title: 'Error tamaño superado',
                 text: `Una o más fotos superan el tamaño máximo de ${MAX_SIZE_MB}MB. Por favor, selecciona archivos más pequeños.`,
                 confirmButtonText: 'Entendido'
             });

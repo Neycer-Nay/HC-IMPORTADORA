@@ -49,7 +49,7 @@
                                                 <tr>
                                                     <td>{{ $recepcion->id }}</td>
                                                     <td>{{ $recepcion->numero_recepcion }}</td>
-                                                    <td>{{ $recepcion->fecha_ingreso->format('d/m/Y') }}</td>
+                                                    <td>{{ $recepcion->fecha_ingreso->format('d/m/Y') }}-{{ \Carbon\Carbon::parse($recepcion->hora_ingreso) ->format('H:i') }}</td>
                                                     <td>{{ $recepcion->cliente->nombre ?? 'N/A' }}</td>
                                                     <td>{{ $recepcion->usuario->nombre ?? 'N/A' }}</td>
                                                     <td>
