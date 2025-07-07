@@ -63,7 +63,12 @@ class ClienteController extends Controller
 
     public function show(Cliente $cliente)
     {
-        
+         // Carga equipos con fotos y recepciones relacionadas
+    $cliente->load([
+        'equipos.fotos',
+        'recepciones'
+    ]);
+    return view('modules.clientes.VerClienteEquipo', compact('cliente'));
         
     }
 
