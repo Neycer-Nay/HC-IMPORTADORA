@@ -4,72 +4,74 @@
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>Usuarios</h1>
+                <h1 style="color:#151414" >Usuarios</h1>
                 <div class="section-header-breadcrumb">
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#usuarioModal">
                         <i class="fas fa-plus"></i> Nuevo Usuario
                     </button>
                 </div>
             </div>
-            <div class="section-body">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4>Lista de Usuarios</h4>
-                            </div>
-
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <form method="GET" action="{{ route('usuarios.index') }}" class="form-inline mb-3">
-                                        <input type="text" name="buscar" class="form-control mr-2"
-                                            placeholder="Buscar por nombre" value="{{ request('buscar') }}">
-                                        <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i>
-                                            Buscar</button>
-                                        @if(request('buscar'))
-                                            <a href="{{ route('usuarios.index') }}" class="btn btn-secondary ml-2">Limpiar</a>
-                                        @endif
+            <!-- Tabla para pantallas medianas y grandes -->
+            <div class="d-none d-md-block">
+                <table class="table table-striped" id="table-1">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Email</th>
+                            <th>Rol</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($users as $user)
+                            <tr>
+                                <td>{{ $user->nombre }}</td>
+                                <td>{{ $user->email }}</td>
+                                <td>{{ $user->rol }}</td>
+                                <td>
+                                    <a href="{{ route('usuarios.edit', $user->id) }}" class="btn btn-warning btn-sm"
+                                        title="Editar"><i class="fas fa-edit"></i></a>
+                                    <form action="{{ route('usuarios.destroy', $user->id) }}" method="POST"
+                                        style="display:inline-block;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm delete-btn"
+                                            data-name="{{ $user->nombre ?? 'usuario' }}"><i class="fas fa-trash"></i></button>
                                     </form>
-                                    <table class="table table-striped" id="table-1">
-                                        <thead>
-                                            <tr>
-                                                <th>Nombre</th>
-                                                <th>Email</th>
-                                                <th>Rol</th>
-                                                <th>Acciones</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach($users as $user)
-                                                <tr>
-                                                    <td>{{ $user->nombre }}</td>
-                                                    <td>{{ $user->email }}</td>
-                                                    <td>{{ $user->rol}} </td>
-                                                    <td> <a href="{{ route('usuarios.edit', $user->id) }}"
-                                                            class="btn btn-warning btn-sm" title="Editar"><i
-                                                                class="fas fa-edit"></i></a>
-                                                        <form action="{{ route('usuarios.destroy', $user->id) }}" method="POST"
-                                                            style="display:inline-block;">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="btn btn-danger btn-sm delete-btn"
-                                                                data-name="{{ $user->nombre ?? 'usuario' }}"><i
-                                                                    class="fas fa-trash"></i></button>
-                                                        </form>
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                    <div class="d-flex justify-content-center">
-                                        {{ $users->links('pagination::bootstrap-4') }}
-                                    </div>
-                                </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Tarjetas para pantallas pequeñas -->
+            <div class="d-block d-md-none">
+                @foreach($users as $user)
+                    <div class="card mb-2">
+                        <div class="card-body p-2">
+                            <h5 class="card-title mb-1">{{ $user->nombre }}</h5>
+                            <p class="mb-1"><strong>Email:</strong> {{ $user->email }}</p>
+                            <p class="mb-1"><strong>Rol:</strong> {{ $user->rol }}</p>
+                            <div>
+                                <a href="{{ route('usuarios.edit', $user->id) }}" class="btn btn-warning btn-sm"
+                                    title="Editar"><i class="fas fa-edit"></i></a>
+                                <form action="{{ route('usuarios.destroy', $user->id) }}" method="POST"
+                                    style="display:inline-block;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm delete-btn"
+                                        data-name="{{ $user->nombre ?? 'usuario' }}"><i class="fas fa-trash"></i></button>
+                                </form>
                             </div>
                         </div>
                     </div>
-                </div>
+                @endforeach
             </div>
+            <div class="d-flex justify-content-center">
+                {{ $users->links('pagination::bootstrap-4') }}
+            </div>
+
         </section>
     </div>
 
@@ -189,19 +191,19 @@
                 $('#usuarioModal').modal('show');
                 $('.is-invalid').first().focus();
             @endif
-        });
+                });
     </script>
 
     @if($users->isEmpty() && request('buscar'))
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Sin resultados',
-                text: 'No se encontraron usuarios que coincidan con la búsqueda.',
-                confirmButtonText: 'OK'
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Sin resultados',
+                    text: 'No se encontraron usuarios que coincidan con la búsqueda.',
+                    confirmButtonText: 'OK'
+                });
             });
-        });
-    </script>
-@endif
+        </script>
+    @endif
 @endsection

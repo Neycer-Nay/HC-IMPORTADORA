@@ -33,7 +33,7 @@
             
             <li class="dropdown">
                 <a href="#" class="nav-link "><i class="fas fa-th-large"></i>
-                    <span>Components</span></a>
+                    <span>Crear cotización</span></a>
                 
             </li>
             <li class="dropdown">
