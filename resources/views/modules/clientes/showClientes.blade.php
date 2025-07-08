@@ -4,9 +4,8 @@
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>Clientes</h1>
+                <h1 style="color:#151414" >Clientes</h1>
                 <div class="section-header-breadcrumb">
-                    
                 </div>
             </div>
             <div class="section-body">
@@ -27,41 +26,72 @@
                                             <a href="{{ route('usuarios.index') }}" class="btn btn-secondary ml-2">Limpiar</a>
                                         @endif
                                     </form>
-                                    <table class="table table-striped" id="table-1">
-                                        <thead>
-                                            <tr>
-                                                <th>Nombre</th>
-                                                <th>Tipo</th>
-                                                <th>N° Documento</th>
-                                                <th>telefonos</th>
-                                                <th>Correo</th>
-                                                <th>Direcion</th>
-                                                <th>Acciones</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach($clientes as $cliente)
+                                    <!-- Tabla para pantallas medianas y grandes -->
+                                    <div class="d-none d-md-block">
+                                        <table class="table table-striped" id="table-1">
+                                            <thead>
                                                 <tr>
-                                                    <td>{{ $cliente->nombre }}</td>
-                                                    <td>{{ $cliente->tipo }}</td>
-                                                    <td>{{ $cliente->tipo_documento}}-{{ $cliente->numero_documento }} </td>
-                                                    <td>{{ $cliente->telefono_1}}-
-                                                    {{ $cliente->telefono_2}}- 
-                                                    {{ $cliente->telefono_3}} </td>
-                                                    <td>{{ $cliente->email}} </td>
-                                                    <td>{{ $cliente->ciudad }}-{{ $cliente->direccion}} </td>
-                                                    <td> <a href="{{ route('clientes.show', $cliente->id) }}"
+                                                    <th>Nombre</th>
+                                                    <th>Tipo</th>
+                                                    <th>N° Documento</th>
+                                                    <th>Teléfonos</th>
+                                                    <th>Correo</th>
+                                                    <th>Dirección</th>
+                                                    <th>Acciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach($clientes as $cliente)
+                                                    <tr>
+                                                        <td>{{ $cliente->nombre }}</td>
+                                                        <td>{{ $cliente->tipo }}</td>
+                                                        <td>{{ $cliente->tipo_documento}}-{{ $cliente->numero_documento }}</td>
+                                                        <td>{{ $cliente->telefono_1 }}{{ $cliente->telefono_2 ? ' - ' . $cliente->telefono_2 : '' }}{{ $cliente->telefono_3 ? ' - ' . $cliente->telefono_3 : '' }}
+                                                        </td>
+                                                        <td>{{ $cliente->email }}</td>
+                                                        <td>{{ $cliente->ciudad }}-{{ $cliente->direccion }}</td>
+                                                        <td>
+                                                            <a href="{{ route('clientes.show', $cliente->id) }}"
+                                                                class="btn btn-info btn-sm" title="Ver">
+                                                                <i class="fas fa-eye"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                        <div class="d-flex justify-content-center">
+                                            {{ $clientes->links('pagination::bootstrap-4') }}
+                                        </div>
+                                    </div>
+
+                                    <!-- Tarjetas para pantallas pequeñas -->
+                                    <div class="d-block d-md-none">
+                                        @foreach($clientes as $cliente)
+                                            <div class="card mb-2">
+                                                <div class="card-body p-2">
+                                                    <h5 class="card-title mb-1">{{ $cliente->nombre }}</h5>
+                                                    <p class="mb-1"><strong>Tipo:</strong> {{ $cliente->tipo }}</p>
+                                                    <p class="mb-1"><strong>N° Documento:</strong>
+                                                        {{ $cliente->tipo_documento}}-{{ $cliente->numero_documento }}</p>
+                                                    <p class="mb-1"><strong>Teléfonos:</strong>
+                                                        {{ $cliente->telefono_1 }}{{ $cliente->telefono_2 ? ' - ' . $cliente->telefono_2 : '' }}{{ $cliente->telefono_3 ? ' - ' . $cliente->telefono_3 : '' }}
+                                                    </p>
+                                                    <p class="mb-1"><strong>Correo:</strong> {{ $cliente->email }}</p>
+                                                    <p class="mb-1"><strong>Dirección:</strong>
+                                                        {{ $cliente->ciudad }}-{{ $cliente->direccion }}</p>
+                                                    <div>
+                                                        <a href="{{ route('clientes.show', $cliente->id) }}"
                                                             class="btn btn-info btn-sm" title="Ver">
                                                             <i class="fas fa-eye"></i>
                                                         </a>
-                                                        
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                    <div class="d-flex justify-content-center">
-                                        {{ $clientes->links('pagination::bootstrap-4') }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                        <div class="d-flex justify-content-center">
+                                            {{ $clientes->links('pagination::bootstrap-4') }}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -70,23 +100,20 @@
                 </div>
             </div>
         </section>
-    </div>  
+    </div>
 @endsection
 @section('scripts')
     @if($clientes->isEmpty() && request('buscar'))
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Sin resultados',
-                text: 'No se encontraron clientes que coincidan con la búsqueda.',
-                confirmButtonText: 'OK'
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Sin resultados',
+                    text: 'No se encontraron clientes que coincidan con la búsqueda.',
+                    confirmButtonText: 'OK'
+                });
             });
-        });
-    </script>
-@endif
+        </script>
+    @endif
 
 @endsection
-
-
-

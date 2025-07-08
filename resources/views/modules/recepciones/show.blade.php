@@ -20,7 +20,7 @@
                     <!-- Card principal con información de recepción -->
                     <div class="card card-primary">
                         <div class="card-header">
-                            <h4>Recepción #{{ $recepcion->numero_recepcion }}</h4>
+                            <h4> N° de recepción: {{ $recepcion->numero_recepcion }}</h4>
                             <div class="card-header-action">
                                 <span class="badge badge-{{ 
                                     $recepcion->estado == 'RECIBIDO' ? 'primary' :
