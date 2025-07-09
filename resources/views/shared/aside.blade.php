@@ -8,17 +8,17 @@
         </div>
         <ul class="sidebar-menu">
             
-            <li class="dropdown active">
-                <a href="{{ route("dashboard.index") }}" class="nav-link "><i class="fas fa-fire"></i><span>Dashboard</span></a>
+            <li class="dropdown ">
+                <a href="{{ route("dashboard.index") }}" class="nav-link "><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
                 
             </li>
             
             <li class="dropdown">
-                <a href="{{ route('recepciones.index') }}" class="nav-link "><i class="fas fa-columns"></i>
+                <a href="{{ route('recepciones.index') }}" class="nav-link "><i class="fas fa-cogs"></i>
                     <span>Equipos recepcionados</span></a>
                 
             </li>
-            <li><a class="nav-link" href="{{ route('recepciones.create') }}"><i class="far fa-square"></i> <span>
+            <li><a class="nav-link" href="{{ route('recepciones.create') }}"><i class="fas fa-file-signature"></i> <span>
                 Crear nueva recepción
             </span></a></li>
             <li class="dropdown">
@@ -26,13 +26,13 @@
                 
             </li>
             <li class="dropdown">
-                <a href="{{ route('clientes.index') }}" class="nav-link "><i class="fas fa-th"></i>
+                <a href="{{ route('clientes.index') }}" class="nav-link "><i class="fas fa-users"></i>
                 <span>Clientes</span></a>
                 
             </li>
             
             <li class="dropdown">
-                <a href="#" class="nav-link "><i class="fas fa-th-large"></i>
+                <a href="{{ route('cotizaciones.index') }}" class="nav-link "><i class="fas fa-file-invoice"></i>
                     <span>Crear cotización</span></a>
                 
             </li>

@@ -39,9 +39,9 @@
                                     <div class="card-body">
                                         <h5 class="card-title mb-1">{{ $equipo->nombre }}</h5>
                                         <p class="mb-1">
-    <strong>N° Recepción:</strong>
-    {{ $equipo->recepcion->numero_recepcion ?? 'Sin recepción asociada' }}
-</p>
+                                            <strong>N° Recepción:</strong>
+                                            {{ $equipo->recepcion->numero_recepcion ?? 'Sin recepción asociada' }}
+                                        </p>
                                         <p class="mb-1"><strong>Fecha:</strong> {{ $equipo->created_at->format('d/m/Y') }}</p>
                                         <p class="mb-1"><strong>Tipo:</strong> {{ $equipo->tipo }}</p>
                                         <p class="mb-1"><strong>Marca:</strong> {{ $equipo->marca }}</p>
@@ -85,7 +85,7 @@
                                         <h5 class="card-title mb-1">N° Recepción: {{ $recepcion->numero_recepcion }}</h5>
                                         <p class="mb-1"><strong>Fecha y hora:</strong>
                                             {{ \Carbon\Carbon::parse($recepcion->fecha_ingreso)->format('d/m/Y') }} -
-                                            {{ $recepcion->hora_ingreso }}
+                                            {{ \Carbon\Carbon::parse($recepcion->hora_ingreso)->format('H:i') }}</p>
                                         </p>
                                         <p class="mb-1"><strong>Estado:</strong>
                                             <span

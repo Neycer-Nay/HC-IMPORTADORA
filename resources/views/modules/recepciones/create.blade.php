@@ -293,7 +293,7 @@
 
 @section('scripts')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+    
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const selectCliente = document.getElementById('cliente_id');
