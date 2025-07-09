@@ -69,6 +69,8 @@ Route::prefix('cotizaciones')->middleware('auth')->group(function () {
     Route::get('/create', [\App\Http\Controllers\CotizacionController::class, 'create'])->name('cotizaciones.create');
     Route::post('/', [\App\Http\Controllers\CotizacionController::class, 'store'])->name('cotizaciones.store');
     Route::get('/{id}/edit', [\App\Http\Controllers\CotizacionController::class, 'edit'])->name('cotizaciones.edit');
-    // Aquí puedes agregar más rutas según sea necesario
+    Route::put('/{id}', [\App\Http\Controllers\CotizacionController::class, 'update'])->name('cotizaciones.update');
+    Route::get('/{id}/pdf', [\App\Http\Controllers\CotizacionController::class, 'generarPdf'])->name('cotizaciones.pdf');
+    
 });
 

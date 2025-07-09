@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Recepcion;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class CotizacionController extends Controller
 {
     public function index(Request $request)
-    {   
+    {
         $query = Recepcion::with(['cliente', 'usuario'])->orderBy('created_at', 'desc');
         if ($request->filled('buscar')) {
             $busqueda = $request->buscar;
@@ -44,6 +45,25 @@ class CotizacionController extends Controller
     {
         $recepcion = Recepcion::with('cliente')->findOrFail($id);
         // Aquí puedes retornar la vista de edición de cotización
-        return view('modules.cotizaciones.edit', compact('recepcion'));
+        return view('modules.cotizaciones.editCoti', compact('recepcion'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $recepcion = Recepcion::findOrFail($id);
+        // Valida y actualiza los campos necesarios
+        $recepcion->update($request->all());
+        return redirect()->route('cotizaciones.index')->with('swal', [
+            'icon' => 'success',
+            'title' => 'Actualizado',
+            'text' => 'La información de la recepción fue actualizada correctamente.'
+        ]);
+    }
+
+    public function generarPdf($id)
+    {
+        $recepcion = Recepcion::with('cliente')->findOrFail($id);
+        $pdf = Pdf::loadView('modules.cotizaciones.Generarpdf', compact('recepcion'));
+        return $pdf->download('cotizacion_' . $recepcion->numero_recepcion . '.pdf');
     }
 }
