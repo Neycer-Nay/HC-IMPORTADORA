@@ -17,13 +17,14 @@
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
+                                    <label style="color:#151414; font-size: 17px;" for="">Buscar clientes por su nombre o telefonos</label>
                                     <form method="GET" action="{{ route('clientes.index') }}" class="form-inline mb-3">
                                         <input type="text" name="buscar" class="form-control mr-2"
-                                            placeholder="Buscar por nombre" value="{{ request('buscar') }}">
+                                            placeholder="Buscar por nombre o telefonos" value="{{ request('buscar') }}">
                                         <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i>
                                             Buscar</button>
                                         @if(request('buscar'))
-                                            <a href="{{ route('usuarios.index') }}" class="btn btn-secondary ml-2">Limpiar</a>
+                                            <a href="{{ route('clientes.index') }}" class="btn btn-secondary ml-2">Limpiar</a>
                                         @endif
                                     </form>
                                     <!-- Tabla para pantallas medianas y grandes -->

@@ -11,10 +11,16 @@ class ClienteController extends Controller
     {
         $query = Cliente::orderBy('id', 'desc');
 
-        // Si hay búsqueda, filtra por nombre
-        if ($request->filled('buscar')) {
-            $query->where('nombre', 'like', '%' . $request->buscar . '%');
-        }
+        // Si hay búsqueda, filtra por nombre o teléfonos
+    if ($request->filled('buscar')) {
+        $busqueda = $request->buscar;
+        $query->where(function($q) use ($busqueda) {
+            $q->where('nombre', 'like', '%' . $busqueda . '%')
+              ->orWhere('telefono_1', 'like', '%' . $busqueda . '%')
+              ->orWhere('telefono_2', 'like', '%' . $busqueda . '%')
+              ->orWhere('telefono_3', 'like', '%' . $busqueda . '%');
+        });
+    }
 
         // Mantén el término de búsqueda en la paginación
         $clientes = $query->paginate(10)->appends($request->only('buscar'));

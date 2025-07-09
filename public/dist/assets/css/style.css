@@ -2389,10 +2389,10 @@ body.sidebar-mini .main-sidebar {
         font-size: 10px; }
       body.sidebar-mini .main-sidebar .sidebar-menu > li > a.has-dropdown:after {
         content: initial; }
-    body.sidebar-mini .main-sidebar .sidebar-menu > li.active > a {
+    /*body.sidebar-mini .main-sidebar .sidebar-menu > li.active > a {
       box-shadow: 0 4px 8px #acb5f6;
       background-color: #6777ef;
-      color: #fff; }
+      color: #fff; }*/
     body.sidebar-mini .main-sidebar .sidebar-menu > li ul.dropdown-menu {
       position: absolute;
       background-color: #fff;
@@ -2635,11 +2635,11 @@ body.layout-3 .main-footer {
         margin-top: 3px;
         width: 100%; }
       .main-sidebar .sidebar-menu li a:hover {
-        background-color: #fcfcfd; }
-    .main-sidebar .sidebar-menu li.active a {
+        background-color: #6777ef; }
+    /*.main-sidebar .sidebar-menu li.active a {
       color: #6777ef;
       font-weight: 600;
-      background-color: #fcfcfd; }
+      background-color: #fcfcfd; }*/
     .main-sidebar .sidebar-menu li.active ul.dropdown-menu {
       background-color: #fcfcfd; }
     .main-sidebar .sidebar-menu li a.has-dropdown:after {

@@ -64,3 +64,11 @@ Route::prefix('usuarios')->middleware('auth')->group(function () {
     Route::delete('/{usuario}', [\App\Http\Controllers\UsuariosController::class, 'destroy'])->name('usuarios.destroy');
 });
 
+Route::prefix('cotizaciones')->middleware('auth')->group(function () {
+    Route::get('/', [\App\Http\Controllers\CotizacionController::class, 'index'])->name('cotizaciones.index');
+    Route::get('/create', [\App\Http\Controllers\CotizacionController::class, 'create'])->name('cotizaciones.create');
+    Route::post('/', [\App\Http\Controllers\CotizacionController::class, 'store'])->name('cotizaciones.store');
+    Route::get('/{id}/edit', [\App\Http\Controllers\CotizacionController::class, 'edit'])->name('cotizaciones.edit');
+    // Aquí puedes agregar más rutas según sea necesario
+});
+

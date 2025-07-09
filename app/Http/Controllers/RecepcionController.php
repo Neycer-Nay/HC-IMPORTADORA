@@ -22,18 +22,18 @@ class RecepcionController extends Controller
     {
         $query = Recepcion::with(['cliente', 'usuario'])->orderBy('created_at', 'desc');
 
-         if ($request->filled('buscar')) {
-        $busqueda = $request->buscar;
-        $query->where(function($q) use ($busqueda) {
-            $q->where('numero_recepcion', 'like', "%$busqueda%")
-              ->orWhereHas('cliente', function($qc) use ($busqueda) {
-                  $qc->where('nombre', 'like', "%$busqueda%");
-              })
-              ->orWhereHas('usuario', function($qu) use ($busqueda) {
-                  $qu->where('nombre', 'like', "%$busqueda%");
-              });
-        });
-    }
+        if ($request->filled('buscar')) {
+            $busqueda = $request->buscar;
+            $query->where(function ($q) use ($busqueda) {
+                $q->where('numero_recepcion', 'like', "%$busqueda%")
+                    ->orWhereHas('cliente', function ($qc) use ($busqueda) {
+                        $qc->where('nombre', 'like', "%$busqueda%");
+                    })
+                    ->orWhereHas('usuario', function ($qu) use ($busqueda) {
+                        $qu->where('nombre', 'like', "%$busqueda%");
+                    });
+            });
+        }
 
         $recepciones = $query->paginate(10)->appends($request->only('buscar', 'cliente', 'usuario'));
 
