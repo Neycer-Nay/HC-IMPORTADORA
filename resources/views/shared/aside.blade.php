@@ -33,40 +33,9 @@
             
             <li class="dropdown">
                 <a href="{{ route('cotizaciones.index') }}" class="nav-link "><i class="fas fa-file-invoice"></i>
-                    <span>Crear cotización</span></a>
+                    <span>Cotizaciónes</span></a>
                 
-            </li>
-            <li class="dropdown">
-                <a href="#" class="nav-link "><i class="far fa-file-alt"></i>
-                    <span>Forms</span></a>
-                
-            </li>
-            <li class="dropdown">
-                <a href="#" class="nav-link "><i class="fas fa-map-marker-alt"></i> <span>Google
-                        Maps</span></a>
-                
-            </li>
-            <li class="dropdown">
-                <a href="#" class="nav-link "><i class="fas fa-plug"></i>
-                    <span>Modules</span></a>
-                
-            </li>
-            
-            <li class="dropdown">
-                <a href="#" class="nav-link "><i class="fas fa-exclamation"></i>
-                    <span>Errors</span></a>
-                
-            </li>
-            <li class="dropdown">
-                <a href="#" class="nav-link "><i class="fas fa-bicycle"></i>
-                    <span>Features</span></a>
-                
-            </li>
-            <li class="dropdown">
-                <a href="#" class="nav-link "><i class="fas fa-ellipsis-h"></i>
-                    <span>Utilities</span></a>
-                
-            </li>
+           
             
         </ul>
 

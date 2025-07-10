@@ -69,6 +69,10 @@
                                                                 class="btn btn-primary btn-sm" title="Editar">
                                                                 <i class="fas fa-edit"></i>
                                                             </a>
+                                                            <a href="{{ route('cotizaciones.edit', $recepcion->id) }}"
+                                                                class="btn btn-primary btn-sm" title="Editar">
+                                                                <i class="fas fa-edit"></i> Cotizar
+                                                            </a>
                                                             <form action="{{ route('recepciones.destroy', $recepcion->id) }}"
                                                                 method="POST" style="display: inline-block;">
                                                                 @csrf
@@ -118,6 +122,10 @@
                                                             class="btn btn-primary btn-sm" title="Editar">
                                                             <i class="fas fa-edit"></i>
                                                         </a>
+                                                        <a href="{{ route('cotizaciones.edit', $recepcion->id) }}"
+                                                                class="btn btn-primary btn-sm" title="Editar">
+                                                                <i class="fas fa-edit"></i> Cotizar
+                                                            </a>
                                                         <form action="{{ route('recepciones.destroy', $recepcion->id) }}"
                                                             method="POST" style="display: inline-block;">
                                                             @csrf
