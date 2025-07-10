@@ -12,24 +12,27 @@ class CotizacionController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Recepcion::with(['cliente', 'usuario'])->orderBy('created_at', 'desc');
-        if ($request->filled('buscar')) {
-            $busqueda = $request->buscar;
-            $query->where(function ($q) use ($busqueda) {
-                $q->where('numero_recepcion', 'like', "%$busqueda%")
-                    ->orWhereHas('cliente', function ($qc) use ($busqueda) {
-                        $qc->where('nombre', 'like', "%$busqueda%");
-                    })
-                    ->orWhereHas('usuario', function ($qu) use ($busqueda) {
-                        $qu->where('nombre', 'like', "%$busqueda%");
-                    });
-            });
-        }
-        $recepciones = $query->paginate(10)->appends($request->only('buscar', 'cliente', 'usuario'));
+        $query = Cotizacion::with(['recepcion.cliente', 'recepcion.usuario'])
+                ->orderBy('created_at', 'desc');
 
-        return view('modules.cotizaciones.indexCoti', [
-            'recepciones' => $recepciones
-        ]);
+    if ($request->filled('buscar')) {
+        $busqueda = $request->buscar;
+        $query->where(function ($q) use ($busqueda) {
+            $q->where('id', 'like', "%$busqueda%")
+                ->orWhereHas('recepcion', function ($qr) use ($busqueda) {
+                    $qr->where('numero_recepcion', 'like', "%$busqueda%")
+                       ->orWhereHas('cliente', function ($qc) use ($busqueda) {
+                           $qc->where('nombre', 'like', "%$busqueda%");
+                       });
+                });
+        });
+    }
+
+    $cotizaciones = $query->paginate(10)->appends($request->only('buscar'));
+
+    return view('modules.cotizaciones.indexCoti', [
+        'cotizaciones' => $cotizaciones
+    ]);
     }
 
     public function create()
