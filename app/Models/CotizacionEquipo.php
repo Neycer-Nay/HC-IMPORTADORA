@@ -27,7 +27,7 @@ class CotizacionEquipo extends Model
         return $this->belongsTo(Equipo::class);
     }
 
-public function repuestos()
+    public function repuestos()
     {
         return $this->hasMany(CotizacionRepuesto::class, 'cotizacion_equipo_id');
     }
@@ -35,11 +35,9 @@ public function repuestos()
 
     public function fotos()
     {
-        return $this->belongsToMany(FotoEquipo::class, 'cotizacion_equipo_fotos', 'cotizacion_equipo_id', 'foto_equipo_id');
+        return $this->belongsToMany(FotoEquipo::class, 'cotizacion_equipo_fotos', 'cotizacion_equipo_id', 'fotos_equipos_id');
     }
+
     
-    
-    // Método para calcular el total de repuestos automáticamente
-    
-    
+
 }
