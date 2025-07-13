@@ -45,114 +45,100 @@ class CotizacionController extends Controller
     }
 
     public function store(Request $request, $id)
-{
-    // Validación de datos
-    $validatedData = $request->validate([
-        'equipos' => 'required|array',
-        'equipos.*.descripcion' => 'required|string|max:1000',
-        'equipos.*.valor_trabajo' => 'required|numeric|min:0',
-        'equipos.*.repuestos_detalle' => 'nullable|array',
-        'equipos.*.repuestos_detalle.*.nombre' => 'required|string|max:255',
-        'equipos.*.repuestos_detalle.*.cantidad' => 'required|integer|min:1',
-        'equipos.*.repuestos_detalle.*.precio' => 'required|numeric|min:0',
-        'equipos.*.fotos' => 'nullable|array',
-        'equipos.*.fotos.*' => 'integer|exists:fotos_equipos,id'
-    ]);
-
-    \Log::info('Request data:', $request->all());
-
-    return DB::transaction(function () use ($request, $id, $validatedData) {
-        // 1. Inicializa variables
-        $subtotal = 0;
-        $equiposData = $validatedData['equipos'];
-
-        // 2. Crea o actualiza la cotización principal
-        $cotizacion = Cotizacion::updateOrCreate(
-            ['recepcion_id' => $id],
-            [
-                'fecha' => now(),
-                'subtotal' => 0,
-                'descuento' => $request->input('descuento', 0),
-                'total' => 0
-            ]
-        );
-
-        // 3. Elimina datos anteriores de manera segura
-        if ($cotizacion->equipos()->exists()) {
-            $cotizacion->equipos()->each(function ($equipo) {
-                // Verifica si la relación existe antes de llamarla
-                if (method_exists($equipo, 'repuestos')) {
-                    $equipo->repuestos()->delete();
-                }
-                if (method_exists($equipo, 'fotos')) {
-                    $equipo->fotos()->detach();
-                }
-            });
-            $cotizacion->equipos()->delete();
-        }
-
-        // 4. Procesa cada equipo
-        foreach ($equiposData as $equipoId => $data) {
-            // Prepara datos
-            $repuestos = $data['repuestos_detalle'] ?? [];
-            $fotoIds = array_filter(array_map('intval', $data['fotos'] ?? []));
-            $totalRepuestos = 0;
-
-            // Crea el equipo en la cotización
-            $cotizacionEquipo = $cotizacion->equipos()->create([
-                'equipo_id' => $equipoId,
-                'trabajo_realizar' => $data['descripcion'],
-                'precio_trabajo' => $data['valor_trabajo'],
-                'total_repuestos' => 0
-            ]);
-
-            // Procesa repuestos
-            if (!empty($repuestos)) {
-                $repuestosData = [];
-                foreach ($repuestos as $rep) {
-                    $subtotal = $rep['cantidad'] * $rep['precio'];
-                    $totalRepuestos += $subtotal;
-                    
-                    $repuestosData[] = [
-                        'cotizacion_equipo_id' => $cotizacionEquipo->id,
-                        'nombre' => $rep['nombre'],
-                        'cantidad' => $rep['cantidad'],
-                        'precio_unitario' => $rep['precio'],
-                        'created_at' => now(),
-                        'updated_at' => now()
-                    ];
-                }
-
-                // Inserta todos los repuestos de una vez
-                CotizacionRepuesto::insert($repuestosData);
-                $cotizacionEquipo->total_repuestos = $totalRepuestos;
-                $cotizacionEquipo->save();
-            }
-
-            // Asocia fotos
-            if (!empty($fotoIds) && method_exists($cotizacionEquipo, 'fotos')) {
-                $cotizacionEquipo->fotos()->sync($fotoIds);
-            }
-
-            // Suma al subtotal
-            $subtotal += $data['valor_trabajo'] + $totalRepuestos;
-        }
-
-        // 5. Actualiza totales de la cotización
-        $cotizacion->update([
-            'subtotal' => $subtotal,
-            'total' => $subtotal - $cotizacion->descuento
+    {
+        // Validación de datos
+        $validatedData = $request->validate([
+            'equipos' => 'required|array',
+            'equipos.*.equipo_id' => 'required|exists:equipos,id', // Asegurar que el equipo existe
+            'equipos.*.descripcion' => 'required|string|max:1000',
+            'equipos.*.valor_trabajo' => 'required|numeric|min:0',
+            'equipos.*.repuestos_detalle' => 'nullable|array',
+            'equipos.*.repuestos_detalle.*.nombre' => 'required|string|max:255',
+            'equipos.*.repuestos_detalle.*.cantidad' => 'required|integer|min:1',
+            'equipos.*.repuestos_detalle.*.precio' => 'required|numeric|min:0',
+            'equipos.*.fotos' => 'nullable|array',
+            'equipos.*.fotos.*' => 'integer|exists:fotos_equipos,id', // Corregido a fotos_equipos
+            'descuento' => 'nullable|numeric|min:0'
         ]);
 
-        return redirect()
-            ->route('cotizaciones.index')
-            ->with('swal', [
-                'icon' => 'success',
-                'title' => 'Cotización guardada',
-                'text' => 'La cotización fue guardada correctamente.'
+        return DB::transaction(function () use ($request, $id, $validatedData) {
+            // Crea o actualiza la cotización principal
+            $cotizacion = Cotizacion::updateOrCreate(
+                ['recepcion_id' => $id],
+                [
+                    'fecha' => now(),
+                    'subtotal' => 0,
+                    'descuento' => $validatedData['descuento'] ?? 0,
+                    'total' => 0
+                ]
+            );
+
+            // Elimina datos anteriores
+            $cotizacion->equipos()->each(function ($equipo) {
+                $equipo->repuestos()->delete();
+                $equipo->fotos()->detach();
+            });
+            $cotizacion->equipos()->delete();
+
+            $subtotalGeneral = 0;
+
+            // Procesa cada equipo
+            foreach ($validatedData['equipos'] as $equipoData) {
+                $totalRepuestos = 0;
+                $repuestosData = [];
+
+                // Procesa repuestos si existen
+                if (!empty($equipoData['repuestos_detalle'])) {
+                    foreach ($equipoData['repuestos_detalle'] as $repuesto) {
+                        $subtotalRepuesto = $repuesto['cantidad'] * $repuesto['precio'];
+                        $totalRepuestos += $subtotalRepuesto;
+
+                        $repuestosData[] = new CotizacionRepuesto([
+                            'nombre' => $repuesto['nombre'],
+                            'cantidad' => $repuesto['cantidad'],
+                            'precio_unitario' => $repuesto['precio']
+                        ]);
+                    }
+                }
+
+                // Crea el equipo en la cotización
+                $cotizacionEquipo = $cotizacion->equipos()->create([
+                    'equipo_id' => $equipoData['equipo_id'],
+                    'trabajo_realizar' => $equipoData['descripcion'],
+                    'precio_trabajo' => $equipoData['valor_trabajo'],
+                    'total_repuestos' => $totalRepuestos
+                ]);
+
+                // Asocia repuestos
+                if (!empty($repuestosData)) {
+                    $cotizacionEquipo->repuestos()->saveMany($repuestosData);
+                }
+
+                // Asocia fotos si existen
+                if (!empty($equipoData['fotos'])) {
+                    $cotizacionEquipo->fotos()->sync($equipoData['fotos']);
+                }
+
+                // Suma al subtotal general
+                $subtotalGeneral += $equipoData['valor_trabajo'] + $totalRepuestos;
+            }
+
+            // Actualiza totales de la cotización
+            $cotizacion->update([
+                'subtotal' => $subtotalGeneral,
+                'total' => $subtotalGeneral - $cotizacion->descuento
             ]);
-    });
-}    public function edit($id)
+
+            return redirect()
+                ->route('cotizaciones.index')
+                ->with('swal', [
+                    'icon' => 'success',
+                    'title' => 'Cotización guardada',
+                    'text' => 'La cotización fue guardada correctamente.'
+                ]);
+        });
+    }
+    public function edit($id)
     {
         $recepcion = Recepcion::with(['cliente', 'equipos'])->findOrFail($id);
         // Aquí puedes retornar la vista de edición de cotización
@@ -173,10 +159,29 @@ class CotizacionController extends Controller
 
     public function show($id)
     {
-        $recepcion = Recepcion::with(['cliente', 'equipos'])->findOrFail($id);
+        // Obtener la recepción con relaciones básicas
+        $recepcion = Recepcion::with(['cliente', 'equipos.fotos'])->findOrFail($id);
 
-        // Aquí puedes retornar la vista de detalle de cotización
-        return view('modules.cotizaciones.showCot', compact('recepcion'));
+        // Obtener la cotización relacionada a esta recepción
+        $cotizacion = Cotizacion::with([
+            'equipos' => function ($query) {
+                $query->with(['repuestos', 'equipo', 'fotos']);
+            }
+        ])->where('recepcion_id', $id)->first();
+
+        if (!$cotizacion) {
+            return redirect()->route('cotizaciones.index')
+                ->with('swal', [
+                    'icon' => 'error',
+                    'title' => 'Error',
+                    'text' => 'No se encontró la cotización para esta recepción'
+                ]);
+        }
+
+        // Calcular totales si no están actualizados (opcional)
+        $cotizacion->recalcularTotales();
+
+        return view('modules.cotizaciones.showCot', compact('recepcion', 'cotizacion'));
     }
 
     public function generarPdf($id)

@@ -28,7 +28,6 @@ class FotoEquipo extends Model
     // Nueva relación con cotizaciones (muchos a muchos)
     public function cotizacionEquipos()
     {
-        return $this->belongsToMany(CotizacionEquipo::class, 'cotizacion_equipo_fotos')
-                    ->withTimestamps();
+        return $this->belongsToMany(CotizacionEquipo::class, 'cotizacion_equipo_fotos')->withTimestamps();
     }
 }

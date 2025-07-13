@@ -29,14 +29,23 @@ class Cotizacion extends Model
     public function recalcularTotales()
     {
         $subtotal = 0;
+    
+    foreach ($this->equipos as $equipo) {
+        // Calcular total de repuestos para este equipo
+        $totalRepuestos = $equipo->repuestos->sum(function($repuesto) {
+            return $repuesto->cantidad * $repuesto->precio_unitario;
+        });
         
-        foreach ($this->equipos as $equipo) {
-            $equipo->calcularTotalRepuestos();
-            $subtotal += $equipo->precio_trabajo + $equipo->total_repuestos;
-        }
+        $equipo->total_repuestos = $totalRepuestos;
+        $equipo->save();
         
-        $this->subtotal = $subtotal;
-        $this->total = $this->subtotal - $this->descuento;
-        $this->save();
+        $subtotal += $equipo->precio_trabajo + $totalRepuestos;
+    }
+    
+    $this->subtotal = $subtotal;
+    $this->total = $subtotal - $this->descuento;
+    $this->save();
+    
+    return $this;
     }
 }

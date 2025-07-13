@@ -50,4 +50,6 @@ class Equipo extends Model
     {
         return $this->hasMany(FotoEquipo::class, 'equipo_id');
     }
+
+    
 }
