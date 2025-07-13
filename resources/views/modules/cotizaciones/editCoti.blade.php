@@ -76,7 +76,7 @@
                                         <p class="mb-1"><strong>Potencia:</strong> {{ $equipo->potencia ?? 'N/A' }}</p>
                                         @endif
                                     </div>
-                                    <!-- Formulario de edición -->
+                                    
                                     <div class="col-md-6">
                                         <!-- Selección de fotos -->
                                         <div class="mb-2">

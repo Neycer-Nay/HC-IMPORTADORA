@@ -1,10 +1,12 @@
 <div class="main-sidebar sidebar-style-2">
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
-            <a href="{{ route("dashboard.index") }}">HC BOBINADO INDUSTRIAL</a>
+            <a href="{{ route("dashboard.index") }}"><img src="{{ asset('dist/assets/img/logo.jpeg') }}" alt="logo" width="70"
+        class="shadow-light "></a>
         </div>
         <div class="sidebar-brand sidebar-brand-sm">
-            <a href="{{ route("dashboard.index") }}">HC</a>
+            <a href="{{ route("dashboard.index") }}"><img src="{{ asset('dist/assets/img/logo.jpeg') }}" alt="logo" width="50"
+        class="shadow-light "></a>
         </div>
         <ul class="sidebar-menu">
             

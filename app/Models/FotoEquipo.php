@@ -23,8 +23,12 @@ class FotoEquipo extends Model
         return $this->belongsTo(Recepcion::class);
     }
 
-    public function FotoEquipo()
+    
+
+    // Nueva relación con cotizaciones (muchos a muchos)
+    public function cotizacionEquipos()
     {
-        return $this->belongsTo(FotoEquipo::class);
+        return $this->belongsToMany(CotizacionEquipo::class, 'cotizacion_equipo_fotos')
+                    ->withTimestamps();
     }
 }

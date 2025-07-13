@@ -42,4 +42,10 @@ class Recepcion extends Model
     {
         return $this->hasMany(Equipo::class);
     }
+
+    public function FotoEquipo()
+    {
+        return $this->belongsTo(FotoEquipo::class);
+    }
+
 }
