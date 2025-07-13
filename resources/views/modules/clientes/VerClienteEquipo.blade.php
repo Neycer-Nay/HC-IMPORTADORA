@@ -53,7 +53,7 @@
                                                 @foreach($equipo->fotos as $foto)
                                                     <a href="{{ Storage::url($foto->ruta) }}" target="_blank"
                                                         data-lightbox="equipo-{{ $equipo->id }}" data-title="{{ $equipo->nombre }}">
-                                                        <img src="{{ asset('storage/' . $foto->ruta) }}" alt="Foto" width="50"
+                                                        <img src="{{ asset('storage/' . $foto->ruta) }}" alt="Foto" width="250"
                                                             class="img-thumbnail mb-1">
                                                     </a>
                                                 @endforeach

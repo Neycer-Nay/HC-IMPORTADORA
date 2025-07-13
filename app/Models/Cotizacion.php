@@ -24,4 +24,19 @@ class Cotizacion extends Model
     {
         return $this->hasMany(CotizacionEquipo::class);
     }
+
+    // Método para recalcular totales
+    public function recalcularTotales()
+    {
+        $subtotal = 0;
+        
+        foreach ($this->equipos as $equipo) {
+            $equipo->calcularTotalRepuestos();
+            $subtotal += $equipo->precio_trabajo + $equipo->total_repuestos;
+        }
+        
+        $this->subtotal = $subtotal;
+        $this->total = $this->subtotal - $this->descuento;
+        $this->save();
+    }
 }

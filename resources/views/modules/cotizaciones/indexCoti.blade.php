@@ -54,10 +54,11 @@
                                                         <td>{{ number_format($cotizacion->subtotal, 2) }}Bs</td>
                                                         <td>{{ number_format($cotizacion->total, 2) }}Bs</td>
                                                         <td>
-                                                            <a href="{{ route('cotizaciones.edit', $cotizacion->recepcion->id) }}"
+                                                            <a href="{{ route('cotizaciones.show', $cotizacion->recepcion->id) }}"
                                                                 class="btn btn-primary btn-sm" title="Editar">
-                                                                <i class="fas fa-edit"></i> Ver/Editar
+                                                                <i class="fas fa-edit"></i> Ver
                                                             </a>
+                                                            
                                                             <a href="{{ route('cotizaciones.pdf', $cotizacion->id) }}"
                                                                 class="btn btn-danger" target="_blank">
                                                                 <i class="fas fa-file-pdf"></i> Generar PDF

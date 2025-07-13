@@ -17,10 +17,7 @@ class CotizacionEquipo extends Model
         'fotos', // <-- agrega esto
         
     ];
-    protected $casts = [
-    'repuestos' => 'array',
-    'fotos' => 'array',
-    ];
+    
     public function cotizacion()
     {
         return $this->belongsTo(Cotizacion::class);
@@ -29,4 +26,20 @@ class CotizacionEquipo extends Model
     {
         return $this->belongsTo(Equipo::class);
     }
+
+public function repuestos()
+    {
+        return $this->hasMany(CotizacionRepuesto::class, 'cotizacion_equipo_id');
+    }
+
+
+    public function fotos()
+    {
+        return $this->belongsToMany(FotoEquipo::class, 'cotizacion_equipo_fotos', 'cotizacion_equipo_id', 'foto_equipo_id');
+    }
+    
+    
+    // Método para calcular el total de repuestos automáticamente
+    
+    
 }
