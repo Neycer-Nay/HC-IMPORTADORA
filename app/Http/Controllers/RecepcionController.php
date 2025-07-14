@@ -20,8 +20,9 @@ class RecepcionController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Recepcion::with(['cliente', 'usuario'])->orderBy('created_at', 'desc');
-
+        
+        $query = Recepcion::with(['cliente', 'usuario', 'cotizacion']) // Agregar cotizacion
+        ->orderBy('created_at', 'desc');
         if ($request->filled('buscar')) {
             $busqueda = $request->buscar;
             $query->where(function ($q) use ($busqueda) {

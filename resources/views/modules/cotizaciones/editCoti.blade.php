@@ -4,7 +4,7 @@
 <div class="main-content">
     <section class="section">
         <div  class="section-header"  >
-            <h1 style="color:#151414"><i class="fas fa-file-invoice-dollar"></i> Cotización para Recepción N° {{ $recepcion->numero_recepcion }}</h1>
+            <h1 style="color:#151414"> Cotización para Recepción N° {{ $recepcion->numero_recepcion }}</h1>
             <div class="section-header-breadcrumb">
                 <a href="{{ route('cotizaciones.index') }}" class="btn btn-light">
                     <i class="fas fa-arrow-left"></i> Volver
@@ -62,13 +62,17 @@
                     <div class="card-header  text-dark">
                         <h5 class="mb-0">
                             <i class="fas fa-tools"></i> Equipo: {{ $equipo->nombre }}
-                            <small class="text-muted">({{ $equipo->tipo }})</small>
+                            
                         </h5>
+                        
                     </div>
                     
                     <div class="card-body">
                         <input type="hidden" name="equipos[{{ $loop->index }}][equipo_id]" value="{{ $equipo->id }}">
-                        
+                        <h6 class="mb-0">
+                            <i class="fas fa-tools"></i>Tipo: {{ $equipo->tipo }}
+                            
+                        </h6>
                         <div class="row">
                             <!-- Columna izquierda - Datos del equipo -->
                             <div class="col-lg-5 border-end">
@@ -78,16 +82,30 @@
                                         <li><strong>Serie:</strong> {{ $equipo->numero_serie }}</li>
                                         <li><strong>Marca:</strong> {{ $equipo->marca }}</li>
                                         <li><strong>Modelo:</strong> {{ $equipo->modelo }}</li>
+                                        <li><strong>Color:</strong> {{ $equipo->color ?? 'N/A' }}</li>
+                                        <li><strong>Voltaje:</strong> {{ $equipo->voltaje ?? 'N/A' }}</li>
                                         @if($equipo->tipo == 'MOTOR_ELECTRICO')
-                                            <li><strong>HP:</strong> {{ $equipo->hp ?? 'N/A' }}</li>
+                                            <li><strong>Hp:</strong> {{ $equipo->hp ?? 'N/A' }}</li>
                                             <li><strong>RPM:</strong> {{ $equipo->rpm ?? 'N/A' }}</li>
+                                            <li><strong>Hz:</strong> {{ $equipo->hz ?? 'N/A' }}</li>
+                                        @elseif($equipo->tipo == 'MAQUINA_SOLDADORA')
+                                            <li><strong>AMP:</strong> {{ $equipo->amperaje ?? 'N/A' }}</li>
+                                            <li><strong>Cable +:</strong> {{ $equipo->cable_positivo ?? 'N/A' }}</li>
+                                            <li><strong>Cable -:</strong> {{ $equipo->cable_negativo ?? 'N/A' }}</li>
+                                          
+                                        @elseif($equipo->tipo == 'GENERADOR_DINAMO')
+                                            <li><strong>RPM:</strong> {{ $equipo->rpm ?? 'N/A' }}</li>
+                                            <li><strong>Hz:</strong> {{ $equipo->hz ?? 'N/A' }}</li>
+                                            <li><strong>Kva/Kw:</strong> {{ $equipo->kva_kw ?? 'N/A' }}</li>
+                                        @else($equipo->tipo == 'OTRO')
+                                            <li><strong>Potencia:</strong> {{ $equipo->potencia ?? 'N/A' }}</li>
                                         @endif
-                                        <!-- Más campos según tipo -->
                                     </ul>
                                     
                                     <!-- Fotos del equipo -->
                                     <div class="mt-4">
-                                        <h6 class="text-primary"><i class="fas fa-camera"></i> Fotos Adjuntas</h6>
+                                        <h6 class="text-primary"><i class="fas fa-camera"></i> Fotos Asociadas</h6>
+                                        <label for="">Selecione fotos para el PDF</label>
                                         <div class="fotos-container d-flex flex-wrap gap-2">
                                             @if($equipo->fotos && $equipo->fotos->count())
                                                 @foreach($equipo->fotos as $foto)
@@ -100,7 +118,7 @@
                                                                {{ isset(old('equipos')[$loop->parent->index]['fotos']) && in_array($foto->id, old('equipos')[$loop->parent->index]['fotos']) ? 'checked' : '' }}>
                                                         <img src="{{ asset('storage/' . $foto->ruta) }}" 
                                                              alt="Foto del equipo" 
-                                                             class="img-thumbnail foto-img">
+                                                             class="img-thumbnail foto-img" width="250">
                                                         <div class="foto-overlay">
                                                             
                                                         </div>
@@ -219,11 +237,7 @@
                 <div class="fixed-bottom bg-white p-3 shadow-lg border-top">
                     <div class="container-fluid">
                         <div class="d-flex justify-content-between">
-                            <a href="{{ route('cotizaciones.pdf', $recepcion->id) }}" 
-                               class="btn btn-danger" target="_blank">
-                                <i class="fas fa-file-pdf"></i> Generar PDF
-                            </a>
-                            
+                            <a  class="btn btn-danger" target="_blank"> </a>
                             <button type="submit" class="btn btn-success">
                                 <i class="fas fa-save"></i> Guardar Cotización
                             </button>

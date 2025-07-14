@@ -35,10 +35,11 @@
                                                 <tr>
                                                     <th>ID</th>
 
-                                                    <th>N° Recepción</th>
+                                                    <th>N° Cotización</th>
                                                     <th>Fecha</th>
                                                     <th>Cliente</th>
                                                     <th>Subtotal</th>
+                                                    <th>Descuento</th>
                                                     <th>Total</th>
                                                     <th>Acciones</th>
                                                 </tr>
@@ -52,6 +53,7 @@
                                                         <td>{{ $cotizacion->fecha}}</td>
                                                         <td>{{ $cotizacion->recepcion->cliente->nombre ?? 'N/A' }}</td>
                                                         <td>{{ number_format($cotizacion->subtotal, 2) }}Bs</td>
+                                                        <td>{{ number_format($cotizacion->descuento, 2) }}Bs</td>
                                                         <td>{{ number_format($cotizacion->total, 2) }}Bs</td>
                                                         <td>
                                                             <a href="{{ route('cotizaciones.show', $cotizacion->recepcion->id) }}"
@@ -59,8 +61,7 @@
                                                                 <i class="fas fa-edit"></i> Ver
                                                             </a>
                                                             
-                                                            <a href="{{ route('cotizaciones.pdf', $cotizacion->id) }}"
-                                                                class="btn btn-danger" target="_blank">
+                                                            <a href="{{ route('cotizaciones.pdf', $cotizacion->recepcion->id) }}" class="btn btn-danger" target="_blank">
                                                                 <i class="fas fa-file-pdf"></i> Generar PDF
                                                             </a>
                                                         </td>
@@ -86,6 +87,8 @@
                                                         {{ $cotizacion->recepcion->cliente->nombre ?? 'N/A' }}</p>
                                                     <p class="mb-1"><strong>Subtotal:</strong>
                                                         {{ number_format($cotizacion->subtotal, 2) }}Bs</p>
+                                                    <p class="mb-1"><strong>Descuento:</strong>
+                                                        {{ number_format($cotizacion->descuento, 2) }}Bs</p>
                                                     <p class="mb-1"><strong>Total:</strong>
                                                         {{ number_format($cotizacion->total, 2) }}Bs</p>
                                                     <div class="d-flex">
@@ -93,8 +96,7 @@
                                                             class="btn btn-primary btn-sm mr-1">
                                                             <i class="fas fa-edit"></i>
                                                         </a>
-                                                        <a href="{{ route('cotizaciones.pdf', $cotizacion->id) }}"
-                                                            class="btn btn-danger" target="_blank">
+                                                        <a href="{{ route('cotizaciones.pdf', $cotizacion->recepcion->id) }}" class="btn btn-danger" target="_blank">
                                                             <i class="fas fa-file-pdf"></i> Generar PDF
                                                         </a>
                                                     </div>
