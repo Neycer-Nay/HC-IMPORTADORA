@@ -158,31 +158,29 @@ class CotizacionController extends Controller
     }
 
     public function show($id)
-    {
-        // Obtener la recepción con relaciones básicas
-        $recepcion = Recepcion::with(['cliente', 'equipos.fotos'])->findOrFail($id);
-
-        // Obtener la cotización relacionada a esta recepción
-        $cotizacion = Cotizacion::with([
-            'equipos' => function ($query) {
-                $query->with(['repuestos', 'equipo', 'fotos']);
-            }
-        ])->where('recepcion_id', $id)->first();
-
-        if (!$cotizacion) {
-            return redirect()->route('cotizaciones.index')
-                ->with('swal', [
-                    'icon' => 'error',
-                    'title' => 'Error',
-                    'text' => 'No se encontró la cotización para esta recepción'
-                ]);
+{
+    $cotizacion = Cotizacion::with([
+        'recepcion.cliente',
+        'equipos' => function ($query) {
+            $query->with([
+                'equipo.fotos', // Todas las fotos del equipo
+                'fotos',        // Fotos seleccionadas para la cotización
+                'repuestos'     // Repuestos de la cotización
+            ]);
         }
+    ])->where('recepcion_id', $id)->first();
 
-        // Calcular totales si no están actualizados (opcional)
-        $cotizacion->recalcularTotales();
-
-        return view('modules.cotizaciones.showCot', compact('recepcion', 'cotizacion'));
+    if (!$cotizacion) {
+        return redirect()->route('cotizaciones.index')
+            ->with('swal', [
+                'icon' => 'error',
+                'title' => 'Error',
+                'text' => 'No se encontró la cotización para esta recepción'
+            ]);
     }
+
+    return view('modules.cotizaciones.showCot', compact('cotizacion'));
+}
 
     public function generarPdf($id)
     {

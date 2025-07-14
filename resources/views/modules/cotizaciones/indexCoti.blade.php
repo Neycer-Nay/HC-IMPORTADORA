@@ -39,6 +39,7 @@
                                                     <th>Fecha</th>
                                                     <th>Cliente</th>
                                                     <th>Subtotal</th>
+                                                    <th>Descuento</th>
                                                     <th>Total</th>
                                                     <th>Acciones</th>
                                                 </tr>
@@ -52,6 +53,7 @@
                                                         <td>{{ $cotizacion->fecha}}</td>
                                                         <td>{{ $cotizacion->recepcion->cliente->nombre ?? 'N/A' }}</td>
                                                         <td>{{ number_format($cotizacion->subtotal, 2) }}Bs</td>
+                                                        <td>{{ number_format($cotizacion->descuento, 2) }}Bs</td>
                                                         <td>{{ number_format($cotizacion->total, 2) }}Bs</td>
                                                         <td>
                                                             <a href="{{ route('cotizaciones.show', $cotizacion->recepcion->id) }}"
@@ -86,6 +88,8 @@
                                                         {{ $cotizacion->recepcion->cliente->nombre ?? 'N/A' }}</p>
                                                     <p class="mb-1"><strong>Subtotal:</strong>
                                                         {{ number_format($cotizacion->subtotal, 2) }}Bs</p>
+                                                    <p class="mb-1"><strong>Descuento:</strong>
+                                                        {{ number_format($cotizacion->descuento, 2) }}Bs</p>
                                                     <p class="mb-1"><strong>Total:</strong>
                                                         {{ number_format($cotizacion->total, 2) }}Bs</p>
                                                     <div class="d-flex">
