@@ -4,7 +4,7 @@
 <div class="main-content">
     <section class="section">
         <div  class="section-header"  >
-            <h1 style="color:#151414"><i class="fas fa-file-invoice-dollar"></i> Cotización para Recepción N° {{ $recepcion->numero_recepcion }}</h1>
+            <h1 style="color:#151414"> Cotización para Recepción N° {{ $recepcion->numero_recepcion }}</h1>
             <div class="section-header-breadcrumb">
                 <a href="{{ route('cotizaciones.index') }}" class="btn btn-light">
                     <i class="fas fa-arrow-left"></i> Volver
@@ -237,11 +237,7 @@
                 <div class="fixed-bottom bg-white p-3 shadow-lg border-top">
                     <div class="container-fluid">
                         <div class="d-flex justify-content-between">
-                            <a href="{{ route('cotizaciones.pdf', $recepcion->id) }}" 
-                               class="btn btn-danger" target="_blank">
-                                <i class="fas fa-file-pdf"></i> Generar PDF
-                            </a>
-                            
+                            <a  class="btn btn-danger" target="_blank"> </a>
                             <button type="submit" class="btn btn-success">
                                 <i class="fas fa-save"></i> Guardar Cotización
                             </button>

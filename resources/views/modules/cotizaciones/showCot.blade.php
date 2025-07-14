@@ -5,12 +5,14 @@
         <section class="section">
             <div class="section-header">
                 <h1><i class="fas fa-file-invoice-dollar"></i> Detalle de Cotización N°
-                    {{ $cotizacion->recepcion->numero_recepcion }}</h1>
+                    {{ $cotizacion->recepcion->numero_recepcion }}
+                </h1>
                 <div class="section-header-breadcrumb">
                     <a href="{{ route('cotizaciones.index') }}" class="btn btn-secondary">
                         <i class="fas fa-arrow-left"></i> Volver
                     </a>
-                    <a href="{{ route('cotizaciones.pdf', $cotizacion->id) }}" class="btn btn-danger" target="_blank">
+                    <a href="{{ route('cotizaciones.pdf', $cotizacion->recepcion->id) }}" class="btn btn-danger"
+                        target="_blank">
                         <i class="fas fa-file-pdf"></i> Generar PDF
                     </a>
                 </div>
@@ -35,7 +37,8 @@
                                     {{ $cotizacion->recepcion->cliente->email }}</p>
                                 <p><strong><i class="fas fa-map-marker-alt"></i> Dirección:</strong>
                                     {{ $cotizacion->recepcion->cliente->ciudad }} -
-                                    {{ $cotizacion->recepcion->cliente->direccion }}</p>
+                                    {{ $cotizacion->recepcion->cliente->direccion }}
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -88,12 +91,12 @@
                         <div class="card-header">
                             <h5 class="mb-0">
                                 <i class="fas fa-tools"></i> Equipo: {{ $equipo->nombre }}
-                               
+
                             </h5>
                         </div>
 
                         <div class="card-body">
-                            <h6 >
+                            <h6>
                                 <i class="fas fa-tools"></i>Tipo: {{ $equipo->tipo }}
                             </h6>
                             <div class="row">
@@ -147,9 +150,10 @@
                                 <!-- Columna derecha - Trabajo y repuestos -->
                                 <div class="col-lg-7">
                                     <div class="trabajo-info p-3">
-                                        <h6 ><i class="fas fa-wrench"></i> Trabajo a Realizar</h6>
+                                        <h6><i class="fas fa-wrench"></i> Trabajo a Realizar</h6>
                                         <p class="bg-light p-2 rounded">
-                                            {{ $cotizacionEquipo->trabajo_realizar ?: 'No especificado' }}</p>
+                                            {{ $cotizacionEquipo->trabajo_realizar ?: 'No especificado' }}
+                                        </p>
 
                                         <div class="row mb-3">
                                             <div class="col-md-6">
@@ -162,7 +166,7 @@
                                             </div>
                                         </div>
 
-                                        <h6 ><i class="fas fa-cogs"></i> Repuestos a Usar</h6>
+                                        <h6><i class="fas fa-cogs"></i> Repuestos a Usar</h6>
                                         @if(!empty($repuestos))
                                             <div class="table-responsive">
                                                 <table class="table table-sm table-striped">
@@ -198,7 +202,7 @@
                     </div>
                 @endforeach
 
-                
+
             </div>
         </section>
     </div>

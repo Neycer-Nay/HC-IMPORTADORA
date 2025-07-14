@@ -20,6 +20,11 @@
                     <span>Equipos recepcionados</span></a>
                 
             </li>
+            <li class="dropdown">
+                <a href="{{ route('cotizaciones.index') }}" class="nav-link "><i class="fas fa-file-invoice"></i>
+                    <span>Cotizaciónes de equipos</span></a>
+                
+            </li>
             <li><a class="nav-link" href="{{ route('recepciones.create') }}"><i class="fas fa-file-signature"></i> <span>
                 Crear nueva recepción
             </span></a></li>
@@ -31,13 +36,9 @@
                 <a href="{{ route('clientes.index') }}" class="nav-link "><i class="fas fa-users"></i>
                 <span>Clientes</span></a>
                 
-            </li>
             
-            <li class="dropdown">
-                <a href="{{ route('cotizaciones.index') }}" class="nav-link "><i class="fas fa-file-invoice"></i>
-                    <span>Cotizaciónes</span></a>
-                
-           
+            
+            
             
         </ul>
 

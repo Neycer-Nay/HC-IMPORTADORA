@@ -46,10 +46,22 @@ class CotizacionController extends Controller
 
     public function store(Request $request, $id)
     {
+        // Verificar si ya existe una cotización para esta recepción
+        $cotizacionExistente = Cotizacion::where('recepcion_id', $id)->first();
+
+        if ($cotizacionExistente) {
+            return redirect()->route('recepciones.index')
+                ->with('swal', [
+                    'icon' => 'warning',
+                    'title' => 'Cotización ya existe',
+                    'text' => 'Esta recepción ya tiene una cotización creada.'
+                ]);
+        }
+
         // Validación de datos
         $validatedData = $request->validate([
             'equipos' => 'required|array',
-            'equipos.*.equipo_id' => 'required|exists:equipos,id', // Asegurar que el equipo existe
+            'equipos.*.equipo_id' => 'required|exists:equipos,id',
             'equipos.*.descripcion' => 'required|string|max:1000',
             'equipos.*.valor_trabajo' => 'required|numeric|min:0',
             'equipos.*.repuestos_detalle' => 'nullable|array',
@@ -57,28 +69,19 @@ class CotizacionController extends Controller
             'equipos.*.repuestos_detalle.*.cantidad' => 'required|integer|min:1',
             'equipos.*.repuestos_detalle.*.precio' => 'required|numeric|min:0',
             'equipos.*.fotos' => 'nullable|array',
-            'equipos.*.fotos.*' => 'integer|exists:fotos_equipos,id', // Corregido a fotos_equipos
+            'equipos.*.fotos.*' => 'integer|exists:fotos_equipos,id',
             'descuento' => 'nullable|numeric|min:0'
         ]);
 
         return DB::transaction(function () use ($request, $id, $validatedData) {
-            // Crea o actualiza la cotización principal
-            $cotizacion = Cotizacion::updateOrCreate(
-                ['recepcion_id' => $id],
-                [
-                    'fecha' => now(),
-                    'subtotal' => 0,
-                    'descuento' => $validatedData['descuento'] ?? 0,
-                    'total' => 0
-                ]
-            );
-
-            // Elimina datos anteriores
-            $cotizacion->equipos()->each(function ($equipo) {
-                $equipo->repuestos()->delete();
-                $equipo->fotos()->detach();
-            });
-            $cotizacion->equipos()->delete();
+            // Crear la cotización (cambiar updateOrCreate por create)
+            $cotizacion = Cotizacion::create([
+                'recepcion_id' => $id,
+                'fecha' => now(),
+                'subtotal' => 0,
+                'descuento' => $validatedData['descuento'] ?? 0,
+                'total' => 0
+            ]);
 
             $subtotalGeneral = 0;
 
@@ -133,59 +136,99 @@ class CotizacionController extends Controller
                 ->route('cotizaciones.index')
                 ->with('swal', [
                     'icon' => 'success',
-                    'title' => 'Cotización guardada',
-                    'text' => 'La cotización fue guardada correctamente.'
+                    'title' => 'Cotización creada',
+                    'text' => 'La cotización fue creada correctamente.'
                 ]);
         });
     }
     public function edit($id)
     {
-        $recepcion = Recepcion::with(['cliente', 'equipos'])->findOrFail($id);
-        // Aquí puedes retornar la vista de edición de cotización
+        // Verificar si ya existe una cotización para esta recepción
+        $cotizacionExistente = Cotizacion::where('recepcion_id', $id)->first();
+
+        if ($cotizacionExistente) {
+            return redirect()->route('recepciones.index')
+                ->with('swal', [
+                    'icon' => 'warning',
+                    'title' => 'Cotización ya existe',
+                    'text' => 'Esta recepción ya tiene una cotización creada. No se puede modificar.'
+                ]);
+        }
+
+        $recepcion = Recepcion::with(['cliente', 'equipos.fotos'])->findOrFail($id);
         return view('modules.cotizaciones.editCoti', compact('recepcion'));
     }
 
+
     public function update(Request $request, $id)
     {
-        $recepcion = Recepcion::findOrFail($id);
-        // Valida y actualiza los campos necesarios
-        $recepcion->update($request->all());
-        return redirect()->route('cotizaciones.index')->with('swal', [
-            'icon' => 'success',
-            'title' => 'Actualizado',
-            'text' => 'La información de la recepción fue actualizada correctamente.'
-        ]);
-    }
-
-    public function show($id)
-{
-    $cotizacion = Cotizacion::with([
-        'recepcion.cliente',
-        'equipos' => function ($query) {
-            $query->with([
-                'equipo.fotos', // Todas las fotos del equipo
-                'fotos',        // Fotos seleccionadas para la cotización
-                'repuestos'     // Repuestos de la cotización
-            ]);
-        }
-    ])->where('recepcion_id', $id)->first();
-
-    if (!$cotizacion) {
         return redirect()->route('cotizaciones.index')
             ->with('swal', [
                 'icon' => 'error',
-                'title' => 'Error',
-                'text' => 'No se encontró la cotización para esta recepción'
+                'title' => 'Acción no permitida',
+                'text' => 'No se pueden actualizar las cotizaciones.'
             ]);
     }
 
-    return view('modules.cotizaciones.showCot', compact('cotizacion'));
-}
+    public function show($id)
+    {
+        $cotizacion = Cotizacion::with([
+            'recepcion.cliente',
+            'equipos' => function ($query) {
+                $query->with([
+                    'equipo.fotos', // Todas las fotos del equipo
+                    'fotos',        // Fotos seleccionadas para la cotización
+                    'repuestos'     // Repuestos de la cotización
+                ]);
+            }
+        ])->where('recepcion_id', $id)->first();
+
+        if (!$cotizacion) {
+            return redirect()->route('cotizaciones.index')
+                ->with('swal', [
+                    'icon' => 'error',
+                    'title' => 'Error',
+                    'text' => 'No se encontró la cotización para esta recepción'
+                ]);
+        }
+
+        return view('modules.cotizaciones.showCot', compact('cotizacion'));
+    }
 
     public function generarPdf($id)
     {
-        $recepcion = Recepcion::with('cliente')->findOrFail($id);
-        $pdf = Pdf::loadView('modules.cotizaciones.Generarpdf', compact('recepcion'));
-        return $pdf->download('cotizacion_' . $recepcion->numero_recepcion . '.pdf');
+        // Buscar la cotización con todas las relaciones necesarias
+        $cotizacion = Cotizacion::with([
+            'recepcion.cliente',
+            'equipos' => function ($query) {
+                $query->with([
+                    'equipo', // Datos del equipo
+                    'fotos',  // Fotos seleccionadas para la cotización
+                    'repuestos' // Repuestos de la cotización
+                ]);
+            }
+        ])->where('recepcion_id', $id)->first();
+
+        if (!$cotizacion) {
+            return redirect()->route('cotizaciones.index')
+                ->with('swal', [
+                    'icon' => 'error',
+                    'title' => 'Error',
+                    'text' => 'No se encontró la cotización para esta recepción'
+                ]);
+        }
+
+        // Datos para el PDF
+        $data = [
+            'cotizacion' => $cotizacion,
+            'recepcion' => $cotizacion->recepcion,
+            'cliente' => $cotizacion->recepcion->cliente,
+            'subtotal' => $cotizacion->subtotal,
+            'descuento' => $cotizacion->descuento,
+            'total' => $cotizacion->total
+        ];
+
+        $pdf = Pdf::loadView('modules.cotizaciones.Generarpdf', $data);
+        return $pdf->download('cotizacion_' . $cotizacion->recepcion->numero_recepcion . '.pdf');
     }
 }

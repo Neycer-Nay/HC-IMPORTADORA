@@ -48,4 +48,9 @@ class Recepcion extends Model
         return $this->belongsTo(FotoEquipo::class);
     }
 
+    public function cotizacion()
+    {
+        return $this->hasOne(Cotizacion::class);
+    }
+
 }

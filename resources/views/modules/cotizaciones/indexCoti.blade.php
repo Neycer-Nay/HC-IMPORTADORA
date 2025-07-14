@@ -35,7 +35,7 @@
                                                 <tr>
                                                     <th>ID</th>
 
-                                                    <th>N° Recepción</th>
+                                                    <th>N° Cotización</th>
                                                     <th>Fecha</th>
                                                     <th>Cliente</th>
                                                     <th>Subtotal</th>
@@ -61,8 +61,7 @@
                                                                 <i class="fas fa-edit"></i> Ver
                                                             </a>
                                                             
-                                                            <a href="{{ route('cotizaciones.pdf', $cotizacion->id) }}"
-                                                                class="btn btn-danger" target="_blank">
+                                                            <a href="{{ route('cotizaciones.pdf', $cotizacion->recepcion->id) }}" class="btn btn-danger" target="_blank">
                                                                 <i class="fas fa-file-pdf"></i> Generar PDF
                                                             </a>
                                                         </td>
@@ -97,8 +96,7 @@
                                                             class="btn btn-primary btn-sm mr-1">
                                                             <i class="fas fa-edit"></i>
                                                         </a>
-                                                        <a href="{{ route('cotizaciones.pdf', $cotizacion->id) }}"
-                                                            class="btn btn-danger" target="_blank">
+                                                        <a href="{{ route('cotizaciones.pdf', $cotizacion->recepcion->id) }}" class="btn btn-danger" target="_blank">
                                                             <i class="fas fa-file-pdf"></i> Generar PDF
                                                         </a>
                                                     </div>

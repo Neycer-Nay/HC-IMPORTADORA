@@ -4,7 +4,7 @@
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1 style="color:#151414" >Recepción de equipos</h1>
+                <h1 style="color:#151414">Recepción de equipos</h1>
                 <div class="section-header-breadcrumb">
                     <a href="{{ route('recepciones.create') }}" class="btn btn-primary">
                         <i class="fas fa-plus"></i> Nueva Recepción
@@ -20,7 +20,8 @@
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
-                                    <label style="color:#151414; font-size: 17px;" for="">Buscar recepciones por N° de recepcion, usuario o cliente</label>
+                                    <label style="color:#151414; font-size: 17px;" for="">Buscar recepciones por N° de
+                                        recepcion, usuario o cliente</label>
                                     <form method="GET" action="{{ route('recepciones.index') }}" class="form-inline mb-3">
                                         <input type="text" name="buscar" class="form-control mr-2" placeholder="Buscar "
                                             value="{{ request('buscar') }}">
@@ -69,10 +70,19 @@
                                                                 class="btn btn-primary btn-sm" title="Editar">
                                                                 <i class="fas fa-edit"></i>
                                                             </a>
-                                                            <a href="{{ route('cotizaciones.edit', $recepcion->id) }}"
-                                                                class="btn btn-primary btn-sm" title="Editar">
-                                                                <i class="fas fa-edit"></i> Cotizar
-                                                            </a>
+
+                                                            @if($recepcion->cotizacion)
+                                                                <a href="{{ route('cotizaciones.show', $recepcion->id) }}"
+                                                                    class="btn btn-success btn-sm" title="Ver Cotización">
+                                                                    <i class="fas fa-file-invoice-dollar"></i> Ver Cotización
+                                                                </a>
+                                                            @else
+                                                                <a href="{{ route('cotizaciones.edit', $recepcion->id) }}"
+                                                                    class="btn btn-warning btn-sm" title="Crear Cotización">
+                                                                    <i class="fas fa-plus"></i> Cotizar
+                                                                </a>
+                                                            @endif
+
                                                             <form action="{{ route('recepciones.destroy', $recepcion->id) }}"
                                                                 method="POST" style="display: inline-block;">
                                                                 @csrf
@@ -102,7 +112,8 @@
                                                     <p class="mb-1"><strong>ID:</strong> {{ $recepcion->id }}</p>
                                                     <p class="mb-1"><strong>Fecha y hora:</strong>
                                                         {{ $recepcion->fecha_ingreso->format('d/m/Y') }} -
-                                                        {{ \Carbon\Carbon::parse($recepcion->hora_ingreso)->format('H:i') }}</p>
+                                                        {{ \Carbon\Carbon::parse($recepcion->hora_ingreso)->format('H:i') }}
+                                                    </p>
                                                     <p class="mb-1"><strong>Cliente:</strong>
                                                         {{ $recepcion->cliente->nombre ?? 'N/A' }}</p>
                                                     <p class="mb-1"><strong>Usuario:</strong>
@@ -122,10 +133,19 @@
                                                             class="btn btn-primary btn-sm" title="Editar">
                                                             <i class="fas fa-edit"></i>
                                                         </a>
-                                                        <a href="{{ route('cotizaciones.edit', $recepcion->id) }}"
-                                                                class="btn btn-primary btn-sm" title="Editar">
-                                                                <i class="fas fa-edit"></i> Cotizar
+
+                                                        @if($recepcion->cotizacion)
+                                                            <a href="{{ route('cotizaciones.show', $recepcion->id) }}"
+                                                                class="btn btn-success btn-sm" title="Ver Cotización">
+                                                                <i class="fas fa-file-invoice-dollar"></i> Ver
                                                             </a>
+                                                        @else
+                                                            <a href="{{ route('cotizaciones.edit', $recepcion->id) }}"
+                                                                class="btn btn-warning btn-sm" title="Crear Cotización">
+                                                                <i class="fas fa-plus"></i> Cotizar
+                                                            </a>
+                                                        @endif
+
                                                         <form action="{{ route('recepciones.destroy', $recepcion->id) }}"
                                                             method="POST" style="display: inline-block;">
                                                             @csrf
