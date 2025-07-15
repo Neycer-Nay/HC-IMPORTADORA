@@ -98,7 +98,7 @@
                 <!-- Máquina Soldadora -->
                 <div class="form-group col-md-3" id="amp__INDEX__" style="display: none;">
                     <label><strong>AMP (Amperio)</strong></label>
-                    <input type="text" class="form-control" name="equipos[__INDEX__][amp]">
+                    <input type="text" class="form-control" name="equipos[__INDEX__][amperaje]">
                 </div>
                 <div class="form-group col-md-3" id="cablePositivo__INDEX__" style="display: none;">
                     <label><strong>Cable +</strong></label>

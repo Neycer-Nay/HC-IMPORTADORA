@@ -114,7 +114,7 @@
 
                                                 <!-- Información adicional -->
                                                 <div class="mt-3">
-                                                    <h6 class="text-success"><i class="fas fa-exclamation-triangle"></i>
+                                                    <h6 ><i class="fas fa-exclamation-triangle"></i>
                                                         Información Adicional</h6>
                                                     <ul class="list-unstyled">
                                                         <li><strong>Partes Faltantes:</strong>
@@ -166,9 +166,7 @@
 
                 <!-- Botones de acción -->
                 <div class="text-right">
-                    <a href="{{ route('recepciones.edit', $recepcion->id) }}" class="btn btn-warning">
-                        <i class="fas fa-edit"></i> Editar Recepción
-                    </a>
+                    
                     <a href="{{ route('cotizaciones.edit', $recepcion->id) }}" class="btn btn-success">
                         <i class="fas fa-file-invoice-dollar"></i> Crear Cotización
                     </a>

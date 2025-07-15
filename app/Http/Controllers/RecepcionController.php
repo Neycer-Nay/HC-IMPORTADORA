@@ -111,7 +111,7 @@ class RecepcionController extends Controller
                 'hp' => $equipoData['hp'] ?? null,
                 'rpm' => $equipoData['rpm'] ?? null,
                 'hz' => $equipoData['hz'] ?? null,
-                'amp' => $equipoData['amp'] ?? null,
+                'amperaje' => $equipoData['amperaje'] ?? null,
                 'cable_positivo' => $equipoData['cable_positivo'] ?? null,
                 'cable_negativo' => $equipoData['cable_negativo'] ?? null,
                 'kva_kw' => $equipoData['kva_kw'] ?? null,
