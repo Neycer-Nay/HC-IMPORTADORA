@@ -16,7 +16,7 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <h3>Lista de recepciones</h3>
+                                <h4 style="font-size:21px">Lista de recepciones</h4>
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
@@ -66,10 +66,7 @@
                                                                 class="btn btn-info btn-sm" title="Ver">
                                                                 <i class="fas fa-eye"></i>
                                                             </a>
-                                                            <a href="{{ route('recepciones.edit', $recepcion->id) }}"
-                                                                class="btn btn-primary btn-sm" title="Editar">
-                                                                <i class="fas fa-edit"></i>
-                                                            </a>
+                                                            
 
                                                             @if($recepcion->cotizacion)
                                                                 <a href="{{ route('cotizaciones.show', $recepcion->id) }}"
@@ -129,10 +126,7 @@
                                                             class="btn btn-info btn-sm" title="Ver">
                                                             <i class="fas fa-eye"></i>
                                                         </a>
-                                                        <a href="{{ route('recepciones.edit', $recepcion->id) }}"
-                                                            class="btn btn-primary btn-sm" title="Editar">
-                                                            <i class="fas fa-edit"></i>
-                                                        </a>
+                                                        
 
                                                         @if($recepcion->cotizacion)
                                                             <a href="{{ route('cotizaciones.show', $recepcion->id) }}"

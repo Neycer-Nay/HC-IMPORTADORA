@@ -20,9 +20,9 @@ class RecepcionController extends Controller
      */
     public function index(Request $request)
     {
-        
+
         $query = Recepcion::with(['cliente', 'usuario', 'cotizacion']) // Agregar cotizacion
-        ->orderBy('created_at', 'desc');
+            ->orderBy('created_at', 'desc');
         if ($request->filled('buscar')) {
             $busqueda = $request->buscar;
             $query->where(function ($q) use ($busqueda) {
@@ -116,10 +116,10 @@ class RecepcionController extends Controller
                 'cable_negativo' => $equipoData['cable_negativo'] ?? null,
                 'kva_kw' => $equipoData['kva_kw'] ?? null,
                 'potencia' => $equipoData['potencia'] ?? null,
-                'partes_faltantes' => $equipoData['partes_faltantes'] ?? null,
-                'observaciones' => $equipoData['observaciones'] ?? null,
+                //Desabilitar campos que no se usan temporalmente
+                //'partes_faltantes' => $equipoData['partes_faltantes'] ?? null,
+                //'observaciones' => $equipoData['observaciones'] ?? null,
 
-                // ... resto de campos
             ]);
 
             $equipo->save();
@@ -134,8 +134,18 @@ class RecepcionController extends Controller
                     ]);
                 }
             }
-
             // Guardar fotos de la cámara
+            if (isset($equipoData['camera_photos'])) {
+                foreach ($equipoData['camera_photos'] as $base64Photo) {
+                    $path = $this->storeBase64Image($base64Photo, $equipo->id);
+
+                    FotoEquipo::create([
+                        'equipo_id' => $equipo->id,
+                        'ruta' => $path,
+                        'descripcion' => 'Foto tomada con cámara'
+                    ]);
+                }
+            }
 
 
         }
@@ -195,6 +205,21 @@ class RecepcionController extends Controller
         return $path;
     }
 
-    // Método para guardar imágenes base64
+    private function storeBase64Image($base64String, $equipoId)
+    {
+        // Extraer la imagen del string base64
+        $imageData = explode(',', $base64String)[1];
+        $imageData = base64_decode($imageData);
+
+        // Crear nombre único para el archivo
+        $filename = 'equipo_' . $equipoId . '_camera_' . time() . '_' . Str::random(8) . '.jpg';
+
+        // Guardar en storage
+        $path = 'equipos_fotos/' . $filename;
+        Storage::disk('public')->put($path, $imageData);
+
+        return $path;
+    }
+
 
 }

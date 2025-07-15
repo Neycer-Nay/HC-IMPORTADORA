@@ -13,14 +13,14 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <h4>Lista de clientes</h4>
+                                <h4 style="font-size:21px">Lista de clientes</h4>
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
-                                    <label style="color:#151414; font-size: 17px;" for="">Buscar clientes por su nombre o telefonos</label>
+                                    <label style="color:#151414; font-size: 17px;" for="">Buscar clientes por nombre, teléfonos o número de documento</label>
                                     <form method="GET" action="{{ route('clientes.index') }}" class="form-inline mb-3">
                                         <input type="text" name="buscar" class="form-control mr-2"
-                                            placeholder="Buscar por nombre o telefonos" value="{{ request('buscar') }}">
+                                            placeholder="Buscar clientes" value="{{ request('buscar') }}">
                                         <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i>
                                             Buscar</button>
                                         @if(request('buscar'))

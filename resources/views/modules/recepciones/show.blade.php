@@ -112,7 +112,7 @@
                                                     @endif
                                                 </ul>
 
-                                                <!-- Información adicional -->
+                                                <!-- Información adicional oculta temportalmente 
                                                 <div class="mt-3">
                                                     <h6 ><i class="fas fa-exclamation-triangle"></i>
                                                         Información Adicional</h6>
@@ -122,7 +122,7 @@
                                                         <li><strong>Observaciones:</strong>
                                                             {{ $equipo->observaciones ?? 'N/A' }}</li>
                                                     </ul>
-                                                </div>
+                                                </div>-->
                                             </div>
                                         </div>
 

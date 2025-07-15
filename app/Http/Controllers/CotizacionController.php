@@ -74,7 +74,10 @@ class CotizacionController extends Controller
         ]);
 
         return DB::transaction(function () use ($request, $id, $validatedData) {
-            // Crear la cotización (cambiar updateOrCreate por create)
+
+            // Obtener la recepción
+            $recepcion = Recepcion::findOrFail($id);
+            // Crear la cotización 
             $cotizacion = Cotizacion::create([
                 'recepcion_id' => $id,
                 'fecha' => now(),
@@ -131,6 +134,11 @@ class CotizacionController extends Controller
                 'subtotal' => $subtotalGeneral,
                 'total' => $subtotalGeneral - $cotizacion->descuento
             ]);
+
+            // ✅ CAMBIAR ESTADO DE LA RECEPCIÓN A DIAGNOSTICADO
+            if ($recepcion->estado === 'RECIBIDO') {
+                $recepcion->update(['estado' => 'DIAGNOSTICADO']);
+            }
 
             return redirect()
                 ->route('cotizaciones.index')
@@ -229,6 +237,6 @@ class CotizacionController extends Controller
         ];
 
         $pdf = Pdf::loadView('modules.cotizaciones.Generarpdf', $data);
-        return $pdf->download('cotizacion_' . $cotizacion->recepcion->numero_recepcion . '.pdf');
+        return $pdf->stream('cotizacion_' . $cotizacion->recepcion->numero_recepcion . '.pdf');
     }
 }

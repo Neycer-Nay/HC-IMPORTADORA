@@ -133,7 +133,7 @@
     <!-- Datos del cliente -->
     <table class="datos-empresa">
         <tr>
-            <td class="titulo" colspan="4">DATOS DE LA EMPRESA O PARTICULAR</td>
+            <td class="titulo" colspan="4">DATOS DEL CLIENTE</td>
         </tr>
         <tr>
             <td><strong>Tipo:</strong></td>

@@ -18,7 +18,8 @@ class ClienteController extends Controller
             $q->where('nombre', 'like', '%' . $busqueda . '%')
               ->orWhere('telefono_1', 'like', '%' . $busqueda . '%')
               ->orWhere('telefono_2', 'like', '%' . $busqueda . '%')
-              ->orWhere('telefono_3', 'like', '%' . $busqueda . '%');
+              ->orWhere('telefono_3', 'like', '%' . $busqueda . '%')
+              ->orWhere('numero_documento', 'like', '%' . $busqueda . '%');
         });
     }
 
