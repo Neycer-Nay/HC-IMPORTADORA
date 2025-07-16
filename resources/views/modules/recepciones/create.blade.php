@@ -32,6 +32,7 @@
                                 <option value="">Seleccione un cliente...</option>
                                 @foreach($clientes as $cliente)
                                     <option value="{{ $cliente->id }}" @if(request('cliente_id') == $cliente->id) selected @endif
+                                        data-nombre="{{ $cliente->nombre }}"
                                         data-documento="{{ $cliente->tipo_documento }}: {{ $cliente->numero_documento }}"
                                         data-telefono="{{ $cliente->telefono_1 }} | {{ $cliente->telefono_2 }} | {{ $cliente->telefono_3 }} "
                                         data-email="{{ $cliente->email ?? '-' }}"
@@ -46,13 +47,24 @@
                         <div class="col-sm-12 col-md-2">
                             <button type="button" class="btn btn-primary btn-block" data-toggle="modal"
                                 data-target="#nuevoClienteModal">
-                                <i class="fas fa-plus"></i> Registar nuevo cliente
+                                <i class="fas fa-plus"></i> Registar cliente
                             </button>
                         </div>
                     </div>
 
                     <!-- Información del cliente seleccionado (oculto inicialmente) -->
                     <div class="row mt-3 d-none" id="clienteInfo">
+                        <div class="col-12 col-md-3">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="mr-3">
+                                    <i class="fas fa-user text-primary" style="font-size: 1.5rem;"></i>
+                                </div>
+                                <div>
+                                    <small class="text-muted d-block">Nombre</small>
+                                    <span id="clienteNombre" class="font-weight-bold">-</span>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-12 col-md-3">
                             <div class="d-flex align-items-center mb-3">
                                 <div class="mr-3">
@@ -138,7 +150,7 @@
                             </strong><span class="text-danger">*</span></label>
                         <div class="col-sm-12 col-md-7">
                             <input type="text" class="form-control"
-                                value="{{ Auth::user()->nombre }} / {{ Auth::user()->rol }}" readonly>
+                                value="{{ Auth::user()->nombre }}" readonly>
                             <input type="hidden" name="encargado_id" value="{{ Auth::user()->id }}">
                             <div class="invalid-feedback">El encargado es requerido</div>
                         </div>
@@ -312,6 +324,7 @@
                 const selectedOption = selectCliente.options[selectCliente.selectedIndex];
 
                 // Actualiza los campos
+                document.getElementById('clienteNombre').textContent = selectedOption.dataset.nombre || '-';
                 document.getElementById('clienteDocumento').textContent = selectedOption.dataset.documento || '-';
                 document.getElementById('clienteTelefono').textContent = selectedOption.dataset.telefono || '-';
                 document.getElementById('clienteEmail').textContent = selectedOption.dataset.email || '-';

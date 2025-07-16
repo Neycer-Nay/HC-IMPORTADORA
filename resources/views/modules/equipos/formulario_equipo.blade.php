@@ -27,7 +27,7 @@
             <div class="row">
                 <!-- Campos que siempre se muestran -->
                 <div class="form-group col-md-6">
-                    <label><strong>Nombre del Equipo</strong> <span class="text-danger">*</span></label>
+                    <label><strong>Articulo</strong> <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" name="equipos[__INDEX__][nombre]" required>
                 </div>
                 <div class="form-group col-md-6">
@@ -215,7 +215,57 @@
         </div>
     </div>
 </template>
-
+<!-- Modal para editar fotos -->
+<div class="modal fade" id="photoEditorModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-crop"></i> Recortar Foto
+                </h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-9">
+                        <div class="img-container">
+                            <img id="cropperImage" style="max-width: 100%;">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="preview-container">
+                            <h6>Vista previa:</h6>
+                            <div class="preview"
+                                style="width: 150px; height: 150px; overflow: hidden; border: 1px solid #ddd; margin-bottom: 10px;">
+                            </div>
+                            <div class="btn-group-vertical w-100">
+                                <button type="button" class="btn btn-sm btn-secondary" onclick="resetCrop()">
+                                    <i class="fas fa-undo"></i> Resetear
+                                </button>
+                                <button type="button" class="btn btn-sm btn-info" onclick="rotateImage(-90)">
+                                    <i class="fas fa-undo"></i> Rotar ↺
+                                </button>
+                                <button type="button" class="btn btn-sm btn-info" onclick="rotateImage(90)">
+                                    <i class="fas fa-redo"></i> Rotar ↻
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
+                <button type="button" class="btn btn-primary" id="cropAndSave">
+                    <i class="fas fa-check"></i> Recortar y Guardar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 <style>
     @media (max-width: 768px) {
         #filePreviews__INDEX__ {
@@ -231,6 +281,98 @@
     /* Espaciado adicional para los botones */
     .mt-4 {
         margin-top: 2rem !important;
+    }
+
+    /* Estilo para cámara fullscreen */
+    .camera-fullscreen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.95);
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .camera-fullscreen video {
+        max-width: 100%;
+        max-height: 80vh;
+        width: auto;
+        height: auto;
+        border-radius: 10px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .camera-fullscreen .controls {
+        position: absolute;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 20px;
+        z-index: 10000;
+    }
+
+    .camera-fullscreen .controls button {
+        padding: 15px 25px;
+        font-size: 18px;
+        border-radius: 50px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .camera-fullscreen .controls button:hover {
+        transform: scale(1.1);
+    }
+
+    .camera-fullscreen .close-btn {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: rgba(255, 255, 255, 0.2);
+        border: 2px solid white;
+        color: white;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        font-size: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .camera-fullscreen .close-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(1.1);
+    }
+
+    .camera-info {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    }
+
+    /* Responsivo para móviles */
+    @media (max-width: 768px) {
+        .camera-fullscreen .controls {
+            bottom: 70px;
+            gap: 15px;
+        }
+
+        .camera-fullscreen .controls button {
+            padding: 12px 20px;
+            font-size: 16px;
+        }
     }
 </style>
 
@@ -323,17 +465,21 @@
                     return;
                 }
 
-                Array.from(input.files).forEach(file => {
+                // Actualizar en la función previewFiles, cambiar esta parte:
+                Array.from(input.files).forEach((file, fileIndex) => {
                     const reader = new FileReader();
                     reader.onload = function (e) {
                         const div = document.createElement('div');
                         div.className = 'position-relative';
                         div.innerHTML = `
-                    <img src="${e.target.result}" style="width: 100px; height: 100px; object-fit: cover;" class="img-thumbnail">
-                    <button type="button" class="btn btn-danger btn-sm position-absolute" style="top: 5px; right: 5px; width: 20px; height: 20px; padding: 0; border-radius: 50%;" onclick="removePreview(this)">
-                        <i class="fas fa-times" style="font-size: 10px;"></i>
-                    </button>
-                `;
+            <img src="${e.target.result}" style="width: 100px; height: 100px; object-fit: cover;" class="img-thumbnail">
+            <button type="button" class="btn btn-warning btn-sm position-absolute" style="top: 5px; left: 5px; width: 25px; height: 25px; padding: 0; border-radius: 50%;" onclick="openPhotoEditor('${e.target.result}', ${index}, 'file', ${fileIndex})">
+                <i class="fas fa-crop" style="font-size: 10px;"></i>
+            </button>
+            <button type="button" class="btn btn-danger btn-sm position-absolute" style="top: 5px; right: 5px; width: 25px; height: 25px; padding: 0; border-radius: 50%;" onclick="removePreview(this)">
+                <i class="fas fa-times" style="font-size: 10px;"></i>
+            </button>
+        `;
                         previewContainer.appendChild(div);
                     }
                     reader.readAsDataURL(file);
@@ -345,7 +491,8 @@
                     input.files[0].name;
             }
         }
-        // Función para manejar la cámara
+
+        // Función para manejar la cámara con fullscreen
         function setupCamera(index) {
             const video = document.getElementById(`cameraVideo${index}`);
             const canvas = document.getElementById(`cameraCanvas${index}`);
@@ -357,36 +504,178 @@
 
             let stream = null;
             let cameraPhotoCount = 0;
+            let fullscreenContainer = null;
 
-            // Activar cámara
+            // Activar cámara en fullscreen
             startBtn.addEventListener('click', async function () {
                 try {
-                    stream = await navigator.mediaDevices.getUserMedia({
-                        video: {
-                            width: 300,
-                            height: 225,
-                            facingMode: 'environment' // Usar cámara trasera si está disponible
+                    // Verificar si getUserMedia está disponible
+                    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                        throw new Error('getUserMedia no está soportado en este navegador');
+                    }
+
+                    // Verificar permisos primero
+                    const permissions = await navigator.permissions.query({name: 'camera'});
+                    console.log('Permisos de cámara:', permissions.state);
+
+                    if (permissions.state === 'denied') {
+                        throw new Error('Permisos de cámara denegados');
+                    }
+
+                    // Obtener dispositivos de cámara disponibles
+                    const devices = await navigator.mediaDevices.enumerateDevices();
+                    const cameras = devices.filter(device => device.kind === 'videoinput');
+                    
+                    if (cameras.length === 0) {
+                        throw new Error('No se encontraron cámaras disponibles');
+                    }
+
+                    console.log('Cámaras disponibles:', cameras);
+
+                    // Intentar diferentes configuraciones
+                    let stream = null;
+                    const constraints = [
+                        // Configuración ideal
+                        {
+                            video: {
+                                width: { ideal: 1920 },
+                                height: { ideal: 1080 },
+                                facingMode: 'environment'
+                            }
+                        },
+                        // Configuración básica
+                        {
+                            video: {
+                                width: { ideal: 1280 },
+                                height: { ideal: 720 }
+                            }
+                        },
+                        // Configuración mínima
+                        {
+                            video: true
                         }
-                    });
-                    video.srcObject = stream;
-                    video.style.display = 'block';
+                    ];
+
+                    for (const constraint of constraints) {
+                        try {
+                            stream = await navigator.mediaDevices.getUserMedia(constraint);
+                            console.log('Stream obtenido con:', constraint);
+                            break;
+                        } catch (constraintError) {
+                            console.log('Error con constraint:', constraint, constraintError);
+                            continue;
+                        }
+                    }
+
+                    if (!stream) {
+                        throw new Error('No se pudo obtener stream de cámara con ninguna configuración');
+                    }
+
+                    // Crear contenedor fullscreen
+                    fullscreenContainer = document.createElement('div');
+                    fullscreenContainer.className = 'camera-fullscreen';
+                    fullscreenContainer.innerHTML = `
+                        <div class="camera-info">
+                            <i class="fas fa-camera"></i> Equipo #${index + 1} - Tomar Foto
+                        </div>
+                        <button class="close-btn" onclick="closeCameraFullscreen(${index})">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        <video id="fullscreenVideo${index}" autoplay playsinline></video>
+                        <div class="controls">
+                            <button type="button" class="btn btn-success btn-lg" onclick="captureFullscreenPhoto(${index})">
+                                <i class="fas fa-camera"></i> Capturar
+                            </button>
+                            <button type="button" class="btn btn-danger btn-lg" onclick="closeCameraFullscreen(${index})">
+                                <i class="fas fa-times"></i> Cancelar
+                            </button>
+                        </div>
+                    `;
+
+                    document.body.appendChild(fullscreenContainer);
+                    document.body.style.overflow = 'hidden';
+
+                    // Asignar stream al video fullscreen
+                    const fullscreenVideo = document.getElementById(`fullscreenVideo${index}`);
+                    fullscreenVideo.srcObject = stream;
+
+                    // Ocultar botones originales
                     startBtn.style.display = 'none';
-                    captureBtn.style.display = 'inline-block';
-                    stopBtn.style.display = 'inline-block';
+                    captureBtn.style.display = 'none';
+                    stopBtn.style.display = 'none';
+
                 } catch (err) {
+                    console.error('Error detallado:', err);
+                    
+                    let errorMessage = 'Error desconocido al acceder a la cámara.';
+                    let errorTitle = 'Error de cámara';
+
+                    switch (err.name) {
+                        case 'NotAllowedError':
+                            errorTitle = 'Permisos denegados';
+                            errorMessage = 'Has denegado el acceso a la cámara. Por favor, permite el acceso en la configuración del navegador.';
+                            break;
+                        case 'NotFoundError':
+                            errorTitle = 'Cámara no encontrada';
+                            errorMessage = 'No se detectó ninguna cámara en tu dispositivo.';
+                            break;
+                        case 'NotReadableError':
+                            errorTitle = 'Cámara en uso';
+                            errorMessage = 'La cámara está siendo usada por otra aplicación. Cierra otras aplicaciones que puedan estar usando la cámara.';
+                            break;
+                        case 'OverconstrainedError':
+                            errorTitle = 'Configuración no compatible';
+                            errorMessage = 'La configuración de cámara solicitada no es compatible con tu dispositivo.';
+                            break;
+                        case 'SecurityError':
+                            errorTitle = 'Error de seguridad';
+                            errorMessage = 'El acceso a la cámara fue bloqueado por razones de seguridad. Asegúrate de estar usando HTTPS o localhost.';
+                            break;
+                        default:
+                            errorMessage = `${err.message || err}`;
+                    }
+
                     Swal.fire({
                         icon: 'error',
-                        title: 'Error de cámara',
-                        text: 'No se pudo acceder a la cámara. Verifica los permisos.',
+                        title: errorTitle,
+                        html: `
+                            <p>${errorMessage}</p>
+                            <hr>
+                            <small><strong>Detalles técnicos:</strong><br>
+                            ${err.name}: ${err.message}<br>
+                            Navegador: ${navigator.userAgent.split(' ')[0]}<br>
+                            Protocolo: ${location.protocol}</small>
+                        `,
+                        width: '500px',
                         confirmButtonText: 'Entendido'
                     });
                 }
             });
 
-            // Tomar foto
-            captureBtn.addEventListener('click', function () {
-                // ✅ VALIDAR LÍMITE DE 8 FOTOS TOTAL
-                const fileInput = document.getElementById(`fileInput${index}`);
+            // Función global para cerrar fullscreen
+            window.closeCameraFullscreen = function (equipoIndex) {
+                if (stream) {
+                    stream.getTracks().forEach(track => track.stop());
+                    stream = null;
+                }
+
+                if (fullscreenContainer) {
+                    document.body.removeChild(fullscreenContainer);
+                    fullscreenContainer = null;
+                }
+
+                document.body.style.overflow = 'auto'; // Restaurar scroll
+
+                // Mostrar botón de inicio
+                startBtn.style.display = 'inline-block';
+                captureBtn.style.display = 'none';
+                stopBtn.style.display = 'none';
+            };
+
+            // Función global para capturar foto en fullscreen
+            window.captureFullscreenPhoto = function (equipoIndex) {
+                // Validar límite de 8 fotos total
+                const fileInput = document.getElementById(`fileInput${equipoIndex}`);
                 const totalFilePhotos = fileInput.files ? fileInput.files.length : 0;
                 const totalCameraPhotos = previewContainer.children.length;
                 const totalPhotos = totalFilePhotos + totalCameraPhotos;
@@ -395,16 +684,27 @@
                     Swal.fire({
                         icon: 'error',
                         title: 'Límite de fotos superado',
-                        text: 'No puedes tomar más fotos. El límite máximo es de 8 fotos por equipo (incluyendo archivos y fotos de cámara).',
+                        text: 'No puedes tomar más fotos. El límite máximo es de 8 fotos por equipo.',
                         confirmButtonText: 'Entendido'
                     });
                     return;
                 }
 
-                const context = canvas.getContext('2d');
-                context.drawImage(video, 0, 0, 300, 225);
+                const fullscreenVideo = document.getElementById(`fullscreenVideo${equipoIndex}`);
 
-                canvas.toBlob(function (blob) {
+                // Crear canvas temporal para captura
+                const tempCanvas = document.createElement('canvas');
+                const context = tempCanvas.getContext('2d');
+
+                // Obtener dimensiones del video
+                tempCanvas.width = fullscreenVideo.videoWidth;
+                tempCanvas.height = fullscreenVideo.videoHeight;
+
+                // Dibujar frame actual del video
+                context.drawImage(fullscreenVideo, 0, 0);
+
+                // Convertir a blob
+                tempCanvas.toBlob(function (blob) {
                     const reader = new FileReader();
                     reader.onload = function (e) {
                         // Crear preview
@@ -412,7 +712,10 @@
                         div.className = 'position-relative';
                         div.innerHTML = `
                     <img src="${e.target.result}" style="width: 100px; height: 100px; object-fit: cover;" class="img-thumbnail">
-                    <button type="button" class="btn btn-danger btn-sm position-absolute" style="top: 5px; right: 5px; width: 20px; height: 20px; padding: 0; border-radius: 50%;" onclick="removeCameraPhoto(this, ${index}, ${cameraPhotoCount})">
+                    <button type="button" class="btn btn-warning btn-sm position-absolute" style="top: 5px; left: 5px; width: 25px; height: 25px; padding: 0; border-radius: 50%;" onclick="openPhotoEditor('${e.target.result}', ${equipoIndex}, 'camera', ${previewContainer.children.length})">
+                        <i class="fas fa-crop" style="font-size: 10px;"></i>
+                    </button>
+                    <button type="button" class="btn btn-danger btn-sm position-absolute" style="top: 5px; right: 5px; width: 25px; height: 25px; padding: 0; border-radius: 50%;" onclick="removeCameraPhoto(this, ${equipoIndex}, ${cameraPhotoCount})">
                         <i class="fas fa-times" style="font-size: 10px;"></i>
                     </button>
                 `;
@@ -421,14 +724,17 @@
                         // Crear input hidden con la imagen
                         const input = document.createElement('input');
                         input.type = 'hidden';
-                        input.name = `equipos[${index}][camera_photos][]`;
+                        input.name = `equipos[${equipoIndex}][camera_photos][]`;
                         input.value = e.target.result;
-                        input.id = `cameraPhoto${index}_${cameraPhotoCount}`;
+                        input.id = `cameraPhoto${equipoIndex}_${cameraPhotoCount}`;
                         inputContainer.appendChild(input);
 
                         cameraPhotoCount++;
 
-                        // ✅ MOSTRAR MENSAJE DE CONFIRMACIÓN
+                        // Cerrar fullscreen
+                        closeCameraFullscreen(equipoIndex);
+
+                        // Mostrar mensaje de confirmación
                         Swal.fire({
                             icon: 'success',
                             title: 'Foto capturada',
@@ -438,19 +744,12 @@
                         });
                     };
                     reader.readAsDataURL(blob);
-                }, 'image/jpeg', 0.8);
-            });
+                }, 'image/jpeg', 0.9); // Calidad alta
+            };
 
-            // Detener cámara
+            // Detener cámara (función original mantenida por compatibilidad)
             stopBtn.addEventListener('click', function () {
-                if (stream) {
-                    stream.getTracks().forEach(track => track.stop());
-                    video.srcObject = null;
-                    video.style.display = 'none';
-                    startBtn.style.display = 'inline-block';
-                    captureBtn.style.display = 'none';
-                    stopBtn.style.display = 'none';
-                }
+                closeCameraFullscreen(index);
             });
         }
 
@@ -682,4 +981,164 @@
             });
         }
     }
+    // Variables globales para el editor
+    let cropper = null;
+    let currentEditingEquipo = null;
+    let currentEditingType = null; // 'file' o 'camera'
+    let currentEditingIndex = null;
+
+    // Función para abrir el editor de fotos
+    function openPhotoEditor(imageSrc, equipoIndex, type, fileIndex = null) {
+        currentEditingEquipo = equipoIndex;
+        currentEditingType = type;
+        currentEditingIndex = fileIndex;
+
+        const cropperImage = document.getElementById('cropperImage');
+        cropperImage.src = imageSrc;
+
+        $('#photoEditorModal').modal('show');
+
+        // Inicializar cropper cuando se abra el modal
+        $('#photoEditorModal').on('shown.bs.modal', function () {
+            if (cropper) {
+                cropper.destroy();
+            }
+
+            cropper = new Cropper(cropperImage, {
+                aspectRatio: NaN, // Permitir cualquier aspecto
+                viewMode: 1,
+                dragMode: 'crop',
+                autoCropArea: 0.8,
+                restore: false,
+                guides: true,
+                center: true,
+                highlight: true,
+                cropBoxMovable: true,
+                cropBoxResizable: true,
+                toggleDragModeOnDblclick: false,
+                preview: '.preview'
+            });
+        });
+    }
+
+    // Función para resetear el recorte
+    function resetCrop() {
+        if (cropper) {
+            cropper.reset();
+        }
+    }
+
+    // Función para rotar imagen
+    function rotateImage(degrees) {
+        if (cropper) {
+            cropper.rotate(degrees);
+        }
+    }
+
+    // Función para recortar y guardar
+    document.getElementById('cropAndSave').addEventListener('click', function () {
+        if (!cropper) return;
+
+        const canvas = cropper.getCroppedCanvas({
+            width: 800,
+            height: 600,
+            imageSmoothingEnabled: false,
+            imageSmoothingQuality: 'high',
+        });
+
+        canvas.toBlob(function (blob) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const croppedImageSrc = e.target.result;
+
+                if (currentEditingType === 'camera') {
+                    // Actualizar foto de cámara
+                    updateCameraPhoto(croppedImageSrc, currentEditingEquipo, currentEditingIndex);
+                } else {
+                    // Actualizar foto de archivo
+                    updateFilePhoto(croppedImageSrc, currentEditingEquipo, currentEditingIndex);
+                }
+
+                $('#photoEditorModal').modal('hide');
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Foto editada',
+                    text: 'La foto ha sido recortada correctamente.',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+            };
+            reader.readAsDataURL(blob);
+        }, 'image/jpeg', 0.8);
+    });
+
+    // Función para actualizar foto de cámara
+    function updateCameraPhoto(newImageSrc, equipoIndex, photoIndex) {
+        const previewContainer = document.getElementById(`cameraPreviews${equipoIndex}`);
+        const photoDiv = previewContainer.children[photoIndex];
+        const img = photoDiv.querySelector('img');
+        const input = document.getElementById(`cameraPhoto${equipoIndex}_${photoIndex}`);
+
+        if (img) img.src = newImageSrc;
+        if (input) input.value = newImageSrc;
+    }
+
+    // Función para actualizar foto de archivo
+    function updateFilePhoto(newImageSrc, equipoIndex, fileIndex) {
+        const previewContainer = document.getElementById(`filePreviews${equipoIndex}`);
+        const photoDiv = previewContainer.children[fileIndex];
+        const img = photoDiv.querySelector('img');
+
+        if (img) img.src = newImageSrc;
+
+        // Crear nuevo archivo blob y actualizar el input
+        fetch(newImageSrc)
+            .then(res => res.blob())
+            .then(blob => {
+                const file = new File([blob], `edited_photo_${Date.now()}.jpg`, { type: 'image/jpeg' });
+                const fileInput = document.getElementById(`fileInput${equipoIndex}`);
+                const dt = new DataTransfer();
+
+                // Mantener otros archivos y reemplazar el editado
+                for (let i = 0; i < fileInput.files.length; i++) {
+                    if (i === fileIndex) {
+                        dt.items.add(file);
+                    } else {
+                        dt.items.add(fileInput.files[i]);
+                    }
+                }
+
+                fileInput.files = dt.files;
+            });
+    }
+
+    // Limpiar cropper al cerrar modal
+    $('#photoEditorModal').on('hidden.bs.modal', function () {
+        if (cropper) {
+            cropper.destroy();
+            cropper = null;
+        }
+    });
+    // Agregar al final del script, antes del cierre
+document.addEventListener('keydown', function(e) {
+    // Si hay una cámara fullscreen activa
+    if (document.querySelector('.camera-fullscreen')) {
+        switch(e.key) {
+            case 'Enter':
+            case ' ': // Barra espaciadora
+                e.preventDefault();
+                // Buscar el botón de captura y hacer clic
+                const captureBtn = document.querySelector('.camera-fullscreen .btn-success');
+                if (captureBtn) captureBtn.click();
+                break;
+            case 'Escape':
+                e.preventDefault();
+                // Buscar el botón de cancelar y hacer clic
+                const cancelBtn = document.querySelector('.camera-fullscreen .btn-danger');
+                if (cancelBtn) cancelBtn.click();
+                break;
+        }
+    }
+});
 </script>

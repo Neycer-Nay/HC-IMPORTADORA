@@ -57,8 +57,8 @@
                                                         <td>{{ number_format($cotizacion->total, 2) }}Bs</td>
                                                         <td>
                                                             <a href="{{ route('cotizaciones.show', $cotizacion->recepcion->id) }}"
-                                                                class="btn btn-primary btn-sm" title="Editar">
-                                                                <i class="fas fa-edit"></i> Ver
+                                                                class="btn btn-success btn-sm" title="Ver">
+                                                                <i class="fas fa-file-invoice-dollar"></i> Ver
                                                             </a>
                                                             
                                                             <a href="{{ route('cotizaciones.pdf', $cotizacion->recepcion->id) }}" class="btn btn-danger" target="_blank">
@@ -92,10 +92,11 @@
                                                     <p class="mb-1"><strong>Total:</strong>
                                                         {{ number_format($cotizacion->total, 2) }}Bs</p>
                                                     <div class="d-flex">
-                                                        <a href="{{ route('cotizaciones.edit', $cotizacion->recepcion->id) }}"
-                                                            class="btn btn-primary btn-sm mr-1">
-                                                            <i class="fas fa-edit"></i>
+                                                        <a href="{{ route('cotizaciones.show', $cotizacion->recepcion->id) }}"
+                                                            class="btn btn-info btn-sm" title="Ver">
+                                                            <i class="fas fa-eye"></i> Ver
                                                         </a>
+                                                        
                                                         <a href="{{ route('cotizaciones.pdf', $cotizacion->recepcion->id) }}" class="btn btn-danger" target="_blank">
                                                             <i class="fas fa-file-pdf"></i> Generar PDF
                                                         </a>
