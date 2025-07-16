@@ -20,9 +20,9 @@ class RecepcionController extends Controller
      */
     public function index(Request $request)
     {
-        
+
         $query = Recepcion::with(['cliente', 'usuario', 'cotizacion']) // Agregar cotizacion
-        ->orderBy('created_at', 'desc');
+            ->orderBy('created_at', 'desc');
         if ($request->filled('buscar')) {
             $busqueda = $request->buscar;
             $query->where(function ($q) use ($busqueda) {
@@ -96,52 +96,73 @@ class RecepcionController extends Controller
             'estado' => 'RECIBIDO'
         ]);
 
-        // Guardar los equipos
         foreach ($request->equipos as $index => $equipoData) {
-            $equipo = new Equipo([
-                'recepcion_id' => $recepcion->id,
-                'cliente_id' => $request->cliente_id,
-                'nombre' => $equipoData['nombre'],
-                'tipo' => $equipoData['tipo'],
-                'modelo' => $equipoData['modelo'] ?? null,
-                'marca' => $equipoData['marca'],
-                'numero_serie' => $equipoData['serie'] ?? null,
-                'color' => isset($equipoData['color']) ? implode(',', (array) $equipoData['color']) : null,
-                'voltaje' => $equipoData['voltaje'] ?? null,
-                'hp' => $equipoData['hp'] ?? null,
-                'rpm' => $equipoData['rpm'] ?? null,
-                'hz' => $equipoData['hz'] ?? null,
-                'amp' => $equipoData['amp'] ?? null,
-                'cable_positivo' => $equipoData['cable_positivo'] ?? null,
-                'cable_negativo' => $equipoData['cable_negativo'] ?? null,
-                'kva_kw' => $equipoData['kva_kw'] ?? null,
-                'potencia' => $equipoData['potencia'] ?? null,
-                'partes_faltantes' => $equipoData['partes_faltantes'] ?? null,
-                'observaciones' => $equipoData['observaciones'] ?? null,
+            $hasFilePhotos = isset($equipoData['fotos']) && count($equipoData['fotos']) > 0;
+            $hasCameraPhotos = isset($equipoData['camera_photos']) && count($equipoData['camera_photos']) > 0;
 
-                // ... resto de campos
-            ]);
-
-            $equipo->save();
-            if (isset($equipoData['fotos'])) {
-                foreach ($equipoData['fotos'] as $foto) {
-                    $path = $this->storeImage($foto, $equipo->id);
-
-                    FotoEquipo::create([
-                        'equipo_id' => $equipo->id,
-                        'ruta' => $path,
-                        'descripcion' => 'Foto subida'
-                    ]);
-                }
+            if (!$hasFilePhotos && !$hasCameraPhotos) {
+                return back()->withErrors([
+                    "equipos.{$index}.fotos" => "El equipo #" . ($index + 1) . " debe tener al menos una foto (archivo o cámara)."
+                ])->withInput();
             }
 
-            // Guardar fotos de la cámara
+            // Guardar los equipos
+            foreach ($request->equipos as $index => $equipoData) {
+                $equipo = new Equipo([
+                    'recepcion_id' => $recepcion->id,
+                    'cliente_id' => $request->cliente_id,
+                    'nombre' => $equipoData['nombre'],
+                    'tipo' => $equipoData['tipo'],
+                    'modelo' => $equipoData['modelo'] ?? null,
+                    'marca' => $equipoData['marca'],
+                    'numero_serie' => $equipoData['serie'] ?? null,
+                    'color' => isset($equipoData['color']) ? implode(',', (array) $equipoData['color']) : null,
+                    'voltaje' => $equipoData['voltaje'] ?? null,
+                    'hp' => $equipoData['hp'] ?? null,
+                    'rpm' => $equipoData['rpm'] ?? null,
+                    'hz' => $equipoData['hz'] ?? null,
+                    'amperaje' => $equipoData['amperaje'] ?? null,
+                    'cable_positivo' => $equipoData['cable_positivo'] ?? null,
+                    'cable_negativo' => $equipoData['cable_negativo'] ?? null,
+                    'kva_kw' => $equipoData['kva_kw'] ?? null,
+                    'potencia' => $equipoData['potencia'] ?? null,
+                    //Desabilitar campos que no se usan temporalmente
+                    //'partes_faltantes' => $equipoData['partes_faltantes'] ?? null,
+                    //'observaciones' => $equipoData['observaciones'] ?? null,
+
+                ]);
+
+                $equipo->save();
+                if (isset($equipoData['fotos'])) {
+                    foreach ($equipoData['fotos'] as $foto) {
+                        $path = $this->storeImage($foto, $equipo->id);
+
+                        FotoEquipo::create([
+                            'equipo_id' => $equipo->id,
+                            'ruta' => $path,
+                            'descripcion' => 'Foto subida'
+                        ]);
+                    }
+                }
+                // Guardar fotos de la cámara
+                if (isset($equipoData['camera_photos'])) {
+                    foreach ($equipoData['camera_photos'] as $base64Photo) {
+                        $path = $this->storeBase64Image($base64Photo, $equipo->id);
+
+                        FotoEquipo::create([
+                            'equipo_id' => $equipo->id,
+                            'ruta' => $path,
+                            'descripcion' => 'Foto tomada con cámara'
+                        ]);
+                    }
+                }
 
 
+            }
+
+            return redirect()->route('recepciones.index')
+                ->with('success', 'Recepción registrada correctamente');
         }
-
-        return redirect()->route('recepciones.index')
-            ->with('success', 'Recepción registrada correctamente');
     }
 
     /**
@@ -195,6 +216,21 @@ class RecepcionController extends Controller
         return $path;
     }
 
-    // Método para guardar imágenes base64
+    private function storeBase64Image($base64String, $equipoId)
+    {
+        // Extraer la imagen del string base64
+        $imageData = explode(',', $base64String)[1];
+        $imageData = base64_decode($imageData);
+
+        // Crear nombre único para el archivo
+        $filename = 'equipo_' . $equipoId . '_camera_' . time() . '_' . Str::random(8) . '.jpg';
+
+        // Guardar en storage
+        $path = 'equipos_fotos/' . $filename;
+        Storage::disk('public')->put($path, $imageData);
+
+        return $path;
+    }
+
 
 }

@@ -3,19 +3,20 @@
 @section('contenido')
     <div class="main-content">
         @if($errors->any())
-        <div class="alert alert-danger">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            <h5><i class="icon fas fa-ban"></i> Error al registar</h5>
-            <ul>
-                @foreach($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
+            <div class="alert alert-danger">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h5><i class="icon fas fa-ban"></i> Error al registar</h5>
+                <ul>
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
         @endif
-        <form action="{{ route('recepciones.store') }}" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+        <form action="{{ route('recepciones.store') }}" method="POST" enctype="multipart/form-data" class="needs-validation"
+            novalidate>
             @csrf
             <div class="card">
                 <div class="card-header">
@@ -23,13 +24,15 @@
                 </div>
                 <div class="card-body">
                     <div class="form-group row">
-                        <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3"><strong>Seleccionar Cliente Existente</strong>
+                        <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3"><strong>Seleccionar Cliente
+                                Existente</strong>
                             <span class="text-danger">*</span></label>
                         <div class="col-sm-12 col-md-7">
                             <select class="form-control selectric" id="cliente_id" name="cliente_id" required>
                                 <option value="">Seleccione un cliente...</option>
                                 @foreach($clientes as $cliente)
                                     <option value="{{ $cliente->id }}" @if(request('cliente_id') == $cliente->id) selected @endif
+                                        data-nombre="{{ $cliente->nombre }}"
                                         data-documento="{{ $cliente->tipo_documento }}: {{ $cliente->numero_documento }}"
                                         data-telefono="{{ $cliente->telefono_1 }} | {{ $cliente->telefono_2 }} | {{ $cliente->telefono_3 }} "
                                         data-email="{{ $cliente->email ?? '-' }}"
@@ -44,13 +47,24 @@
                         <div class="col-sm-12 col-md-2">
                             <button type="button" class="btn btn-primary btn-block" data-toggle="modal"
                                 data-target="#nuevoClienteModal">
-                                <i class="fas fa-plus"></i> Registar nuevo cliente
+                                <i class="fas fa-plus"></i> Registar cliente
                             </button>
                         </div>
                     </div>
 
                     <!-- Información del cliente seleccionado (oculto inicialmente) -->
                     <div class="row mt-3 d-none" id="clienteInfo">
+                        <div class="col-12 col-md-3">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="mr-3">
+                                    <i class="fas fa-user text-primary" style="font-size: 1.5rem;"></i>
+                                </div>
+                                <div>
+                                    <small class="text-muted d-block">Nombre</small>
+                                    <span id="clienteNombre" class="font-weight-bold">-</span>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-12 col-md-3">
                             <div class="d-flex align-items-center mb-3">
                                 <div class="mr-3">
@@ -104,8 +118,8 @@
                 </div>
                 <div class="card-body">
                     <div class="form-group row">
-                        <label class="col-form-label text-md-right col-12 col-md-3 col-lg-2"><strong>Número de Recepción </strong><span
-                                class="text-danger">*</span></label>
+                        <label class="col-form-label text-md-right col-12 col-md-3 col-lg-2"><strong>Número de Recepción
+                            </strong><span class="text-danger">*</span></label>
                         <div class="col-sm-12 col-md-7">
                             <input type="text" class="form-control" id="numero_recepcion" name="numero_recepcion"
                                 value="{{ $numeroRecepcion ?? '' }}" required readonly>
@@ -132,21 +146,19 @@
                     </div>
 
                     <div class="form-group row">
-                        <label class="col-form-label text-md-right col-12 col-md-3 col-lg-2"><strong>Encargado </strong><span
-                                class="text-danger">*</span></label>
+                        <label class="col-form-label text-md-right col-12 col-md-3 col-lg-2"><strong>Encargado
+                            </strong><span class="text-danger">*</span></label>
                         <div class="col-sm-12 col-md-7">
-                            <select class="form-control selectric" id="encargado_id" name="encargado_id" required>
-                                <option value="">{{Auth::user()->nombre}}</option>
-                                <option value="">{{Auth::user()->nombre}}</option>
-
-                                <!-- Opciones se llenarán dinámicamente -->
-                            </select>
-                            <div class="invalid-feedback">Seleccione un encargado</div>
+                            <input type="text" class="form-control"
+                                value="{{ Auth::user()->nombre }}" readonly>
+                            <input type="hidden" name="encargado_id" value="{{ Auth::user()->id }}">
+                            <div class="invalid-feedback">El encargado es requerido</div>
                         </div>
                     </div>
 
                     <div class="form-group row">
-                        <label class="col-form-label text-md-right col-12 col-md-3 col-lg-2"><strong>Observaciones</strong></label>
+                        <label
+                            class="col-form-label text-md-right col-12 col-md-3 col-lg-2"><strong>Observaciones</strong></label>
                         <div class="col-sm-12 col-md-7">
                             <textarea class="form-control" id="observaciones" name="observaciones" rows="3"></textarea>
                         </div>
@@ -167,7 +179,7 @@
         </form>
     </div>
 
-    
+
     <!-- Modal Nuevo Cliente -->
     <div class="modal fade" tabindex="-1" role="dialog" id="nuevoClienteModal">
         <div class="modal-dialog modal-lg" role="document">
@@ -182,8 +194,8 @@
                     @csrf
                     <div class="modal-body">
                         <div class="form-group row">
-                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3"><strong>Nombre/Razón Social </strong><span
-                                    class="text-danger">*</span></label>
+                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3"><strong>Nombre/Razón Social
+                                </strong><span class="text-danger">*</span></label>
                             <div class="col-sm-12 col-md-9">
                                 <input type="text" class="form-control" value="{{ old('nombre') }}" name="nombre" required>
 
@@ -204,8 +216,8 @@
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3"><strong>Tipo Documento </strong><span
-                                    class="text-danger">*</span></label>
+                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3"><strong>Tipo Documento
+                                </strong><span class="text-danger">*</span></label>
                             <div class="col-sm-12 col-md-9">
                                 <select class="form-control" name="tipo_documento" required>
                                     <option value="">-- Seleccione --</option>
@@ -221,8 +233,8 @@
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3"><strong>Número Documento</strong> <span
-                                    class="text-danger">*</span></label>
+                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3"><strong>Número
+                                    Documento</strong> <span class="text-danger">*</span></label>
                             <div class="col-sm-12 col-md-9">
                                 <input type="number" class="form-control @error('numero_documento') is-invalid @enderror"
                                     value="{{ old('numero_documento') }}" name="numero_documento" required>
@@ -233,21 +245,21 @@
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3"><strong>Teléfono Principal</strong> <span
-                                    class="text-danger">*</span></label>
+                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3"><strong>Teléfono
+                                    Principal</strong> <span class="text-danger">*</span></label>
                             <div class="col-sm-12 col-md-9">
                                 <input type="number" class="form-control" value="{{ old('telefono_1') }}" name="telefono_1"
                                     required>
 
                             </div>
-                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3"><strong>Teléfono Secundario </strong><span
-                                    class="text-danger">*</span></label>
+                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3"><strong>Teléfono Secundario
+                                </strong><span class="text-danger">*</span></label>
                             <div class="col-sm-12 col-md-9">
                                 <input type="number" class="form-control" value="{{ old('telefono_2') }}" name="telefono_2">
 
                             </div>
-                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3"><strong>Teléfono Terciario </strong><span
-                                    class="text-danger">*</span></label>
+                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3"><strong>Teléfono Terciario
+                                </strong><span class="text-danger">*</span></label>
                             <div class="col-sm-12 col-md-9">
                                 <input type="number" class="form-control" value="{{ old('telefono_3') }}" name="telefono_3">
 
@@ -255,7 +267,8 @@
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3"><strong>Email</strong></label>
+                            <label
+                                class="col-form-label text-md-right col-12 col-md-3 col-lg-3"><strong>Email</strong></label>
                             <div class="col-sm-12 col-md-9">
                                 <input type="email" class="form-control" value="{{ old('email') }}" name="email">
 
@@ -263,7 +276,8 @@
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3"><strong>Ciudad</strong></label>
+                            <label
+                                class="col-form-label text-md-right col-12 col-md-3 col-lg-3"><strong>Ciudad</strong></label>
                             <div class="col-sm-12 col-md-9">
                                 <input type="text" class="form-control" name="ciudad" value="Santa Cruz">
 
@@ -271,7 +285,8 @@
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3"><strong>Dirección</strong></label>
+                            <label
+                                class="col-form-label text-md-right col-12 col-md-3 col-lg-3"><strong>Dirección</strong></label>
                             <div class="col-sm-12 col-md-9">
                                 <textarea name="direccion"
                                     class="form-control @error('direccion') is-invalid @enderror">{{ old('direccion') }}</textarea>
@@ -293,7 +308,7 @@
 
 @section('scripts')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const selectCliente = document.getElementById('cliente_id');
@@ -309,6 +324,7 @@
                 const selectedOption = selectCliente.options[selectCliente.selectedIndex];
 
                 // Actualiza los campos
+                document.getElementById('clienteNombre').textContent = selectedOption.dataset.nombre || '-';
                 document.getElementById('clienteDocumento').textContent = selectedOption.dataset.documento || '-';
                 document.getElementById('clienteTelefono').textContent = selectedOption.dataset.telefono || '-';
                 document.getElementById('clienteEmail').textContent = selectedOption.dataset.email || '-';
@@ -343,24 +359,24 @@
     @endif
 
     @if($errors->any())
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Solo abre el modal si hay errores específicos del formulario de cliente
-        const hasClienteErrors = @json($errors->has('nombre') || $errors->has('tipo_documento') /* etc... */);
-        
-        if(hasClienteErrors) {
-            $('#nuevoClienteModal').modal('show');
-        } else {
-            // Muestra errores generales del formulario de recepción
-            Swal.fire({
-                icon: 'error',
-                title: 'Error en el formulario',
-                html: `{!! implode('<br>', $errors->all()) !!}`,
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                // Solo abre el modal si hay errores específicos del formulario de cliente
+                const hasClienteErrors = @json($errors->has('nombre') || $errors->has('tipo_documento') /* etc... */);
+
+                if (hasClienteErrors) {
+                    $('#nuevoClienteModal').modal('show');
+                } else {
+                    // Muestra errores generales del formulario de recepción
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error en el formulario',
+                        html: `{!! implode('<br>', $errors->all()) !!}`,
+                    });
+                }
             });
-        }
-    });
-</script>
-@endif
+        </script>
+    @endif
 
 
 @endsection

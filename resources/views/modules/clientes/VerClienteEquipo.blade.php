@@ -63,11 +63,27 @@
                                             <h6 class="text-primary"><i class="fas fa-info-circle"></i> Información Técnica</h6>
                                             <ul class="list-unstyled">
                                                 <li><strong>N° Recepción:</strong> {{ $equipo->recepcion->numero_recepcion ?? 'Sin recepción asociada' }}</li>
-                                                <li><strong>Fecha:</strong> {{ $equipo->created_at->format('d/m/Y') }}</li>
-                                                <li><strong>Tipo:</strong> {{ $equipo->tipo }}</li>
+                                                <li><strong>Serie:</strong> {{ $equipo->numero_serie }}</li>
                                                 <li><strong>Marca:</strong> {{ $equipo->marca }}</li>
                                                 <li><strong>Modelo:</strong> {{ $equipo->modelo }}</li>
-                                                <li><strong>Serie:</strong> {{ $equipo->serie }}</li>
+                                                <li><strong>Color:</strong> {{ $equipo->color ?? 'N/A' }}</li>
+                                                <li><strong>Voltaje:</strong> {{ $equipo->voltaje ?? 'N/A' }}</li>
+                                                @if($equipo->tipo == 'MOTOR_ELECTRICO')
+                                                    <li><strong>Hp:</strong> {{ $equipo->hp ?? 'N/A' }}</li>
+                                                    <li><strong>RPM:</strong> {{ $equipo->rpm ?? 'N/A' }}</li>
+                                                    <li><strong>Hz:</strong> {{ $equipo->hz ?? 'N/A' }}</li>
+                                                @elseif($equipo->tipo == 'MAQUINA_SOLDADORA')
+                                                    <li><strong>AMP:</strong> {{ $equipo->amperaje ?? 'N/A' }}</li>
+                                                    <li><strong>Cable +:</strong> {{ $equipo->cable_positivo ?? 'N/A' }}</li>
+                                                    <li><strong>Cable -:</strong> {{ $equipo->cable_negativo ?? 'N/A' }}</li>
+
+                                                @elseif($equipo->tipo == 'GENERADOR_DINAMO')
+                                                    <li><strong>RPM:</strong> {{ $equipo->rpm ?? 'N/A' }}</li>
+                                                    <li><strong>Hz:</strong> {{ $equipo->hz ?? 'N/A' }}</li>
+                                                    <li><strong>Kva/Kw:</strong> {{ $equipo->kva_kw ?? 'N/A' }}</li>
+                                                @else($equipo->tipo == 'OTRO')
+                                                    <li><strong>Potencia:</strong> {{ $equipo->potencia ?? 'N/A' }}</li>
+                                                @endif
                                             </ul>
                                         </div>
                                     </div>

@@ -30,7 +30,7 @@
                                 <p><strong><i class="fas fa-id-card"></i> Nombre:</strong>
                                     {{ $cotizacion->recepcion->cliente->nombre }}</p>
                                 <p><strong><i class="fas fa-phone"></i> Teléfono:</strong>
-                                    {{ $cotizacion->recepcion->cliente->telefono_1 }}</p>
+                                    {{ $cotizacion->recepcion->cliente->telefono_1 }} / {{ $cotizacion->recepcion->cliente->telefono_2 }} / {{ $cotizacion->recepcion->cliente->telefono_3 }}</p>
                             </div>
                             <div class="col-md-6">
                                 <p><strong><i class="fas fa-envelope"></i> Email:</strong>

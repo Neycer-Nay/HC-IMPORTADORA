@@ -58,23 +58,88 @@ class CotizacionController extends Controller
                 ]);
         }
 
-        // Validación de datos
+        // ✅ VALIDACIÓN MEJORADA CON FOTOS OBLIGATORIAS
         $validatedData = $request->validate([
             'equipos' => 'required|array',
             'equipos.*.equipo_id' => 'required|exists:equipos,id',
-            'equipos.*.descripcion' => 'required|string|max:1000',
-            'equipos.*.valor_trabajo' => 'required|numeric|min:0',
-            'equipos.*.repuestos_detalle' => 'nullable|array',
-            'equipos.*.repuestos_detalle.*.nombre' => 'required|string|max:255',
-            'equipos.*.repuestos_detalle.*.cantidad' => 'required|integer|min:1',
-            'equipos.*.repuestos_detalle.*.precio' => 'required|numeric|min:0',
-            'equipos.*.fotos' => 'nullable|array',
+            'equipos.*.descripcion' => 'required|string|min:10|max:1000',
+            'equipos.*.valor_trabajo' => 'required|numeric|min:0.01',
+            'equipos.*.repuestos_detalle' => 'required|array|min:1',
+            'equipos.*.repuestos_detalle.*.nombre' => 'required|string|min:3|max:100',
+            'equipos.*.repuestos_detalle.*.cantidad' => 'required|integer|min:1|max:9999',
+            'equipos.*.repuestos_detalle.*.precio' => 'required|numeric|min:0.01|max:999999.99',
+            'equipos.*.fotos' => 'required|array|min:1', // ✅ FOTOS OBLIGATORIAS
             'equipos.*.fotos.*' => 'integer|exists:fotos_equipos,id',
             'descuento' => 'nullable|numeric|min:0'
+        ], [
+            // ✅ MENSAJES PERSONALIZADOS
+            'equipos.*.descripcion.required' => 'La descripción del trabajo es obligatoria.',
+            'equipos.*.descripcion.min' => 'La descripción debe tener al menos 10 caracteres.',
+            'equipos.*.valor_trabajo.required' => 'El valor del trabajo es obligatorio.',
+            'equipos.*.valor_trabajo.min' => 'El valor del trabajo debe ser mayor a 0.',
+            'equipos.*.repuestos_detalle.required' => 'Debe agregar al menos un repuesto.',
+            'equipos.*.repuestos_detalle.min' => 'Debe agregar al menos un repuesto.',
+            'equipos.*.repuestos_detalle.*.nombre.required' => 'El nombre del repuesto es obligatorio.',
+            'equipos.*.repuestos_detalle.*.nombre.min' => 'El nombre del repuesto debe tener al menos 3 caracteres.',
+            'equipos.*.repuestos_detalle.*.cantidad.required' => 'La cantidad es obligatoria.',
+            'equipos.*.repuestos_detalle.*.cantidad.min' => 'La cantidad debe ser mayor a 0.',
+            'equipos.*.repuestos_detalle.*.precio.required' => 'El precio es obligatorio.',
+            'equipos.*.repuestos_detalle.*.precio.min' => 'El precio debe ser mayor a 0.',
+            'equipos.*.fotos.required' => 'Debe seleccionar al menos una foto para cada equipo.',
+            'equipos.*.fotos.min' => 'Debe seleccionar al menos una foto para cada equipo.',
         ]);
 
+        // ✅ VALIDACIÓN ADICIONAL PERSONALIZADA
+        $recepcion = Recepcion::with('equipos.fotos')->findOrFail($id);
+        $errores = [];
+
+        foreach ($validatedData['equipos'] as $index => $equipoData) {
+            $equipoNumero = $index + 1;
+            $equipo = $recepcion->equipos->where('id', $equipoData['equipo_id'])->first();
+            $equipoNombre = $equipo ? $equipo->nombre : "Equipo {$equipoNumero}";
+
+            // ✅ VALIDAR QUE LAS FOTOS SELECCIONADAS PERTENEZCAN AL EQUIPO
+            if (!empty($equipoData['fotos'])) {
+                $fotosEquipo = $equipo->fotos->pluck('id')->toArray();
+                $fotosSeleccionadas = $equipoData['fotos'];
+
+                $fotosInvalidas = array_diff($fotosSeleccionadas, $fotosEquipo);
+                if (!empty($fotosInvalidas)) {
+                    $errores[] = "Las fotos seleccionadas para {$equipoNombre} no son válidas.";
+                }
+            }
+
+            // ✅ VALIDAR NOMBRES DE REPUESTOS ÚNICOS POR EQUIPO
+            if (!empty($equipoData['repuestos_detalle'])) {
+                $nombresRepuestos = collect($equipoData['repuestos_detalle'])->pluck('nombre')->map(function ($nombre) {
+                    return strtolower(trim($nombre));
+                });
+
+                if ($nombresRepuestos->count() !== $nombresRepuestos->unique()->count()) {
+                    $errores[] = "El {$equipoNombre} tiene repuestos con nombres duplicados.";
+                }
+            }
+        }
+
+        // ✅ SI HAY ERRORES, REGRESAR CON SWEET ALERT
+        if (!empty($errores)) {
+            return redirect()->back()
+                ->withInput()
+                ->with('swal', [
+                    'icon' => 'error',
+                    'title' => 'Errores de validación',
+                    'html' => '<ul style="text-align: left;">' .
+                        implode('', array_map(fn($error) => "<li>{$error}</li>", $errores)) .
+                        '</ul>'
+                ]);
+        }
+
         return DB::transaction(function () use ($request, $id, $validatedData) {
-            // Crear la cotización (cambiar updateOrCreate por create)
+
+            // Obtener la recepción
+            $recepcion = Recepcion::findOrFail($id);
+
+            // Crear la cotización 
             $cotizacion = Cotizacion::create([
                 'recepcion_id' => $id,
                 'fecha' => now(),
@@ -90,37 +155,36 @@ class CotizacionController extends Controller
                 $totalRepuestos = 0;
                 $repuestosData = [];
 
-                // Procesa repuestos si existen
-                if (!empty($equipoData['repuestos_detalle'])) {
-                    foreach ($equipoData['repuestos_detalle'] as $repuesto) {
-                        $subtotalRepuesto = $repuesto['cantidad'] * $repuesto['precio'];
-                        $totalRepuestos += $subtotalRepuesto;
-
-                        $repuestosData[] = new CotizacionRepuesto([
-                            'nombre' => $repuesto['nombre'],
-                            'cantidad' => $repuesto['cantidad'],
-                            'precio_unitario' => $repuesto['precio']
-                        ]);
-                    }
+                // Procesa repuestos y calcula total
+                foreach ($equipoData['repuestos_detalle'] as $repuesto) {
+                    $subtotalRepuesto = $repuesto['cantidad'] * $repuesto['precio'];
+                    $totalRepuestos += $subtotalRepuesto;
                 }
 
                 // Crea el equipo en la cotización
                 $cotizacionEquipo = $cotizacion->equipos()->create([
                     'equipo_id' => $equipoData['equipo_id'],
-                    'trabajo_realizar' => $equipoData['descripcion'],
+                    'trabajo_realizar' => trim($equipoData['descripcion']),
                     'precio_trabajo' => $equipoData['valor_trabajo'],
                     'total_repuestos' => $totalRepuestos
                 ]);
+
+                // Crea repuestos directamente en la relación
+                foreach ($equipoData['repuestos_detalle'] as $repuesto) {
+                    $cotizacionEquipo->repuestos()->create([
+                        'nombre' => trim($repuesto['nombre']),
+                        'cantidad' => $repuesto['cantidad'],
+                        'precio_unitario' => $repuesto['precio']
+                    ]);
+                }
 
                 // Asocia repuestos
                 if (!empty($repuestosData)) {
                     $cotizacionEquipo->repuestos()->saveMany($repuestosData);
                 }
 
-                // Asocia fotos si existen
-                if (!empty($equipoData['fotos'])) {
-                    $cotizacionEquipo->fotos()->sync($equipoData['fotos']);
-                }
+                // ✅ ASOCIA FOTOS (YA VALIDADAS COMO OBLIGATORIAS)
+                $cotizacionEquipo->fotos()->sync($equipoData['fotos']);
 
                 // Suma al subtotal general
                 $subtotalGeneral += $equipoData['valor_trabajo'] + $totalRepuestos;
@@ -131,6 +195,11 @@ class CotizacionController extends Controller
                 'subtotal' => $subtotalGeneral,
                 'total' => $subtotalGeneral - $cotizacion->descuento
             ]);
+
+            // ✅ CAMBIAR ESTADO DE LA RECEPCIÓN A DIAGNOSTICADO
+            if ($recepcion->estado === 'RECIBIDO') {
+                $recepcion->update(['estado' => 'DIAGNOSTICADO']);
+            }
 
             return redirect()
                 ->route('cotizaciones.index')
@@ -229,6 +298,6 @@ class CotizacionController extends Controller
         ];
 
         $pdf = Pdf::loadView('modules.cotizaciones.Generarpdf', $data);
-        return $pdf->download('cotizacion_' . $cotizacion->recepcion->numero_recepcion . '.pdf');
+        return $pdf->stream('cotizacion_' . $cotizacion->recepcion->numero_recepcion . '.pdf');
     }
 }

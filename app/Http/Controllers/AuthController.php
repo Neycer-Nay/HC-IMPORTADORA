@@ -23,10 +23,10 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
         if (!$user) {
-            return back()->withErrors(['email' => 'Credencial incorrectas.'])->withInput();
+            return back()->withErrors(['email' => 'Correo invalido.'])->withInput();
         }
         if (!Hash::check($request->password, (string) $user->password)) {
-            return back()->withErrors(['email' => 'Credencial incorrectas.'])->withInput();
+            return back()->withErrors(['email' => 'Contraseña incorrecta.'])->withInput();
         }
         
 
@@ -43,7 +43,7 @@ class AuthController extends Controller
 
         if (!$usuario) {
             User::create([
-                'nombre' => 'Neythan',
+                'nombre' => 'Administrador',
                 'email' => 'Admin@gmail.com',
                 'password' => Hash::make('Admin1234'), 
                 'rol' => 'Gerente',
