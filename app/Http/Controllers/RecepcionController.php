@@ -291,7 +291,7 @@ class RecepcionController extends Controller
             }
         }
 
-        return redirect()->route('recepciones.show', $recepcion)
+        return redirect()->route('recepciones.index', $recepcion)
             ->with('success', 'Equipos actualizados correctamente');
     }
 
