@@ -227,7 +227,6 @@ class RecepcionController extends Controller
                 if ($equipo) {
                     $equipo->update([
                         'nombre' => $equipoData['nombre'],
-                        'tipo' => $equipoData['tipo'],
                         'modelo' => $equipoData['modelo'] ?? null,
                         'marca' => $equipoData['marca'],
                         'numero_serie' => $equipoData['serie'] ?? null,
@@ -249,7 +248,7 @@ class RecepcionController extends Controller
                     'recepcion_id' => $recepcion->id,
                     'cliente_id' => $recepcion->cliente_id,
                     'nombre' => $equipoData['nombre'],
-                    'tipo' => $equipoData['tipo'],
+                    
                     'modelo' => $equipoData['modelo'] ?? null,
                     'marca' => $equipoData['marca'],
                     'numero_serie' => $equipoData['serie'] ?? null,
