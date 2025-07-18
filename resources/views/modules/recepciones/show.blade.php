@@ -7,6 +7,7 @@
                 <h1 style="color:#151414"><i class="fas fa-clipboard-list"></i> Detalle de Recepción N°
                     {{ $recepcion->numero_recepcion }}</h1>
                 <div class="section-header-breadcrumb">
+                    
                     <a href="{{ route('recepciones.index') }}" class="btn btn-light">
                         <i class="fas fa-arrow-left"></i> Volver
                     </a>
