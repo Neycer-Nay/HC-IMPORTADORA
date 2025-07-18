@@ -66,7 +66,11 @@
                                                                 class="btn btn-info btn-sm" title="Ver">
                                                                 <i class="fas fa-eye"></i>
                                                             </a>
-                                                            
+                                                            <a href="{{ route('recepciones.edit', $recepcion->id) }}"
+                                                                class="btn btn-warning btn-sm" title="Editar">
+                                                                <i class="fas fa-pencil-alt"></i>
+                                                            </a>
+                                                        
 
                                                             @if($recepcion->cotizacion)
                                                                 <a href="{{ route('cotizaciones.show', $recepcion->id) }}"
@@ -125,6 +129,10 @@
                                                         <a href="{{ route('recepciones.show', $recepcion->id) }}"
                                                             class="btn btn-info btn-sm" title="Ver">
                                                             <i class="fas fa-eye"></i>
+                                                        </a>
+                                                        <a href="{{ route('recepciones.edit', $recepcion->id) }}"
+                                                            class="btn btn-warning btn-sm" title="Editar">
+                                                            <i class="fas fa-pencil-alt"></i>
                                                         </a>
                                                         
 
