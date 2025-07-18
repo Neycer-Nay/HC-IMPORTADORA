@@ -198,13 +198,17 @@
                         </div>
                     </div>
 
-                    <!-- Contenedor de previsualizaciones -->
-                    <div id="allPreviews__INDEX__" class="d-flex flex-wrap mt-3 mb-4"
-                        style="max-height: 200px; overflow-y: auto; gap: 8px;">
+                    <!-- Contenedor de previsualizaciones mejorado -->
+                    <div id="allPreviews__INDEX__" class="preview-container">
+                        <div class="empty-state" id="emptyState__INDEX__" style="width: 100%; text-align: center; padding: 40px; color: #6c757d;">
+                            <i class="fas fa-images fa-3x mb-3" style="opacity: 0.5;"></i>
+                            <p class="mb-0"><strong>No hay fotos agregadas</strong></p>
+                            <small>Selecciona archivos o toma fotos para previsualizarlas aquí</small>
+                        </div>
                         <!-- Previsualizaciones de archivos -->
-                        <div id="filePreviews__INDEX__" class="d-flex flex-wrap" style="gap: 8px;"></div>
+                        <div id="filePreviews__INDEX__"></div>
                         <!-- Previsualizaciones de cámara -->
-                        <div id="cameraPreviews__INDEX__" class="d-flex flex-wrap" style="gap: 8px;"></div>
+                        <div id="cameraPreviews__INDEX__"></div>
                     </div>
 
                     <!-- Campos ocultos para fotos de cámara -->
@@ -267,15 +271,169 @@
     </div>
 </div>
 <style>
+    /* Estilos mejorados para previsualizaciones */
+    .preview-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-top: 15px;
+        max-height: 300px;
+        overflow-y: auto;
+        padding: 10px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        border: 2px dashed #dee2e6;
+    }
+
+    .preview-item {
+        position: relative;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
+        background: white;
+        border: 3px solid #e9ecef;
+    }
+
+    .preview-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        border-color: #007bff;
+    }
+
+    .preview-item img {
+        width: 160px;
+        height: 160px;
+        object-fit: cover;
+        display: block;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+    }
+
+    .preview-item img:hover {
+        transform: scale(1.05);
+    }
+
+    .preview-controls {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        display: flex;
+        gap: 5px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .preview-item:hover .preview-controls {
+        opacity: 1;
+    }
+
+    .preview-controls .btn {
+        width: 32px;
+        height: 32px;
+        padding: 0;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        border: 2px solid white;
+    }
+
+    .preview-badge {
+        position: absolute;
+        bottom: 8px;
+        left: 8px;
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 10px;
+        font-weight: bold;
+    }
+
+    /* Responsive para móviles */
     @media (max-width: 768px) {
-        #filePreviews__INDEX__ {
-            max-height: 150px !important;
+        .preview-container {
+            gap: 10px;
+            max-height: 250px;
+            padding: 8px;
         }
 
-        #filePreviews__INDEX__ img {
-            width: 80px !important;
-            height: 80px !important;
+        .preview-item img {
+            width: 120px;
+            height: 120px;
         }
+
+        .preview-controls {
+            opacity: 1; /* Siempre visible en móviles */
+        }
+
+        .preview-controls .btn {
+            width: 28px;
+            height: 28px;
+            font-size: 10px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .preview-item img {
+            width: 100px;
+            height: 100px;
+        }
+
+        .preview-container {
+            gap: 8px;
+            padding: 6px;
+        }
+    }
+
+    /* Modal para vista ampliada */
+    .image-modal {
+        display: none;
+        position: fixed;
+        z-index: 10000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.9);
+        animation: fadeIn 0.3s ease;
+    }
+
+    .image-modal.show {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .image-modal-content {
+        max-width: 90%;
+        max-height: 90%;
+        object-fit: contain;
+        border-radius: 8px;
+        box-shadow: 0 0 50px rgba(255, 255, 255, 0.1);
+    }
+
+    .image-modal-close {
+        position: absolute;
+        top: 20px;
+        right: 30px;
+        color: white;
+        font-size: 40px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: color 0.3s ease;
+    }
+
+    .image-modal-close:hover {
+        color: #ff6b6b;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
     }
 
     /* Espaciado adicional para los botones */
@@ -390,6 +548,9 @@
             const hasFilePhotos = fileInput && fileInput.files && fileInput.files.length > 0;
             const hasCameraPhotos = cameraPreviewContainer && cameraPreviewContainer.children.length > 0;
 
+            // Mostrar/ocultar estado vacío
+            toggleEmptyState(index, hasFilePhotos || hasCameraPhotos);
+
             // Agregar/quitar clase de error visual
             if (!hasFilePhotos && !hasCameraPhotos) {
                 if (photoLabel) {
@@ -401,6 +562,14 @@
                     photoLabel.classList.remove('text-danger');
                     photoLabel.innerHTML = '<strong>Fotos del Equipo</strong> <span class="text-danger">*</span>';
                 }
+            }
+        }
+
+        // Función para mostrar/ocultar estado vacío
+        function toggleEmptyState(index, hasPhotos) {
+            const emptyState = document.getElementById(`emptyState${index}`);
+            if (emptyState) {
+                emptyState.style.display = hasPhotos ? 'none' : 'block';
             }
         }
 
@@ -470,17 +639,24 @@
                     const reader = new FileReader();
                     reader.onload = function (e) {
                         const div = document.createElement('div');
-                        div.className = 'position-relative';
+                        div.className = 'preview-item';
                         div.innerHTML = `
-            <img src="${e.target.result}" style="width: 100px; height: 100px; object-fit: cover;" class="img-thumbnail">
-            <button type="button" class="btn btn-warning btn-sm position-absolute" style="top: 5px; left: 5px; width: 25px; height: 25px; padding: 0; border-radius: 50%;" onclick="openPhotoEditor('${e.target.result}', ${index}, 'file', ${fileIndex})">
-                <i class="fas fa-crop" style="font-size: 10px;"></i>
-            </button>
-            <button type="button" class="btn btn-danger btn-sm position-absolute" style="top: 5px; right: 5px; width: 25px; height: 25px; padding: 0; border-radius: 50%;" onclick="removePreview(this)">
-                <i class="fas fa-times" style="font-size: 10px;"></i>
-            </button>
-        `;
+            <img src="${e.target.result}" onclick="showImageModal('${e.target.result}')" title="Clic para ver en tamaño completo">
+            <div class="preview-controls">
+                <button type="button" class="btn btn-warning btn-sm" onclick="openPhotoEditor('${e.target.result}', ${index}, 'file', ${fileIndex})" title="Editar foto">
+                    <i style="font-size: 20px;" class="fas fa-crop"></i>
+                </button>
+                <button type="button" class="btn btn-danger btn-sm" onclick="removePreview(this)" title="Eliminar foto">
+                    <i style="font-size: 20px;" class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="preview-badge">
+                <i class="fas fa-file"></i> Archivo
+            </div>                        `;
                         previewContainer.appendChild(div);
+                        
+                        // Ocultar estado vacío
+                        toggleEmptyState(index, true);
                     }
                     reader.readAsDataURL(file);
                 });
@@ -515,7 +691,7 @@
                     }
 
                     // Verificar permisos primero
-                    const permissions = await navigator.permissions.query({name: 'camera'});
+                    const permissions = await navigator.permissions.query({ name: 'camera' });
                     console.log('Permisos de cámara:', permissions.state);
 
                     if (permissions.state === 'denied') {
@@ -525,7 +701,7 @@
                     // Obtener dispositivos de cámara disponibles
                     const devices = await navigator.mediaDevices.enumerateDevices();
                     const cameras = devices.filter(device => device.kind === 'videoinput');
-                    
+
                     if (cameras.length === 0) {
                         throw new Error('No se encontraron cámaras disponibles');
                     }
@@ -606,7 +782,7 @@
 
                 } catch (err) {
                     console.error('Error detallado:', err);
-                    
+
                     let errorMessage = 'Error desconocido al acceder a la cámara.';
                     let errorTitle = 'Error de cámara';
 
@@ -709,17 +885,25 @@
                     reader.onload = function (e) {
                         // Crear preview
                         const div = document.createElement('div');
-                        div.className = 'position-relative';
+                        div.className = 'preview-item';
                         div.innerHTML = `
-                    <img src="${e.target.result}" style="width: 100px; height: 100px; object-fit: cover;" class="img-thumbnail">
-                    <button type="button" class="btn btn-warning btn-sm position-absolute" style="top: 5px; left: 5px; width: 25px; height: 25px; padding: 0; border-radius: 50%;" onclick="openPhotoEditor('${e.target.result}', ${equipoIndex}, 'camera', ${previewContainer.children.length})">
-                        <i class="fas fa-crop" style="font-size: 10px;"></i>
-                    </button>
-                    <button type="button" class="btn btn-danger btn-sm position-absolute" style="top: 5px; right: 5px; width: 25px; height: 25px; padding: 0; border-radius: 50%;" onclick="removeCameraPhoto(this, ${equipoIndex}, ${cameraPhotoCount})">
-                        <i class="fas fa-times" style="font-size: 10px;"></i>
-                    </button>
+                    <img src="${e.target.result}" onclick="showImageModal('${e.target.result}')" title="Clic para ver en tamaño completo">
+                    <div class="preview-controls">
+                        <button type="button" class="btn btn-warning btn-sm" onclick="openPhotoEditor('${e.target.result}', ${equipoIndex}, 'camera', ${previewContainer.children.length})" title="Editar foto">
+                            <i class="fas fa-crop"></i>
+                        </button>
+                        <button type="button" class="btn btn-danger btn-sm" onclick="removeCameraPhoto(this, ${equipoIndex}, ${cameraPhotoCount})" title="Eliminar foto">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="preview-badge">
+                        <i class="fas fa-camera"></i> Cámara
+                    </div>
                 `;
                         previewContainer.appendChild(div);
+                        
+                        // Ocultar estado vacío
+                        toggleEmptyState(equipoIndex, true);
 
                         // Crear input hidden con la imagen
                         const input = document.createElement('input');
@@ -755,14 +939,31 @@
 
         // Función global para remover preview
         window.removePreview = function (button) {
-            button.closest('.position-relative').remove();
+            const previewItem = button.closest('.preview-item');
+            const equipoContainer = previewItem.closest('.equipo-item');
+            const equipoIndex = Array.from(equipoContainer.parentNode.children).indexOf(equipoContainer);
+            
+            previewItem.style.animation = 'fadeOut 0.3s ease';
+            setTimeout(() => {
+                previewItem.remove();
+                // Verificar si quedan fotos y mostrar estado vacío si es necesario
+                checkEmptyStateAfterRemoval(equipoIndex);
+            }, 300);
         };
 
         // Función global para remover foto de cámara
         window.removeCameraPhoto = function (button, equipoIndex, photoIndex) {
-            button.closest('.position-relative').remove();
+            const previewItem = button.closest('.preview-item');
             const input = document.getElementById(`cameraPhoto${equipoIndex}_${photoIndex}`);
-            if (input) input.remove();
+            
+            // Animación de salida
+            previewItem.style.animation = 'fadeOut 0.3s ease';
+            setTimeout(() => {
+                previewItem.remove();
+                if (input) input.remove();
+                // Verificar si quedan fotos y mostrar estado vacío si es necesario
+                checkEmptyStateAfterRemoval(equipoIndex);
+            }, 300);
 
             // ✅ MOSTRAR MENSAJE DE CONFIRMACIÓN
             Swal.fire({
@@ -773,6 +974,18 @@
                 showConfirmButton: false
             });
         };
+
+        // Función para verificar estado vacío después de eliminar
+        function checkEmptyStateAfterRemoval(equipoIndex) {
+            const fileInput = document.getElementById(`fileInput${equipoIndex}`);
+            const cameraPreviewContainer = document.getElementById(`cameraPreviews${equipoIndex}`);
+            const filePreviewContainer = document.getElementById(`filePreviews${equipoIndex}`);
+
+            const hasFilePhotos = filePreviewContainer && filePreviewContainer.children.length > 0;
+            const hasCameraPhotos = cameraPreviewContainer && cameraPreviewContainer.children.length > 0;
+
+            toggleEmptyState(equipoIndex, hasFilePhotos || hasCameraPhotos);
+        }
 
         // Agregar nuevo equipo
         document.getElementById('addEquipo').addEventListener('click', function () {
@@ -1080,7 +1293,11 @@
         const img = photoDiv.querySelector('img');
         const input = document.getElementById(`cameraPhoto${equipoIndex}_${photoIndex}`);
 
-        if (img) img.src = newImageSrc;
+        if (img) {
+            img.src = newImageSrc;
+            // Actualizar el onclick para que use la imagen recortada
+            img.setAttribute('onclick', `showImageModal('${newImageSrc}')`);
+        }
         if (input) input.value = newImageSrc;
     }
 
@@ -1090,7 +1307,11 @@
         const photoDiv = previewContainer.children[fileIndex];
         const img = photoDiv.querySelector('img');
 
-        if (img) img.src = newImageSrc;
+        if (img) {
+            img.src = newImageSrc;
+            // Actualizar el onclick para que use la imagen recortada
+            img.setAttribute('onclick', `showImageModal('${newImageSrc}')`);
+        }
 
         // Crear nuevo archivo blob y actualizar el input
         fetch(newImageSrc)
@@ -1121,24 +1342,100 @@
         }
     });
     // Agregar al final del script, antes del cierre
-document.addEventListener('keydown', function(e) {
-    // Si hay una cámara fullscreen activa
-    if (document.querySelector('.camera-fullscreen')) {
-        switch(e.key) {
-            case 'Enter':
-            case ' ': // Barra espaciadora
-                e.preventDefault();
-                // Buscar el botón de captura y hacer clic
-                const captureBtn = document.querySelector('.camera-fullscreen .btn-success');
-                if (captureBtn) captureBtn.click();
-                break;
-            case 'Escape':
-                e.preventDefault();
-                // Buscar el botón de cancelar y hacer clic
-                const cancelBtn = document.querySelector('.camera-fullscreen .btn-danger');
-                if (cancelBtn) cancelBtn.click();
-                break;
+    document.addEventListener('keydown', function (e) {
+        // Si hay una cámara fullscreen activa
+        if (document.querySelector('.camera-fullscreen')) {
+            switch (e.key) {
+                case 'Enter':
+                case ' ': // Barra espaciadora
+                    e.preventDefault();
+                    // Buscar el botón de captura y hacer clic
+                    const captureBtn = document.querySelector('.camera-fullscreen .btn-success');
+                    if (captureBtn) captureBtn.click();
+                    break;
+                case 'Escape':
+                    e.preventDefault();
+                    // Buscar el botón de cancelar y hacer clic
+                    const cancelBtn = document.querySelector('.camera-fullscreen .btn-danger');
+                    if (cancelBtn) cancelBtn.click();
+                    break;
+            }
+        }
+        
+        // Si hay un modal de imagen activo
+        if (document.querySelector('.image-modal.show')) {
+            if (e.key === 'Escape') {
+                closeImageModal();
+            }
+        }
+    });
+
+    // Función para mostrar imagen en modal ampliado
+    function showImageModal(imageSrc) {
+        // Crear modal si no existe
+        let modal = document.getElementById('imageModal');
+        if (!modal) {
+            modal = document.createElement('div');
+            modal.id = 'imageModal';
+            modal.className = 'image-modal';
+            modal.innerHTML = `
+                <span class="image-modal-close" onclick="closeImageModal()">&times;</span>
+                <img class="image-modal-content" id="modalImage">
+            `;
+            document.body.appendChild(modal);
+            
+            // Cerrar modal al hacer clic fuera de la imagen
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeImageModal();
+                }
+            });
+        }
+        
+        // Mostrar imagen
+        const modalImage = document.getElementById('modalImage');
+        modalImage.src = imageSrc;
+        modal.classList.add('show');
+        document.body.style.overflow = 'hidden';
+    }
+
+    // Función para cerrar modal de imagen
+    function closeImageModal() {
+        const modal = document.getElementById('imageModal');
+        if (modal) {
+            modal.classList.remove('show');
+            document.body.style.overflow = 'auto';
         }
     }
-});
+
+    // Añadir animaciones CSS
+    const animationStyles = document.createElement('style');
+    animationStyles.textContent = `
+        @keyframes fadeOut {
+            from { 
+                opacity: 1; 
+                transform: scale(1); 
+            }
+            to { 
+                opacity: 0; 
+                transform: scale(0.8); 
+            }
+        }
+        
+        .preview-item {
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { 
+                opacity: 0; 
+                transform: scale(0.8); 
+            }
+            to { 
+                opacity: 1; 
+                transform: scale(1); 
+            }
+        }
+    `;
+    document.head.appendChild(animationStyles);
 </script>

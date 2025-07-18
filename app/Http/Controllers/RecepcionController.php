@@ -181,9 +181,9 @@ class RecepcionController extends Controller
      */
     public function edit(Recepcion $recepcion)
     {
-        // Carga las relaciones necesarias
-        $estados = ['RECIBIDO', 'DIAGNOSTICADO', 'EN_REPARACION', 'REPARADO', 'ENTREGADO'];
-        return view('modules.recepciones.edit_estado', compact('recepcion', 'estados'));
+        $recepcion->load(['cliente', 'usuario', 'equipos.fotos']);
+
+        return view('modules.recepciones.edit_estado', compact('recepcion'));
     }
 
     /**
@@ -191,14 +191,109 @@ class RecepcionController extends Controller
      */
     public function update(Request $request, Recepcion $recepcion)
     {
-        $request->validate(['estado' => 'required|in:RECIBIDO,DIAGNOSTICADO,EN_REPARACION,REPARADO,ENTREGADO']);
-        $recepcion->estado = $request->estado;
-        $recepcion->save();
-        return redirect()->route('recepciones.index')->with('swal', [
-            'icon' => 'success',
-            'title' => '¡Actualizado!',
-            'text' => 'Estado de la recepción actualizado correctamente.'
+        // Validación
+        $validated = $request->validate([
+            'equipos' => 'required|array|min:1',
+            'equipos.*.nombre' => 'required|string|max:255',
+            'equipos.*.tipo' => 'required|in:MOTOR_ELECTRICO,MAQUINA_SOLDADORA,GENERADOR_DINAMO,OTROS',
+            'equipos.*.marca' => 'required|string|max:255',
+            'equipos.*.fotos' => 'nullable|array|max:8',
+            'equipos.*.fotos.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:8192',
+            'equipos.*.camera_photos' => 'nullable|array',
+            'deleted_photos' => 'nullable|string',
         ]);
+
+        // Eliminar fotos marcadas para eliminación
+        if ($request->deleted_photos) {
+            $deletedPhotos = json_decode($request->deleted_photos);
+            if (is_array($deletedPhotos)) {
+                foreach ($deletedPhotos as $photoId) {
+                    $foto = FotoEquipo::find($photoId);
+                    if ($foto) {
+                        // Eliminar archivo físico
+                        Storage::disk('public')->delete($foto->ruta);
+                        // Eliminar registro de base de datos
+                        $foto->delete();
+                    }
+                }
+            }
+        }
+
+        // Actualizar equipos
+        foreach ($request->equipos as $index => $equipoData) {
+            if (isset($equipoData['id'])) {
+                // Actualizar equipo existente
+                $equipo = Equipo::find($equipoData['id']);
+                if ($equipo) {
+                    $equipo->update([
+                        'nombre' => $equipoData['nombre'],
+                        'tipo' => $equipoData['tipo'],
+                        'modelo' => $equipoData['modelo'] ?? null,
+                        'marca' => $equipoData['marca'],
+                        'numero_serie' => $equipoData['serie'] ?? null,
+                        'color' => isset($equipoData['color']) ? implode(',', (array) $equipoData['color']) : null,
+                        'voltaje' => $equipoData['voltaje'] ?? null,
+                        'hp' => $equipoData['hp'] ?? null,
+                        'rpm' => $equipoData['rpm'] ?? null,
+                        'hz' => $equipoData['hz'] ?? null,
+                        'amperaje' => $equipoData['amperaje'] ?? null,
+                        'cable_positivo' => $equipoData['cable_positivo'] ?? null,
+                        'cable_negativo' => $equipoData['cable_negativo'] ?? null,
+                        'kva_kw' => $equipoData['kva_kw'] ?? null,
+                        'potencia' => $equipoData['potencia'] ?? null,
+                    ]);
+                }
+            } else {
+                // Crear nuevo equipo
+                $equipo = new Equipo([
+                    'recepcion_id' => $recepcion->id,
+                    'cliente_id' => $recepcion->cliente_id,
+                    'nombre' => $equipoData['nombre'],
+                    'tipo' => $equipoData['tipo'],
+                    'modelo' => $equipoData['modelo'] ?? null,
+                    'marca' => $equipoData['marca'],
+                    'numero_serie' => $equipoData['serie'] ?? null,
+                    'color' => isset($equipoData['color']) ? implode(',', (array) $equipoData['color']) : null,
+                    'voltaje' => $equipoData['voltaje'] ?? null,
+                    'hp' => $equipoData['hp'] ?? null,
+                    'rpm' => $equipoData['rpm'] ?? null,
+                    'hz' => $equipoData['hz'] ?? null,
+                    'amperaje' => $equipoData['amperaje'] ?? null,
+                    'cable_positivo' => $equipoData['cable_positivo'] ?? null,
+                    'cable_negativo' => $equipoData['cable_negativo'] ?? null,
+                    'kva_kw' => $equipoData['kva_kw'] ?? null,
+                    'potencia' => $equipoData['potencia'] ?? null,
+                ]);
+                $equipo->save();
+            }
+
+            // Guardar nuevas fotos
+            if (isset($equipoData['fotos'])) {
+                foreach ($equipoData['fotos'] as $foto) {
+                    $path = $this->storeImage($foto, $equipo->id);
+                    FotoEquipo::create([
+                        'equipo_id' => $equipo->id,
+                        'ruta' => $path,
+                        'descripcion' => 'Nueva foto agregada'
+                    ]);
+                }
+            }
+
+            // Guardar fotos de cámara
+            if (isset($equipoData['camera_photos'])) {
+                foreach ($equipoData['camera_photos'] as $base64Photo) {
+                    $path = $this->storeBase64Image($base64Photo, $equipo->id);
+                    FotoEquipo::create([
+                        'equipo_id' => $equipo->id,
+                        'ruta' => $path,
+                        'descripcion' => 'Foto tomada con cámara'
+                    ]);
+                }
+            }
+        }
+
+        return redirect()->route('recepciones.show', $recepcion)
+            ->with('success', 'Equipos actualizados correctamente');
     }
 
     /**
