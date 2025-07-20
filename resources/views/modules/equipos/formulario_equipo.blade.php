@@ -35,12 +35,12 @@
                     <input type="text" class="form-control" name="equipos[__INDEX__][serie]">
                 </div>
 
-                <!-- Selector de tipo de equipo -->
+                <!-- Selector de categoría de equipo -->
                 <div class="form-group col-md-4">
-                    <label><strong>Tipo de Equipo </strong><span class="text-danger">*</span></label>
+                    <label><strong>Categoría de Equipo</strong><span class="text-danger">*</span></label>
                     <select class="form-control selectric" name="equipos[__INDEX__][tipo]" id="tipoEquipo__INDEX__"
                         required onchange="mostrarCamposPorTipo('__INDEX__')">
-                        <option value="">Seleccione...</option>
+                        <option class="d-none" value="">Seleccione...</option>
                         <option value="MOTOR_ELECTRICO">Motor Eléctrico</option>
                         <option value="MAQUINA_SOLDADORA">Máquina Soldadora</option>
                         <option value="GENERADOR_DINAMO">Generador/Dinamo</option>
@@ -54,7 +54,7 @@
                     <input type="text" class="form-control" name="equipos[__INDEX__][marca]" required>
                 </div>
                 <div class="form-group col-md-4" id="modelo__INDEX__" style="display: none;">
-                    <label><strong>Modelo</strong></label>
+                    <label><strong>Tipo Modelo</strong></label>
                     <input type="text" class="form-control" name="equipos[__INDEX__][modelo]">
                 </div>
                 <div class="form-group col-md-4" id="color__INDEX__" style="display: none;">
@@ -146,7 +146,7 @@
                         <li class="nav-item">
                             <a class="nav-link active" id="archivo-tab__INDEX__" data-toggle="tab"
                                 href="#archivo__INDEX__" role="tab">
-                                <i class="fas fa-folder-open"></i> Seleccionar archivos
+                                <i class="fas fa-folder-open"></i>Selección de archivo
                             </a>
                         </li>
                         <li class="nav-item">
@@ -160,18 +160,26 @@
 
                     <div class="tab-content" id="fotoTabContent__INDEX__">
                         <!-- Pestaña de archivos -->
-                        <div class="tab-pane fade show active" id="archivo__INDEX__" role="tabpanel">
-                            <div class="custom-file mb-3 mt-3">
-                                <input type="file" class="custom-file-input" id="fileInput__INDEX__"
-                                    name="equipos[__INDEX__][fotos][]" multiple
-                                    accept="image/jpeg,image/png,image/jpg,image/gif">
-                                <label class="custom-file-label">Seleccionar fotos</label>
-                                <div class="form-text">Puede seleccionar hasta 8 fotos incluyendo tomadas de camara y
-                                    seleccionados (JPEG, PNG, JPG, GIF) - Máx. 8MB
-                                    cada una</div>
-                            </div>
-                        </div>
-
+                        
+                    <div class="tab-pane fade show active" id="archivo__INDEX__" role="tabpanel">
+    <div class="custom-file mb-3 mt-3" style="height: 120px;">
+        <input type="file" class="custom-file-input" id="fileInput__INDEX__"
+            name="equipos[__INDEX__][fotos][]" multiple
+            accept="image/jpeg,image/png,image/jpg,image/gif"
+            style="height: 100%; opacity: 0; position: absolute; cursor: pointer;">
+        <label class="custom-file-label text-black py-4 px-3 rounded shadow-sm border border-2 border-primary" 
+               style="height: 100%; display: flex; align-items: center; justify-content: center; cursor: pointer; border-style: dashed !important;">
+            <div class="text-center">
+                <i class="fas fa-cloud-upload-alt d-block mb-2" style="font-size: 1.5rem;"></i>
+                Toca o haz clic para subir tus fotos
+            </div>
+        </label>
+        <div class="form-text mt-2">
+            Puede seleccionar hasta 8 fotos incluyendo tomadas de camara y
+            seleccionados (JPEG, PNG, JPG, GIF) - Máx. 8MB cada una
+        </div>
+    </div>
+</div>
                         <!-- Pestaña de cámara -->
                         <div class="tab-pane fade" id="camara__INDEX__" role="tabpanel">
                             <div class="camera-container mt-3">
@@ -200,7 +208,8 @@
 
                     <!-- Contenedor de previsualizaciones mejorado -->
                     <div id="allPreviews__INDEX__" class="preview-container">
-                        <div class="empty-state" id="emptyState__INDEX__" style="width: 100%; text-align: center; padding: 40px; color: #6c757d;">
+                        <div class="empty-state" id="emptyState__INDEX__"
+                            style="width: 100%; text-align: center; padding: 40px; color: #6c757d;">
                             <i class="fas fa-images fa-3x mb-3" style="opacity: 0.5;"></i>
                             <p class="mb-0"><strong>No hay fotos agregadas</strong></p>
                             <small>Selecciona archivos o toma fotos para previsualizarlas aquí</small>
@@ -367,7 +376,8 @@
         }
 
         .preview-controls {
-            opacity: 1; /* Siempre visible en móviles */
+            opacity: 1;
+            /* Siempre visible en móviles */
         }
 
         .preview-controls .btn {
@@ -432,8 +442,13 @@
     }
 
     @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
     }
 
     /* Espaciado adicional para los botones */
@@ -654,7 +669,7 @@
                 <i class="fas fa-file"></i> Archivo
             </div>                        `;
                         previewContainer.appendChild(div);
-                        
+
                         // Ocultar estado vacío
                         toggleEmptyState(index, true);
                     }
@@ -901,7 +916,7 @@
                     </div>
                 `;
                         previewContainer.appendChild(div);
-                        
+
                         // Ocultar estado vacío
                         toggleEmptyState(equipoIndex, true);
 
@@ -942,7 +957,7 @@
             const previewItem = button.closest('.preview-item');
             const equipoContainer = previewItem.closest('.equipo-item');
             const equipoIndex = Array.from(equipoContainer.parentNode.children).indexOf(equipoContainer);
-            
+
             previewItem.style.animation = 'fadeOut 0.3s ease';
             setTimeout(() => {
                 previewItem.remove();
@@ -955,7 +970,7 @@
         window.removeCameraPhoto = function (button, equipoIndex, photoIndex) {
             const previewItem = button.closest('.preview-item');
             const input = document.getElementById(`cameraPhoto${equipoIndex}_${photoIndex}`);
-            
+
             // Animación de salida
             previewItem.style.animation = 'fadeOut 0.3s ease';
             setTimeout(() => {
@@ -1361,7 +1376,7 @@
                     break;
             }
         }
-        
+
         // Si hay un modal de imagen activo
         if (document.querySelector('.image-modal.show')) {
             if (e.key === 'Escape') {
@@ -1383,15 +1398,15 @@
                 <img class="image-modal-content" id="modalImage">
             `;
             document.body.appendChild(modal);
-            
+
             // Cerrar modal al hacer clic fuera de la imagen
-            modal.addEventListener('click', function(e) {
+            modal.addEventListener('click', function (e) {
                 if (e.target === modal) {
                     closeImageModal();
                 }
             });
         }
-        
+
         // Mostrar imagen
         const modalImage = document.getElementById('modalImage');
         modalImage.src = imageSrc;
