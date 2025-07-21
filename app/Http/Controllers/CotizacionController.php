@@ -7,8 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Recepcion;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Cotizacion;
-use App\Models\CotizacionRepuesto;
-use App\Models\CotizacionEquipo;
+use App\Models\FotoEquipo;
 
 
 class CotizacionController extends Controller
@@ -19,7 +18,7 @@ class CotizacionController extends Controller
             ->orderBy('created_at', 'desc');
 
         if ($request->filled('buscar')) {
-            $busqueda = $request->buscar;
+            $busqueda = $request->input('buscar');
             $query->where(function ($q) use ($busqueda) {
                 $q->where('id', 'like', "%$busqueda%")
                     ->orWhereHas('recepcion', function ($qr) use ($busqueda) {
@@ -70,7 +69,9 @@ class CotizacionController extends Controller
             'equipos.*.repuestos_detalle.*.precio' => 'required|numeric|min:0.01|max:999999.99',
             'equipos.*.fotos' => 'required|array|min:1', // ✅ FOTOS OBLIGATORIAS
             'equipos.*.fotos.*' => 'integer|exists:fotos_equipos,id',
-            'descuento' => 'nullable|numeric|min:0'
+            'descuento' => 'nullable|numeric|min:0',
+            'equipos.*.servicios_detalle' => 'required|array|min:1',
+            'equipos.*.servicios_detalle.*.nombre' => 'required|string|min:3|max:100',
         ], [
             // ✅ MENSAJES PERSONALIZADOS
             'equipos.*.descripcion.required' => 'La descripción del trabajo es obligatoria.',
@@ -87,6 +88,10 @@ class CotizacionController extends Controller
             'equipos.*.repuestos_detalle.*.precio.min' => 'El precio debe ser mayor a 0.',
             'equipos.*.fotos.required' => 'Debe seleccionar al menos una foto para cada equipo.',
             'equipos.*.fotos.min' => 'Debe seleccionar al menos una foto para cada equipo.',
+            'equipos.*.servicios_detalle.required' => 'Debe agregar al menos un servicio.',
+            'equipos.*.servicios_detalle.min' => 'Debe agregar al menos un servicio.',
+            'equipos.*.servicios_detalle.*.nombre.required' => 'El nombre del servicio es obligatorio.',
+            'equipos.*.servicios_detalle.*.nombre.min' => 'El nombre del servicio debe tener al menos 3 caracteres.',
         ]);
 
         // ✅ VALIDACIÓN ADICIONAL PERSONALIZADA
@@ -177,6 +182,15 @@ class CotizacionController extends Controller
                         'precio_unitario' => $repuesto['precio']
                     ]);
                 }
+                
+            // Guarda los servicios realizados
+                if (!empty($equipoData['servicios_detalle'])) {
+                    foreach ($equipoData['servicios_detalle'] as $servicio) {
+                        $cotizacionEquipo->servicios()->create([
+                            'nombre' => trim($servicio['nombre'])
+                        ]);
+                    }
+                }
 
                 // Asocia repuestos
                 if (!empty($repuestosData)) {
@@ -189,6 +203,9 @@ class CotizacionController extends Controller
                 // Suma al subtotal general
                 $subtotalGeneral += $equipoData['valor_trabajo'] + $totalRepuestos;
             }
+
+            
+
 
             // Actualiza totales de la cotización
             $cotizacion->update([
@@ -273,7 +290,8 @@ class CotizacionController extends Controller
                 $query->with([
                     'equipo', // Datos del equipo
                     'fotos',  // Fotos seleccionadas para la cotización
-                    'repuestos' // Repuestos de la cotización
+                    'repuestos',
+                    'servicios' // Servicios de la cotización
                 ]);
             }
         ])->where('recepcion_id', $id)->first();

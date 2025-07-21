@@ -121,7 +121,7 @@
                                                                     <img src="{{ asset('storage/' . $foto->ruta) }}"
                                                                         alt="Foto del equipo" class="img-thumbnail foto-img">
                                                                     <div class="foto-overlay">
-                                                                        <i class="fas fa-check-circle"></i>
+
                                                                     </div>
                                                                 </label>
                                                             </div>
@@ -220,6 +220,47 @@
                                                                     onclick="eliminarRepuesto(this)">
                                                                     <i class="fas fa-trash-alt"></i> Eliminar
                                                                 </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                        <div class="servicios-container mt-4">
+                                            <h6 class=" mb-3">
+                                                <i class="fas fa-cogs"></i>Servicios a realizar <span
+                                                    class="text-danger">*</span>
+                                                <button type="button" class="btn btn-primary btn-sm"
+                                                    onclick="agregarServicio({{ $loop->index }})">
+                                                    <i class="fas fa-plus"></i> Agregar
+                                                </button>
+                                            </h6>
+                                            <div id="servicios-container-{{ $loop->index }}">
+                                                @php
+                                                    $servicios = old('equipos.' . $loop->index . '.servicios_detalle', []);
+                                                    if (empty($servicios)) {
+                                                        $servicios = [['nombre' => '']];
+                                                    }
+                                                @endphp
+
+                                                @foreach($servicios as $sindex => $servicio)
+                                                    <div class="servicio-item card mb-2">
+                                                        <div class="card-body py-2">
+                                                            <div class="row g-2 align-items-center">
+                                                                <div class="col-md-10">
+                                                                    <label class="form-label small mb-1">Nombre del servicio <span
+                                                                            class="text-danger">*</span></label>
+                                                                    <input type="text"
+                                                                        name="equipos[{{ $loop->parent->index }}][servicios_detalle][{{ $sindex }}][nombre]"
+                                                                        class="form-control form-control-sm"
+                                                                        value="{{ $servicio['nombre'] }}">
+                                                                </div>
+                                                                <div class="col-md-2 text-end">
+                                                                    <button type="button" class="btn btn-danger btn-sm mt-3"
+                                                                        onclick="eliminarServicio(this)">
+                                                                        <i class="fas fa-trash-alt"></i>
+                                                                    </button>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -350,45 +391,45 @@
             const count = container.querySelectorAll('.repuesto-item').length;
 
             const html = `
-            <div class="repuesto-item card mb-3">
-                <div class="card-body">
-                    <div class="row g-2">
-                        <div class="col-md-6">
-                            <label class="form-label small">Nombre del repuesto <span class="text-danger">*</span></label>
-                            <input type="text"
-                                   name="equipos[${equipoIndex}][repuestos_detalle][${count}][nombre]"
-                                   class="form-control form-control-sm">
-                        </div>
+                    <div class="repuesto-item card mb-3">
+                        <div class="card-body">
+                            <div class="row g-2">
+                                <div class="col-md-6">
+                                    <label class="form-label small">Nombre del repuesto <span class="text-danger">*</span></label>
+                                    <input type="text"
+                                           name="equipos[${equipoIndex}][repuestos_detalle][${count}][nombre]"
+                                           class="form-control form-control-sm">
+                                </div>
 
-                        <div class="col-md-3">
-                            <label class="form-label small">Cantidad <span class="text-danger">*</span></label>
-                            <input type="number" min="1" max="9999"
-                                   name="equipos[${equipoIndex}][repuestos_detalle][${count}][cantidad]"
-                                   class="form-control form-control-sm"
-                                   value="1">
-                        </div>
+                                <div class="col-md-3">
+                                    <label class="form-label small">Cantidad <span class="text-danger">*</span></label>
+                                    <input type="number" min="1" max="9999"
+                                           name="equipos[${equipoIndex}][repuestos_detalle][${count}][cantidad]"
+                                           class="form-control form-control-sm"
+                                           value="1">
+                                </div>
 
-                        <div class="col-md-3">
-                            <label class="form-label small">Precio U. (Bs) <span class="text-danger">*</span></label>
-                            <div class="input-group input-group-sm">
-                                <span class="input-group-text">Bs</span>
-                                <input type="number" min="0.01" max="999999.99" step="0.01"
-                                       name="equipos[${equipoIndex}][repuestos_detalle][${count}][precio]"
-                                       class="form-control"
-                                       value="0.01">
+                                <div class="col-md-3">
+                                    <label class="form-label small">Precio U. (Bs) <span class="text-danger">*</span></label>
+                                    <div class="input-group input-group-sm">
+                                        <span class="input-group-text">Bs</span>
+                                        <input type="number" min="0.01" max="999999.99" step="0.01"
+                                               name="equipos[${equipoIndex}][repuestos_detalle][${count}][precio]"
+                                               class="form-control"
+                                               value="0.01">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="text-end mt-2">
+                                <button type="button" class="btn btn-danger btn-sm"
+                                        onclick="eliminarRepuesto(this)">
+                                    <i class="fas fa-trash-alt"></i> Eliminar
+                                </button>
                             </div>
                         </div>
                     </div>
-
-                    <div class="text-end mt-2">
-                        <button type="button" class="btn btn-danger btn-sm"
-                                onclick="eliminarRepuesto(this)">
-                            <i class="fas fa-trash-alt"></i> Eliminar
-                        </button>
-                    </div>
-                </div>
-            </div>
-            `;
+                    `;
 
             container.insertAdjacentHTML('beforeend', html);
         }
@@ -464,7 +505,7 @@
                     // ✅ VALIDAR FOTOS SELECCIONADAS (OBLIGATORIAS)
                     const fotosSeleccionadas = equipo.querySelectorAll('.foto-checkbox:checked');
                     console.log(`Equipo ${equipoNumero} - Fotos seleccionadas:`, fotosSeleccionadas.length);
-                    
+
                     if (fotosSeleccionadas.length === 0) {
                         equiposConErrores.push(`${equipoNombre}: Debe seleccionar al menos una foto`);
                     }
@@ -491,7 +532,7 @@
                         // Validar nombres únicos de repuestos
                         const nombresRepuestos = [];
                         let hayDuplicados = false;
-                        
+
                         repuestos.forEach((repuesto, repuestoIndex) => {
                             const nombreRepuesto = repuesto.querySelector('input[name*="[nombre]"]');
                             const cantidadRepuesto = repuesto.querySelector('input[name*="[cantidad]"]');
@@ -541,11 +582,11 @@
                         icon: 'error',
                         title: 'Errores en el formulario',
                         html: `<div style="text-align: left; max-height: 400px; overflow-y: auto; padding: 10px;">
-                                   <p><strong>Corrige los siguientes errores:</strong></p>
-                                   <ul style="margin: 0;">
-                                       ${equiposConErrores.map(error => `<li style="margin-bottom: 5px;">${error}</li>`).join('')}
-                                   </ul>
-                               </div>`,
+                                           <p><strong>Corrige los siguientes errores:</strong></p>
+                                           <ul style="margin: 0;">
+                                               ${equiposConErrores.map(error => `<li style="margin-bottom: 5px;">${error}</li>`).join('')}
+                                           </ul>
+                                       </div>`,
                         confirmButtonText: 'Entendido',
                         confirmButtonColor: '#dc3545',
                         width: '600px'
@@ -581,11 +622,11 @@
                         icon: 'error',
                         title: 'Errores en el formulario',
                         html: `<div style="text-align: left; max-height: 400px; overflow-y: auto; padding: 10px;">
-                                   <p><strong>Corrige los siguientes errores:</strong></p>
-                                   <ul style="margin: 0;">
-                                       ${equiposConErrores.map(error => `<li style="margin-bottom: 5px;">${error}</li>`).join('')}
-                                   </ul>
-                               </div>`,
+                                           <p><strong>Corrige los siguientes errores:</strong></p>
+                                           <ul style="margin: 0;">
+                                               ${equiposConErrores.map(error => `<li style="margin-bottom: 5px;">${error}</li>`).join('')}
+                                           </ul>
+                                       </div>`,
                         confirmButtonText: 'Entendido',
                         confirmButtonColor: '#dc3545',
                         width: '600px'
@@ -698,5 +739,46 @@
                 }
             });
         });
+        function agregarServicio(equipoIndex) {
+            const container = document.getElementById(`servicios-container-${equipoIndex}`);
+            const count = container.querySelectorAll('.servicio-item').length;
+
+            const html = `
+        <div class="servicio-item card mb-2">
+            <div class="card-body py-2">
+                <div class="row g-2 align-items-center">
+                    <div class="col-md-10">
+                        <label class="form-label small mb-1">Nombre del servicio <span class="text-danger">*</span></label>
+                        <input type="text"
+                            name="equipos[${equipoIndex}][servicios_detalle][${count}][nombre]"
+                            class="form-control form-control-sm">
+                    </div>
+                    <div class="col-md-2 text-end">
+                        <button type="button" class="btn btn-danger btn-sm mt-3"
+                            onclick="eliminarServicio(this)">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
+            container.insertAdjacentHTML('beforeend', html);
+        }
+
+        function eliminarServicio(button) {
+            const servicioItem = button.closest('.servicio-item');
+            const container = servicioItem.closest('[id^="servicios-container-"]');
+            if (container.querySelectorAll('.servicio-item').length > 1) {
+                servicioItem.remove();
+            } else {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'No se puede eliminar',
+                    text: 'Debe tener al menos un servicio por equipo.',
+                    confirmButtonText: 'Entendido'
+                });
+            }
+        }
     </script>
 @endsection

@@ -44,6 +44,15 @@ return new class extends Migration {
             $table->timestamps();
         });
 
+        // Tabla para serivios realizados
+        Schema::create('cotizacion_servicios', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('cotizacion_equipo_id')->constrained('cotizacion_equipos')->onDelete('cascade');
+            $table->string('nombre');
+            $table->timestamps();
+        });
+        
+
         // Tabla para fotos (relación muchos a muchos)
         Schema::create('cotizacion_equipo_fotos', function (Blueprint $table) {
             $table->id();
