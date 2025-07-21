@@ -85,6 +85,7 @@
                         $equipo = $cotizacionEquipo->equipo;
                         $fotosSeleccionadas = $cotizacionEquipo->fotos; // Relación, no JSON
                         $repuestos = $cotizacionEquipo->repuestos;
+                        $servicios = $cotizacionEquipo->servicios;
                     @endphp
 
                     <div class="card card-warning shadow-sm mb-4">
@@ -194,6 +195,31 @@
                                             </div>
                                         @else
                                             <p class="text-muted">No se especificaron repuestos</p>
+                                        @endif
+
+                                         <!-- Servicios a realizar -->
+                                        <h6><i class="fas fa-cogs"></i> Servicios a Realizar</h6>
+                                        @if(!empty($servicios))
+                                            <div class="table-responsive">
+                                                <table class="table table-sm table-striped">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Servicio</th>
+                                                            
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach($servicios as $servicio)
+                                                            <tr>
+                                                                <td>{{ $servicio['nombre'] ?? 'N/A' }}</td>
+
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        @else
+                                            <p class="text-muted">No se especificaron servicios</p>
                                         @endif
                                     </div>
                                 </div>

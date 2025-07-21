@@ -133,7 +133,7 @@
     <!-- Datos del cliente -->
     <table class="datos-empresa">
         <tr>
-            <td class="titulo" colspan="4">DATOS DEL CLIENTE</td>
+            <td class="titulo" colspan="4" style="background-color: #000d53; color: #fff;">DATOS DEL CLIENTE</td>
         </tr>
         <tr>
             <td><strong>Tipo:</strong></td>
@@ -150,7 +150,6 @@
     </table>
 
     <!-- Información de equipos cotizados -->
-    <!-- Información de equipos cotizados -->
     @foreach($cotizacion->equipos as $cotizacionEquipo)
         @php
             $equipo = $cotizacionEquipo->equipo;
@@ -160,7 +159,7 @@
 
         <table class="tabla-equipos">
             <tr>
-                <th colspan="5">NOMBRE DEL EQUIPO:{{ $equipo->nombre }}</th>
+                <th colspan="5" style="background-color: #000d53; color: #fff;">NOMBRE DEL EQUIPO:{{ $equipo->nombre }}</th>
             </tr>
             <tr>
                 <td><strong>Tipo:</strong> {{ $equipo->tipo }}</td>
@@ -210,11 +209,11 @@
 
         <!-- Tabla de repuestos -->
         <table class="tabla-repuestos">
-            <tr>
-                <th>CANT</th>
-                <th>DESCRIPCIÓN</th>
-                <th>U. UNITARIO</th>
-                <th>TOTAL</th>
+            <tr >
+                <th style="background-color: #000d53; color: #fff;">CANT</th>
+                <th style="background-color: #000d53; color: #fff;">DESCRIPCIÓN</th>
+                <th style="background-color: #000d53; color: #fff;">U. UNITARIO</th>
+                <th style="background-color: #000d53; color: #fff;">TOTAL</th>
             </tr>
             @if($repuestos && $repuestos->count())
                 @foreach($repuestos as $repuesto)
@@ -230,6 +229,8 @@
                     <td colspan="4" style="text-align: center;">No se especificaron repuestos</td>
                 </tr>
             @endif
+            <!-- Tabla de servicios realizados -->
+
 
             <!-- Fotos seleccionadas -->
             <tr>
@@ -250,7 +251,27 @@
             </tr>
         </table>
     @endforeach
-
+        <table class="tabla-repuestos">
+    <tr>
+        <th colspan="4" style="background-color: #000d53; color: #fff;">SERVICIOS REALIZADOS</th>
+    </tr>
+    <tr>
+        <th style="background-color: #000d53; color: #fff;">#</th>
+        <th colspan="3" style="background-color: #000d53; color: #fff;">Descripción del Servicio</th>
+    </tr>
+    @if($cotizacionEquipo->servicios && $cotizacionEquipo->servicios->count())
+        @foreach($cotizacionEquipo->servicios as $i => $servicio)
+            <tr>
+                <td>{{ $i + 1 }}</td>
+                <td colspan="3">{{ $servicio->nombre }}</td>
+            </tr>
+        @endforeach
+    @else
+        <tr>
+            <td colspan="4" style="text-align: center;">No se especificaron servicios</td>
+        </tr>
+    @endif
+</table>
     <!-- Totales -->
     <table class="totales">
         <tr>

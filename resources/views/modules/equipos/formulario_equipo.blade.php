@@ -94,10 +94,10 @@
                     <label><strong>Hz (Hercios)</strong></label>
                     <input type="number" class="form-control" name="equipos[__INDEX__][hz]">
                 </div>
-                <div class="form-group col-md-3" id="kvaKw__INDEX__" style="display: none;">
+                <!--<div class="form-group col-md-3" id="kvaKw__INDEX__" style="display: none;">
                     <label><strong>Kva/Kw</strong></label>
                     <input type="text" class="form-control" name="equipos[__INDEX__][kva_kw]">
-                </div>
+                </div>-->
 
                 <!-- Máquina Soldadora -->
                 <div class="form-group col-md-3" id="amp__INDEX__" style="display: none;">
@@ -160,26 +160,27 @@
 
                     <div class="tab-content" id="fotoTabContent__INDEX__">
                         <!-- Pestaña de archivos -->
-                        
-                    <div class="tab-pane fade show active" id="archivo__INDEX__" role="tabpanel">
-    <div class="custom-file mb-3 mt-3" style="height: 120px;">
-        <input type="file" class="custom-file-input" id="fileInput__INDEX__"
-            name="equipos[__INDEX__][fotos][]" multiple
-            accept="image/jpeg,image/png,image/jpg,image/gif"
-            style="height: 100%; opacity: 0; position: absolute; cursor: pointer;">
-        <label class="custom-file-label text-black py-4 px-3 rounded shadow-sm border border-2 border-primary" 
-               style="height: 100%; display: flex; align-items: center; justify-content: center; cursor: pointer; border-style: dashed !important;">
-            <div class="text-center">
-                <i class="fas fa-cloud-upload-alt d-block mb-2" style="font-size: 1.5rem;"></i>
-                Toca o haz clic para subir tus fotos
-            </div>
-        </label>
-        <div class="form-text mt-2">
-            Puede seleccionar hasta 8 fotos incluyendo tomadas de camara y
-            seleccionados (JPEG, PNG, JPG, GIF) - Máx. 8MB cada una
-        </div>
-    </div>
-</div>
+
+                        <div class="tab-pane fade show active" id="archivo__INDEX__" role="tabpanel">
+                            <div class="custom-file mb-3 mt-3" style="height: 120px;">
+                                <input type="file" class="custom-file-input" id="fileInput__INDEX__"
+                                    name="equipos[__INDEX__][fotos][]" multiple
+                                    accept="image/jpeg,image/png,image/jpg,image/gif"
+                                    style="height: 100%; opacity: 0; position: absolute; cursor: pointer;">
+                                <label
+                                    class="custom-file-label text-black py-4 px-3 rounded shadow-sm border border-2 border-primary"
+                                    style="height: 100%; display: flex; align-items: center; justify-content: center; cursor: pointer; border-style: dashed !important;">
+                                    <div class="text-center">
+                                        <i class="fas fa-cloud-upload-alt d-block mb-2" style="font-size: 1.5rem;"></i>
+                                        Toca o haz clic para subir tus fotos
+                                    </div>
+                                </label>
+                                <div class="form-text mt-2">
+                                    Puede seleccionar hasta 8 fotos incluyendo tomadas de camara y
+                                    seleccionados (JPEG, PNG, JPG, GIF) - Máx. 8MB cada una
+                                </div>
+                            </div>
+                        </div>
                         <!-- Pestaña de cámara -->
                         <div class="tab-pane fade" id="camara__INDEX__" role="tabpanel">
                             <div class="camera-container mt-3">
@@ -207,7 +208,9 @@
                     </div>
 
                     <!-- Contenedor de previsualizaciones mejorado -->
+                     <label for="">Vista previa:</label>
                     <div id="allPreviews__INDEX__" class="preview-container">
+                        
                         <div class="empty-state" id="emptyState__INDEX__"
                             style="width: 100%; text-align: center; padding: 40px; color: #6c757d;">
                             <i class="fas fa-images fa-3x mb-3" style="opacity: 0.5;"></i>

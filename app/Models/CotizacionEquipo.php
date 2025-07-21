@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\CotizacionSerivicio;
 
 class CotizacionEquipo extends Model
 {
@@ -38,6 +39,9 @@ class CotizacionEquipo extends Model
         return $this->belongsToMany(FotoEquipo::class, 'cotizacion_equipo_fotos', 'cotizacion_equipo_id', 'fotos_equipos_id');
     }
 
-    
+    public function servicios()
+    {
+        return $this->hasMany(CotizacionServicio::class, 'cotizacion_equipo_id');
+    }
 
 }
