@@ -67,9 +67,10 @@ Route::prefix('usuarios')->middleware('auth')->group(function () {
 Route::prefix('cotizaciones')->middleware('auth')->group(function () {
     Route::get('/', [\App\Http\Controllers\CotizacionController::class, 'index'])->name('cotizaciones.index');
     Route::get('/create', [\App\Http\Controllers\CotizacionController::class, 'create'])->name('cotizaciones.create');
+    Route::get('/create-from-recepcion/{id}', [\App\Http\Controllers\CotizacionController::class, 'createFromRecepcion'])->name('cotizaciones.createFromRecepcion');
     Route::post('/{id}', [\App\Http\Controllers\CotizacionController::class, 'store'])->name('cotizaciones.store');
     Route::get('/{id}/edit', [\App\Http\Controllers\CotizacionController::class, 'edit'])->name('cotizaciones.edit');
-    Route::get('/{id}', [\App\Http\Controllers\CotizacionController::class, 'show'])->name('cotizaciones.show');
+    Route::get('/{id}/show', [\App\Http\Controllers\CotizacionController::class, 'show'])->name('cotizaciones.show');
     Route::put('/{id}', [\App\Http\Controllers\CotizacionController::class, 'update'])->name('cotizaciones.update');
     Route::get('/{id}/pdf', [\App\Http\Controllers\CotizacionController::class, 'generarPdf'])->name('cotizaciones.pdf');
     

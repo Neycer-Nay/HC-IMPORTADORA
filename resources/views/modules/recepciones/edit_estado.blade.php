@@ -21,47 +21,33 @@
                     <input type="hidden" id="deleted_photos" name="deleted_photos" value="">
 
                     <!-- Información de la Recepción (No editable) -->
-                    <div class="card">
-                        <div class="card-header bg-primary text-white">
-                            <h4><i class="fas fa-info-circle"></i> Información de la Recepción</h4>
+                    <div class="card card-primary shadow-sm mb-4">
+                        <div class="card-header">
+                            <h5><i class="fas fa-info-circle"></i> Información de la Recepción N°:{{ $recepcion->numero_recepcion }}</h5>
                         </div>
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label><strong>Número de Recepción</strong></label>
-                                        <input type="text" class="form-control" value="{{ $recepcion->numero_recepcion }}"
-                                            readonly>
-                                    </div>
+                                <div class="col-md-6">
+                                    
+                                    <p><strong><i class="fas fa-user"></i> Cliente:</strong>
+                                        {{ $recepcion->cliente->nombre }}
+                                    </p>
+                                    <p><strong><i class="fas fa-calendar-alt"></i> Fecha de Ingreso:</strong>
+                                        {{ $recepcion->fecha_ingreso ? \Carbon\Carbon::parse($recepcion->fecha_ingreso)->format('d/m/Y') : 'No especificada' }}
+                                    </p>
+                                    
                                 </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label><strong>Cliente</strong></label>
-                                        <input type="text" class="form-control" value="{{ $recepcion->cliente->nombre }}"
-                                            readonly>
-                                    </div>
+                                <div class="col-md-6">
+                                    <p><strong><i class="fas fa-clock"></i> Hora Recepción:</strong>
+                                    {{ \Carbon\Carbon::parse($recepcion->hora_ingreso)->format('H:i') }}</p>
+                                    <p><strong><i class="fas fa-user-tie"></i> Atendido por:</strong>
+                                    {{ optional($recepcion->usuario)->nombre ?? 'N/A' }}</p>
                                 </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label><strong>Fecha de Ingreso</strong></label>
-                                        <input type="text" class="form-control"
-                                            value="{{ $recepcion->fecha_ingreso ? \Carbon\Carbon::parse($recepcion->fecha_ingreso)->format('d/m/Y') : 'No especificada' }}"
-                                            readonly>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label><strong>Hora de Ingreso</strong></label>
-                                        <input type="text" class="form-control" value="{{ $recepcion->hora_ingreso }}"
-                                            readonly>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-group">
-                                        <label><strong>Observaciones de la Recepción</strong></label>
-                                        <textarea class="form-control" name="observaciones"
-                                            rows="3">{{ $recepcion->observaciones }}</textarea>
-                                    </div>
+                                <div class="col-12 mt-2">
+                                    <p><strong><i class="fas fa-sticky-note"></i> Observaciones de la Recepción:</strong>
+                                    </p>
+                                    <textarea class="form-control" name="observaciones"
+                                        rows="3">{{ old('observaciones', $recepcion->observaciones) }}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -875,19 +861,19 @@
                             const div = document.createElement('div');
                             div.className = 'preview-item';
                             div.innerHTML = `
-                                    <img src="${e.target.result}" onclick="showImageModal('${e.target.result}')" title="Clic para ver en tamaño completo">
-                                    <div class="preview-controls">
-                                        <button type="button" class="btn btn-warning btn-sm" onclick="openPhotoEditor('${e.target.result}', ${index}, 'file', ${fileIndex})" title="Editar foto">
-                                            <i style="font-size: 20px;" class="fas fa-crop"></i>
-                                        </button>
-                                        <button type="button" class="btn btn-danger btn-sm" onclick="removePreview(this)" title="Eliminar foto">
-                                            <i style="font-size: 20px;" class="fas fa-times"></i>
-                                        </button>
-                                    </div>
-                                    <div class="preview-badge">
-                                        <i class="fas fa-file"></i> Nueva
-                                    </div>
-                                `;
+                                        <img src="${e.target.result}" onclick="showImageModal('${e.target.result}')" title="Clic para ver en tamaño completo">
+                                        <div class="preview-controls">
+                                            <button type="button" class="btn btn-warning btn-sm" onclick="openPhotoEditor('${e.target.result}', ${index}, 'file', ${fileIndex})" title="Editar foto">
+                                                <i style="font-size: 20px;" class="fas fa-crop"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-danger btn-sm" onclick="removePreview(this)" title="Eliminar foto">
+                                                <i style="font-size: 20px;" class="fas fa-times"></i>
+                                            </button>
+                                        </div>
+                                        <div class="preview-badge">
+                                            <i class="fas fa-file"></i> Nueva
+                                        </div>
+                                    `;
                             previewContainer.appendChild(div);
 
                             // Ocultar estado vacío
@@ -986,22 +972,22 @@
                         fullscreenContainer = document.createElement('div');
                         fullscreenContainer.className = 'camera-fullscreen';
                         fullscreenContainer.innerHTML = `
-                                <div class="camera-info">
-                                    <i class="fas fa-camera"></i> Equipo #${index + 1} - Tomar Foto
-                                </div>
-                                <button class="close-btn" onclick="closeCameraFullscreen(${index})">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                                <video id="fullscreenVideo${index}" autoplay playsinline></video>
-                                <div class="controls">
-                                    <button type="button" class="btn btn-success btn-lg" onclick="captureFullscreenPhoto(${index})">
-                                        <i class="fas fa-camera"></i> Capturar
+                                    <div class="camera-info">
+                                        <i class="fas fa-camera"></i> Equipo #${index + 1} - Tomar Foto
+                                    </div>
+                                    <button class="close-btn" onclick="closeCameraFullscreen(${index})">
+                                        <i class="fas fa-times"></i>
                                     </button>
-                                    <button type="button" class="btn btn-danger btn-lg" onclick="closeCameraFullscreen(${index})">
-                                        <i class="fas fa-times"></i> Cancelar
-                                    </button>
-                                </div>
-                            `;
+                                    <video id="fullscreenVideo${index}" autoplay playsinline></video>
+                                    <div class="controls">
+                                        <button type="button" class="btn btn-success btn-lg" onclick="captureFullscreenPhoto(${index})">
+                                            <i class="fas fa-camera"></i> Capturar
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-lg" onclick="closeCameraFullscreen(${index})">
+                                            <i class="fas fa-times"></i> Cancelar
+                                        </button>
+                                    </div>
+                                `;
 
                         document.body.appendChild(fullscreenContainer);
                         document.body.style.overflow = 'hidden';
@@ -1050,13 +1036,13 @@
                             icon: 'error',
                             title: errorTitle,
                             html: `
-                                    <p>${errorMessage}</p>
-                                    <hr>
-                                    <small><strong>Detalles técnicos:</strong><br>
-                                    ${err.name}: ${err.message}<br>
-                                    Navegador: ${navigator.userAgent.split(' ')[0]}<br>
-                                    Protocolo: ${location.protocol}</small>
-                                `,
+                                        <p>${errorMessage}</p>
+                                        <hr>
+                                        <small><strong>Detalles técnicos:</strong><br>
+                                        ${err.name}: ${err.message}<br>
+                                        Navegador: ${navigator.userAgent.split(' ')[0]}<br>
+                                        Protocolo: ${location.protocol}</small>
+                                    `,
                             width: '500px',
                             confirmButtonText: 'Entendido'
                         });
@@ -1124,19 +1110,19 @@
                             const div = document.createElement('div');
                             div.className = 'preview-item';
                             div.innerHTML = `
-                                    <img src="${e.target.result}" onclick="showImageModal('${e.target.result}')" title="Clic para ver en tamaño completo">
-                                    <div class="preview-controls">
-                                        <button type="button" class="btn btn-warning btn-sm" onclick="openPhotoEditor('${e.target.result}', ${equipoIndex}, 'camera', ${previewContainer.children.length})" title="Editar foto">
-                                            <i class="fas fa-crop"></i>
-                                        </button>
-                                        <button type="button" class="btn btn-danger btn-sm" onclick="removeCameraPhoto(this, ${equipoIndex}, ${cameraPhotoCount})" title="Eliminar foto">
-                                            <i class="fas fa-times"></i>
-                                        </button>
-                                    </div>
-                                    <div class="preview-badge">
-                                        <i class="fas fa-camera"></i> Cámara
-                                    </div>
-                                `;
+                                        <img src="${e.target.result}" onclick="showImageModal('${e.target.result}')" title="Clic para ver en tamaño completo">
+                                        <div class="preview-controls">
+                                            <button type="button" class="btn btn-warning btn-sm" onclick="openPhotoEditor('${e.target.result}', ${equipoIndex}, 'camera', ${previewContainer.children.length})" title="Editar foto">
+                                                <i class="fas fa-crop"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-danger btn-sm" onclick="removeCameraPhoto(this, ${equipoIndex}, ${cameraPhotoCount})" title="Eliminar foto">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </div>
+                                        <div class="preview-badge">
+                                            <i class="fas fa-camera"></i> Cámara
+                                        </div>
+                                    `;
                             previewContainer.appendChild(div);
 
                             // Ocultar estado vacío
@@ -1457,9 +1443,9 @@
                 modal.id = 'imageModal';
                 modal.className = 'image-modal';
                 modal.innerHTML = `
-                        <span class="image-modal-close" onclick="closeImageModal()">&times;</span>
-                        <img class="image-modal-content" id="modalImage">
-                    `;
+                            <span class="image-modal-close" onclick="closeImageModal()">&times;</span>
+                            <img class="image-modal-content" id="modalImage">
+                        `;
                 document.body.appendChild(modal);
 
                 // Cerrar modal al hacer clic fuera de la imagen

@@ -78,7 +78,7 @@
                                                                     <i class="fas fa-file-invoice-dollar"></i> Ver Cotización
                                                                 </a>
                                                             @else
-                                                                <a href="{{ route('cotizaciones.edit', $recepcion->id) }}"
+                                                                <a href="{{ route('cotizaciones.createFromRecepcion', $recepcion->id) }}"
                                                                     class="btn btn-warning btn-sm" title="Crear Cotización">
                                                                     <i class="fas fa-plus"></i> Cotizar
                                                                 </a>
@@ -142,7 +142,7 @@
                                                                 <i class="fas fa-file-invoice-dollar"></i> Ver
                                                             </a>
                                                         @else
-                                                            <a href="{{ route('cotizaciones.edit', $recepcion->id) }}"
+                                                            <a href="{{ route('cotizaciones.createFromRecepcion', $recepcion->id) }}"
                                                                 class="btn btn-warning btn-sm" title="Crear Cotización">
                                                                 <i class="fas fa-plus"></i> Cotizar
                                                             </a>

@@ -6,6 +6,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @property string $numero_recepcion
+ * @property int $cliente_id
+ * @property int $user_id
+ * @property \Illuminate\Support\Carbon $fecha_ingreso
+ * @property \Illuminate\Support\Carbon $hora_ingreso
+ * @property string $estado
+ */
+
+
 class Recepcion extends Model
 {
     use HasFactory, SoftDeletes;
