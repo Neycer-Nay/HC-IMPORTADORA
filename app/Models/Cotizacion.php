@@ -4,6 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property string $nombre
+ * @property float $subtotal
+ * @property float $descuento
+ * @property float $total
+ * @property string $estado
+ * @property string $numero_recepcion
+ * */
 class Cotizacion extends Model
 {
     protected $table = 'cotizaciones';

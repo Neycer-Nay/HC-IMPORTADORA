@@ -30,7 +30,10 @@
                                 <p><strong><i class="fas fa-id-card"></i> Nombre:</strong>
                                     {{ $cotizacion->recepcion->cliente->nombre }}</p>
                                 <p><strong><i class="fas fa-phone"></i> Teléfono:</strong>
-                                    {{ $cotizacion->recepcion->cliente->telefono_1 }} / {{ $cotizacion->recepcion->cliente->telefono_2 }} / {{ $cotizacion->recepcion->cliente->telefono_3 }}</p>
+                                    {{ $cotizacion->recepcion->cliente->telefono_1 }} /
+                                    {{ $cotizacion->recepcion->cliente->telefono_2 }} /
+                                    {{ $cotizacion->recepcion->cliente->telefono_3 }}
+                                </p>
                             </div>
                             <div class="col-md-6">
                                 <p><strong><i class="fas fa-envelope"></i> Email:</strong>
@@ -137,8 +140,12 @@
                                             @if($fotosSeleccionadas && $fotosSeleccionadas->count())
                                                 @foreach($fotosSeleccionadas as $foto)
                                                     <div class="foto-item">
-                                                        <img src="{{ asset('storage/' . $foto->ruta) }}" alt="Foto seleccionada"
-                                                            class="img-thumbnail" style="width: 80px; height: 80px; object-fit: cover;">
+                                                        <a href="{{ Storage::url($foto->ruta) }}"
+                                                            data-lightbox="equipo-{{ $equipo->id }}" data-title="{{ $equipo->nombre }}">
+                                                            <img src="{{ asset('storage/' . $foto->ruta) }}" alt="Foto seleccionada"
+                                                                class="img-thumbnail"
+                                                                style="width: 80px; height: 80px; object-fit: cover;">
+                                                        </a>
                                                     </div>
                                                 @endforeach
                                             @else
@@ -197,7 +204,7 @@
                                             <p class="text-muted">No se especificaron repuestos</p>
                                         @endif
 
-                                         <!-- Servicios a realizar -->
+                                        <!-- Servicios a realizar -->
                                         <h6><i class="fas fa-cogs"></i> Servicios a Realizar</h6>
                                         @if(!empty($servicios))
                                             <div class="table-responsive">
@@ -205,7 +212,7 @@
                                                     <thead>
                                                         <tr>
                                                             <th>Servicio</th>
-                                                            
+
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -227,8 +234,6 @@
                         </div>
                     </div>
                 @endforeach
-
-
             </div>
         </section>
     </div>

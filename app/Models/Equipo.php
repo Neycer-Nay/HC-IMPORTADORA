@@ -8,6 +8,28 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @property int $recepcion_id
+ * @property int $cliente_id
+ * @property string $nombre
+ * @property string $tipo
+ * @property string $marca
+ * @property string $modelo
+ * @property string $color
+ * @property string $numero_serie
+ * @property float $potencia
+ * @property float $voltaje
+ * @property float $hp
+ * @property float $rpm
+ * @property float $hz
+ * @property float $amperaje
+ * @property string $cable_positivo
+ * @property string $cable_negativo
+ * @property float $kva_kw
+ * @property string|null $partes_faltantes
+ * @property string|null $observaciones
+ */
+
 class Equipo extends Model
 {
     use HasFactory, SoftDeletes;

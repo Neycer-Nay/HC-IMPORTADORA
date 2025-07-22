@@ -255,10 +255,7 @@
     <tr>
         <th colspan="4" style="background-color: #000d53; color: #fff;">SERVICIOS REALIZADOS</th>
     </tr>
-    <tr>
-        <th style="background-color: #000d53; color: #fff;">#</th>
-        <th colspan="3" style="background-color: #000d53; color: #fff;">Descripción del Servicio</th>
-    </tr>
+   
     @if($cotizacionEquipo->servicios && $cotizacionEquipo->servicios->count())
         @foreach($cotizacionEquipo->servicios as $i => $servicio)
             <tr>
