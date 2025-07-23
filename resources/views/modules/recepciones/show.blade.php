@@ -5,9 +5,10 @@
         <section class="section">
             <div class="section-header">
                 <h1 style="color:#151414"><i class="fas fa-clipboard-list"></i> Detalle de Recepción N°
-                    {{ $recepcion->numero_recepcion }}</h1>
+                    {{ $recepcion->numero_recepcion }}
+                </h1>
                 <div class="section-header-breadcrumb">
-                    
+
                     <a href="{{ route('recepciones.index') }}" class="btn btn-light">
                         <i class="fas fa-arrow-left"></i> Volver
                     </a>
@@ -21,10 +22,10 @@
                         <h5><i class="fas fa-info-circle"></i> Información General</h5>
                         <div class="card-header-action">
                             <span class="badge badge-{{ 
-                                $recepcion->estado == 'RECIBIDO' ? 'primary' :
+                                    $recepcion->estado == 'RECIBIDO' ? 'primary' :
         ($recepcion->estado == 'EN_REPARACION' ? 'warning' :
             ($recepcion->estado == 'REPARADO' ? 'success' : 'secondary'))
-                            }}">
+                                }}">
                                 {{ str_replace('_', ' ', $recepcion->estado) }}
                             </span>
                         </div>
@@ -42,6 +43,12 @@
                                 </p>
                                 <p><strong><i class="fas fa-user-tie"></i> Atendido por:</strong>
                                     {{ optional($recepcion->usuario)->nombre ?? 'N/A' }}</p>
+                            </div>
+                            <div class="col-12 mt-2">
+                                <p><strong><i class="fas fa-sticky-note"></i> Observaciones de la Recepción:</strong></p>
+                                <div class="form-control bg-light" style="min-height: 80px;">
+                                    {{ $recepcion->observaciones ?: 'Sin observaciones' }}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -114,16 +121,16 @@
                                                 </ul>
 
                                                 <!-- Información adicional oculta temportalmente 
-                                                <div class="mt-3">
-                                                    <h6 ><i class="fas fa-exclamation-triangle"></i>
-                                                        Información Adicional</h6>
-                                                    <ul class="list-unstyled">
-                                                        <li><strong>Partes Faltantes:</strong>
-                                                            {{ $equipo->partes_faltantes ?? 'N/A' }}</li>
-                                                        <li><strong>Observaciones:</strong>
-                                                            {{ $equipo->observaciones ?? 'N/A' }}</li>
-                                                    </ul>
-                                                </div>-->
+                                                        <div class="mt-3">
+                                                            <h6 ><i class="fas fa-exclamation-triangle"></i>
+                                                                Información Adicional</h6>
+                                                            <ul class="list-unstyled">
+                                                                <li><strong>Partes Faltantes:</strong>
+                                                                    {{ $equipo->partes_faltantes ?? 'N/A' }}</li>
+                                                                <li><strong>Observaciones:</strong>
+                                                                    {{ $equipo->observaciones ?? 'N/A' }}</li>
+                                                            </ul>
+                                                        </div>-->
                                             </div>
                                         </div>
 
@@ -167,7 +174,7 @@
 
                 <!-- Botones de acción -->
                 <div class="text-right">
-                    
+
                     <a href="{{ route('cotizaciones.edit', $recepcion->id) }}" class="btn btn-success">
                         <i class="fas fa-file-invoice-dollar"></i> Crear Cotización
                     </a>

@@ -121,7 +121,7 @@
                 <td width="70%" class="empresa-info">
                     <strong>HC INDUSTRIAL</strong><br>
                     MANTENIMIENTO Y REPARACIÓN DE MAQUINARIA ELÉCTRICA INDUSTRIAL<br>
-                    Dir: Av. Alemana Esq. Costanera<br>
+                    Dir: 4to Anillo entre Av. Alemana y Av. Costanera<br>
                     Cel: 76578154 - 72868051<br>
                     <strong>PRO-FORMA</strong>
                 </td>
@@ -129,23 +129,30 @@
         </table>
     </div>
     <div class="clearfix"></div>
-    <h3>Proforma N°: {{ $recepcion->numero_recepcion }}</h3>
+    <h3>PRO-FORMA N°: {{ $recepcion->numero_recepcion }}</h3>
     <!-- Datos del cliente -->
     <table class="datos-empresa">
         <tr>
-            <td class="titulo" colspan="4" style="background-color: #000d53; color: #fff;">DATOS DEL CLIENTE</td>
+            <td class="titulo" colspan="4" style="background-color: #000d53; color: #fff; text-align: center;">DATOS DEL CLIENTE</td>
         </tr>
         <tr>
-            <td><strong>Tipo:</strong></td>
-            <td>{{ $cliente->tipo ?? 'Particular' }}</td>
-            <td><strong>Solicitante:</strong></td>
-            <td>{{ $cliente->nombre }}</td>
+            <td><strong>Tipo:</strong>{{ $cliente->tipo ?? 'Particular' }}</td>
+            
+            <td><strong>Solicitante:</strong>{{ $cliente->nombre }}</td>
+            
+
         </tr>
         <tr>
-            <td><strong>Celular:</strong></td>
-            <td>{{ $cliente->telefono_1 }}-{{ $cliente->telefono_2 }}-{{ $cliente->telefono_3 }}</td>
-            <td><strong>Fecha:</strong></td>
-            <td>{{ \Carbon\Carbon::parse($cotizacion->fecha)->format('d/m/Y') }}</td>
+            <td><strong>Celular:</strong>{{ $cliente->telefono_1 }}-{{ $cliente->telefono_2 }}-{{ $cliente->telefono_3 }}</td>
+            
+            <td><strong>Fecha:</strong>{{ \Carbon\Carbon::parse($cotizacion->fecha)->format('d/m/Y') }}</td>
+            
+        </tr>
+        <tr>
+            @foreach($cliente->equipos as $equipo)
+                <td><strong>Articulo:</strong>{{ $equipo->nombre }}</td>
+                <td><strong>N° Documento:</strong>{{ $cliente->numero_documento }}</td>
+            @endforeach
         </tr>
     </table>
 
@@ -209,17 +216,19 @@
 
         <!-- Tabla de repuestos -->
         <table class="tabla-repuestos">
-            <tr >
-                <th style="background-color: #000d53; color: #fff;">CANT</th>
-                <th style="background-color: #000d53; color: #fff;">DESCRIPCIÓN</th>
+            <tr>
+                
+                <th style="background-color: #000d53; color: #fff;">DESCRIPCIÓN DE LOS REPUESTOS</th>
+                <th style="background-color: #000d53; color: #fff; ">CANT</th>
                 <th style="background-color: #000d53; color: #fff;">U. UNITARIO</th>
                 <th style="background-color: #000d53; color: #fff;">TOTAL</th>
             </tr>
             @if($repuestos && $repuestos->count())
                 @foreach($repuestos as $repuesto)
                     <tr>
-                        <td>{{ $repuesto->cantidad }}</td>
-                        <td>{{ $repuesto->nombre }}</td>
+                        
+                        <td style="text-align: center;">{{ $repuesto->nombre }}</td>
+                        <td style="text-align: center;">{{ $repuesto->cantidad }}</td>
                         <td>Bs. {{ number_format($repuesto->precio_unitario, 2) }}</td>
                         <td>Bs. {{ number_format($repuesto->cantidad * $repuesto->precio_unitario, 2) }}</td>
                     </tr>
@@ -238,7 +247,7 @@
             </tr>
             <tr>
                 <td colspan="4">
-                    <div class="fotos">
+                    <div class="fotos" style="margin-top: 38px; display: flex; justify-content: center;flex-wrap: wrap; ">
                         @if($fotosSeleccionadas && $fotosSeleccionadas->count())
                             @foreach($fotosSeleccionadas as $foto)
                                 <img src="{{ public_path('storage/' . $foto->ruta) }}" alt="Foto del equipo">
@@ -251,24 +260,27 @@
             </tr>
         </table>
     @endforeach
-        <table class="tabla-repuestos">
-    <tr>
-        <th colspan="4" style="background-color: #000d53; color: #fff;">SERVICIOS REALIZADOS</th>
-    </tr>
-   
-    @if($cotizacionEquipo->servicios && $cotizacionEquipo->servicios->count())
-        @foreach($cotizacionEquipo->servicios as $i => $servicio)
-            <tr>
-                <td>{{ $i + 1 }}</td>
-                <td colspan="3">{{ $servicio->nombre }}</td>
-            </tr>
-        @endforeach
-    @else
+    <table class="tabla-repuestos">
         <tr>
-            <td colspan="4" style="text-align: center;">No se especificaron servicios</td>
+            <th colspan="4" style="background-color: #000d53; color: #fff;">SERVICIOS REALIZADOS</th>
         </tr>
-    @endif
-</table>
+
+        @if($cotizacionEquipo->servicios && $cotizacionEquipo->servicios->count())
+            @foreach($cotizacionEquipo->servicios as $i => $servicio)
+                <tr>
+                    <td style="border-right: 0.5px solid #b0b0b0 !important;
+                                        border-left: 0.5px solid #b0b0b0 !important;
+                                        width: 85px;
+                                        text-align: center;">{{ $i + 1 }}</td>
+                    <td colspan="3" >{{ $servicio->nombre }}</td>
+                </tr>
+            @endforeach
+        @else
+            <tr>
+                <td colspan="4" >No se especificaron servicios</td>
+            </tr>
+        @endif
+    </table>
     <!-- Totales -->
     <table class="totales">
         <tr>
