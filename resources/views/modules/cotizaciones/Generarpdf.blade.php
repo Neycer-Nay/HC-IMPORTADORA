@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Proforma N°: {{ $recepcion->numero_recepcion }}</title>
+    <title>PRO-FORMA N°: {{ $recepcion->numero_recepcion }}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -73,8 +73,14 @@
             background: #e0e7ef;
         }
 
+        .tdfoto {
+            margin-bottom: 25px;
+            padding: 0;
+        }
+
         .fotos {
-            margin-top: 5px;
+            margin-top: 25px;
+
         }
 
         .fotos img {
@@ -84,6 +90,7 @@
             margin-bottom: 5px;
             border-radius: 4px;
             border: 1px solid #aaa;
+            display: inline-block;
         }
 
         .condiciones {
@@ -133,20 +140,21 @@
     <!-- Datos del cliente -->
     <table class="datos-empresa">
         <tr>
-            <td class="titulo" colspan="4" style="background-color: #000d53; color: #fff; text-align: center;">DATOS DEL CLIENTE</td>
+            <td class="titulo" colspan="4" style="background-color: #000d53; color: #fff; text-align: center;">DATOS DEL
+                CLIENTE</td>
         </tr>
         <tr>
             <td><strong>Tipo:</strong>{{ $cliente->tipo ?? 'Particular' }}</td>
-            
+
             <td><strong>Solicitante:</strong>{{ $cliente->nombre }}</td>
-            
+
 
         </tr>
         <tr>
-            <td><strong>Celular:</strong>{{ $cliente->telefono_1 }}-{{ $cliente->telefono_2 }}-{{ $cliente->telefono_3 }}</td>
-            
+            <td><strong>Celular:</strong>{{ $cliente->telefono_1 }}-{{ $cliente->telefono_2 }}-{{ $cliente->telefono_3 }}
+            </td>
             <td><strong>Fecha:</strong>{{ \Carbon\Carbon::parse($cotizacion->fecha)->format('d/m/Y') }}</td>
-            
+
         </tr>
         <tr>
             @foreach($cliente->equipos as $equipo)
@@ -217,7 +225,7 @@
         <!-- Tabla de repuestos -->
         <table class="tabla-repuestos">
             <tr>
-                
+
                 <th style="background-color: #000d53; color: #fff;">DESCRIPCIÓN DE LOS REPUESTOS</th>
                 <th style="background-color: #000d53; color: #fff; ">CANT</th>
                 <th style="background-color: #000d53; color: #fff;">U. UNITARIO</th>
@@ -226,7 +234,7 @@
             @if($repuestos && $repuestos->count())
                 @foreach($repuestos as $repuesto)
                     <tr>
-                        
+
                         <td style="text-align: center;">{{ $repuesto->nombre }}</td>
                         <td style="text-align: center;">{{ $repuesto->cantidad }}</td>
                         <td>Bs. {{ number_format($repuesto->precio_unitario, 2) }}</td>
@@ -246,8 +254,8 @@
                 <td colspan="4"><strong>IMAGEN {{ strtoupper($equipo->nombre) }}</strong></td>
             </tr>
             <tr>
-                <td colspan="4">
-                    <div class="fotos" style="margin-top: 38px; display: flex; justify-content: center;flex-wrap: wrap; ">
+                <td class="tdfoto" colspan="4">
+                    <div class="fotos">
                         @if($fotosSeleccionadas && $fotosSeleccionadas->count())
                             @foreach($fotosSeleccionadas as $foto)
                                 <img src="{{ public_path('storage/' . $foto->ruta) }}" alt="Foto del equipo">
@@ -268,16 +276,13 @@
         @if($cotizacionEquipo->servicios && $cotizacionEquipo->servicios->count())
             @foreach($cotizacionEquipo->servicios as $i => $servicio)
                 <tr>
-                    <td style="border-right: 0.5px solid #b0b0b0 !important;
-                                        border-left: 0.5px solid #b0b0b0 !important;
-                                        width: 85px;
-                                        text-align: center;">{{ $i + 1 }}</td>
-                    <td colspan="3" >{{ $servicio->nombre }}</td>
+
+                    <td colspan="4" ><strong>{{ $i + 1 }}</strong>.- {{ $servicio->nombre }}</td>
                 </tr>
             @endforeach
         @else
             <tr>
-                <td colspan="4" >No se especificaron servicios</td>
+                <td colspan="4">No se especificaron servicios</td>
             </tr>
         @endif
     </table>
