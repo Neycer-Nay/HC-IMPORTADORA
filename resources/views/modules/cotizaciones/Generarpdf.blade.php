@@ -175,10 +175,11 @@
             </tr>
             <tr>
                 <td><strong>Tipo:</strong> {{ $equipo->tipo }}</td>
-                <td><strong>Serie:</strong> {{ $equipo->numero_serie }}</td>
+                
                 <td><strong>Marca:</strong> {{ $equipo->marca }}</td>
                 <td><strong>Modelo:</strong> {{ $equipo->modelo }}</td>
                 <td><strong>Color:</strong> {{ $equipo->color ?? 'N/A' }}</td>
+                <td>-</td>
             </tr>
             <tr>
                 <td><strong>Voltaje:</strong> {{ $equipo->voltaje ?? 'N/A' }}</td>

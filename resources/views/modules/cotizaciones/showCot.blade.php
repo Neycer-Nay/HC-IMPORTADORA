@@ -109,7 +109,7 @@
                                     <div class="equipo-info p-3">
                                         <h6 class="text-primary"><i class="fas fa-info-circle"></i> Información Técnica</h6>
                                         <ul class="list-unstyled">
-                                            <li><strong>Serie:</strong> {{ $equipo->numero_serie }}</li>
+                                            <!--<li><strong>Serie:</strong> {{ $equipo->numero_serie }}</li>-->
                                             <li><strong>Marca:</strong> {{ $equipo->marca }}</li>
                                             <li><strong>Modelo:</strong> {{ $equipo->modelo }}</li>
                                             <li><strong>Color:</strong> {{ $equipo->color ?? 'N/A' }}</li>

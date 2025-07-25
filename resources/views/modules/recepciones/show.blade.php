@@ -82,7 +82,7 @@
                                                 <h6 class="text-primary"><i class="fas fa-info-circle"></i> Información Técnica
                                                 </h6>
                                                 <ul class="list-unstyled">
-                                                    <li><strong>N° de Serie:</strong> {{ $equipo->numero_serie ?? 'N/A' }}</li>
+                                                    <!--<li><strong>N° de Serie:</strong> {{ $equipo->numero_serie ?? 'N/A' }}</li>-->
 
                                                     @if($equipo->tipo == 'MOTOR_ELECTRICO')
                                                         <li><strong>Marca:</strong> {{ $equipo->marca ?? 'N/A' }}</li>
