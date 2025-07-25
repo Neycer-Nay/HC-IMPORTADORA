@@ -15,6 +15,7 @@ class Dashboard extends Controller
         $totalRecepciones = \App\Models\Recepcion::count();
         $totalUsuarios = \App\Models\User::count();
         $totalEquipos = \App\Models\Equipo::count();
-        return view('modules.dashboard.home', compact('totalClientes','totalRecepciones', 'totalUsuarios','totalEquipos', )); // Assuming you have a dashboard view at resources/views/dashboard/index.blade.php
+        $totalCotizaciones = \App\Models\Cotizacion::count();
+        return view('modules.dashboard.home', compact('totalClientes','totalRecepciones', 'totalUsuarios','totalEquipos', 'totalCotizaciones')); // Assuming you have a dashboard view at resources/views/dashboard/index.blade.php
     }
 }

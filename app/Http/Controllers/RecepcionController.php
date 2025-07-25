@@ -170,11 +170,14 @@ class RecepcionController extends Controller
      */
     public function show(Recepcion $recepcion)
     {
-        // Carga las relaciones (esto se puede hacer directamente en el modelo con $with si siempre las necesitas)
         $recepcion->load(['cliente', 'usuario', 'equipos']);
+        // Buscar cotización asociada
+        $cotizacion = \App\Models\Cotizacion::where('recepcion_id', $recepcion->id)->first();
 
-        // Retorna la vista de DETALLE (show) con los datos
-        return view('modules.recepciones.show', ['recepcion' => $recepcion]);
+        return view('modules.recepciones.show', [
+            'recepcion' => $recepcion,
+            'cotizacion' => $cotizacion
+        ]);
     }
     /**
      * Show the form for editing the specified resource.
@@ -248,7 +251,7 @@ class RecepcionController extends Controller
                     'recepcion_id' => $recepcion->id,
                     'cliente_id' => $recepcion->cliente_id,
                     'nombre' => $equipoData['nombre'],
-                    
+
                     'modelo' => $equipoData['modelo'] ?? null,
                     'marca' => $equipoData['marca'],
                     'numero_serie' => $equipoData['serie'] ?? null,

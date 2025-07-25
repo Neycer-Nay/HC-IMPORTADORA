@@ -30,9 +30,9 @@
                                 <p><strong><i class="fas fa-id-card"></i> Nombre:</strong>
                                     {{ $cotizacion->recepcion->cliente->nombre }}</p>
                                 <p><strong><i class="fas fa-phone"></i> Teléfono:</strong>
-                                    {{ $cotizacion->recepcion->cliente->telefono_1 }} /
-                                    {{ $cotizacion->recepcion->cliente->telefono_2 }} /
-                                    {{ $cotizacion->recepcion->cliente->telefono_3 }}
+                                    {{ $cotizacion->recepcion->cliente->telefono_1 }}
+                                    {{ $cotizacion->recepcion->cliente->telefono_2 ? '  - ' . $cotizacion->recepcion->cliente->telefono_2 : '' }}
+                                    {{ $cotizacion->recepcion->cliente->telefono_3 ? '  - ' . $cotizacion->recepcion->cliente->telefono_3 : '' }}
                                 </p>
                             </div>
                             <div class="col-md-6">
@@ -101,7 +101,7 @@
 
                         <div class="card-body">
                             <h6>
-                                <i class="fas fa-tools"></i>Tipo: {{ $equipo->tipo }}
+                                <i class="fas fa-tools"></i>Categoria: {{ Str::title(str_replace('_', ' ', $equipo->tipo)) }}
                             </h6>
                             <div class="row">
                                 <!-- Columna izquierda - Datos del equipo -->

@@ -28,6 +28,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property float $kva_kw
  * @property string|null $partes_faltantes
  * @property string|null $observaciones
+ * @property int $id
  */
 
 class Equipo extends Model

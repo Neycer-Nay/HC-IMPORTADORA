@@ -152,7 +152,7 @@
             <td>
                 <strong>Articulo:</strong>{{ $cotizacion->equipos->first()->equipo->nombre ?? 'N/A' }}
             </td>
-            <td><strong>Celular:</strong>{{ $cliente->telefono_1 }}-{{ $cliente->telefono_2 }}-{{ $cliente->telefono_3 }}
+            <td><strong>Celular:</strong>{{ $cliente->telefono_1 }}  {{ $cliente->telefono_2 }}  {{ $cliente->telefono_3 }}
             </td>
             
             <td><strong>Fecha:</strong>{{ \Carbon\Carbon::parse($cotizacion->fecha)->format('d/m/Y') }}</td>

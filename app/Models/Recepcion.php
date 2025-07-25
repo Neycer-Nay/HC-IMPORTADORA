@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property \Illuminate\Support\Carbon $fecha_ingreso
  * @property \Illuminate\Support\Carbon $hora_ingreso
  * @property string $estado
+ * @property int $id
  */
 
 

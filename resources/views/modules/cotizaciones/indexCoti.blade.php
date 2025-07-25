@@ -33,8 +33,7 @@
                                         <table class="table table-striped" id="table-1">
                                             <thead>
                                                 <tr>
-                                                    <th>ID</th>
-
+                                                    <th></th>                                                
                                                     <th>N° Cotización</th>
                                                     <th>Fecha</th>
                                                     <th>Cliente</th>
@@ -46,9 +45,8 @@
                                             </thead>
                                             <tbody>
                                                 @foreach($cotizaciones as $cotizacion)
-                                                    <tr>
-                                                        <td>{{ $cotizacion->id }}</td>
-
+                                                    <tr>  
+                                                        <td>{{ $loop->iteration }}</td>                                                      
                                                         <td>{{ $cotizacion->recepcion->numero_recepcion }}</td>
                                                         <td>{{ $cotizacion->fecha}}</td>
                                                         <td>{{ $cotizacion->recepcion->cliente->nombre ?? 'N/A' }}</td>

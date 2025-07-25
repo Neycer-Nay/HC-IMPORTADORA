@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\CotizacionSerivicio;
 
+
+
 class CotizacionEquipo extends Model
 {
     protected $fillable = [

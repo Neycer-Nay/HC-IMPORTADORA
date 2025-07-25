@@ -6,7 +6,7 @@
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1><i class="fas fa-edit"></i> Editar Recepción</h1>
+                <h1 style="color:#151414;">Editar Recepción</h1>
                 <div class="section-header-breadcrumb">
                     <a href="{{ route('recepciones.index') }}" class="btn btn-light">
                         <i class="fas fa-arrow-left"></i> Volver
@@ -23,7 +23,7 @@
                     <!-- Información de la Recepción (No editable) -->
                     <div class="card card-primary shadow-sm mb-4">
                         <div class="card-header">
-                            <h5><i class="fas fa-info-circle"></i> Información de la Recepción N°:{{ $recepcion->numero_recepcion }}</h5>
+                            <h5>Información de la Recepción N°:{{ $recepcion->numero_recepcion }}</h5>
                         </div>
                         <div class="card-body">
                             <div class="row">
@@ -80,15 +80,11 @@
                                                 <input type="text" class="form-control" name="equipos[{{ $index }}][nombre]"
                                                     value="{{ $equipo->nombre }}" required>
                                             </div>
-                                            <div class="form-group col-md-6">
-                                                <label><strong>Número de Serie</strong></label>
-                                                <input type="text" class="form-control" name="equipos[{{ $index }}][serie]"
-                                                    value="{{ $equipo->numero_serie }}">
-                                            </div>
+                                            
 
                                             <!-- Tipo de equipo (No editable) -->
                                             <div class="form-group col-md-4">
-                                                <label><strong>Tipo de Equipo</strong></label>
+                                                <label><strong>Categoria de Equipo</strong></label>
                                                 <input type="text" class="form-control"
                                                     value="{{ ucwords(str_replace('_', ' ', strtolower($equipo->tipo))) }}"
                                                     readonly>
@@ -103,7 +99,7 @@
                                                     value="{{ $equipo->marca }}" required>
                                             </div>
                                             <div class="form-group col-md-4">
-                                                <label><strong>Modelo</strong></label>
+                                                <label><strong>Tipo modelo</strong></label>
                                                 <input type="text" class="form-control" name="equipos[{{ $index }}][modelo]"
                                                     value="{{ $equipo->modelo }}">
                                             </div>
@@ -130,7 +126,7 @@
 
                                                 <!-- HP -->
                                                 <div class="form-group col-md-3">
-                                                    <label><strong>HP (Caballos de fuerza)</strong></label>
+                                                    <label><strong>HP</strong></label>
                                                     <input type="number" class="form-control" name="equipos[{{ $index }}][hp]"
                                                         value="{{ $equipo->hp }}">
                                                 </div>
@@ -144,7 +140,7 @@
 
                                                 <!-- Hz -->
                                                 <div class="form-group col-md-3">
-                                                    <label><strong>Hz (Hercios)</strong></label>
+                                                    <label><strong>Hz</strong></label>
                                                     <input type="number" class="form-control" name="equipos[{{ $index }}][hz]"
                                                         value="{{ $equipo->hz }}">
                                                 </div>
@@ -160,7 +156,7 @@
 
                                                 <!-- Amperaje -->
                                                 <div class="form-group col-md-3">
-                                                    <label><strong>AMP (Amperio)</strong></label>
+                                                    <label><strong>AMP</strong></label>
                                                     <input type="number" class="form-control" name="equipos[{{ $index }}][amperaje]"
                                                         value="{{ $equipo->amperaje }}">
                                                 </div>
@@ -199,7 +195,7 @@
 
                                                 <!-- Hz -->
                                                 <div class="form-group col-md-3">
-                                                    <label><strong>Hz (Hercios)</strong></label>
+                                                    <label><strong>Hz</strong></label>
                                                     <input type="number" class="form-control" name="equipos[{{ $index }}][hz]"
                                                         value="{{ $equipo->hz }}">
                                                 </div>

@@ -22,11 +22,11 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6">
-                            <p><strong><i class="fas fa-tag"></i> Tipo:</strong> {{ $cliente->tipo }}</p>
+                            <p><strong><i class="fas fa-tag"></i> Tipo:</strong> {{ Str::title($cliente->tipo) }}</p>
                             <p><strong><i class="fas fa-id-card"></i> Documento:</strong> {{ $cliente->tipo_documento }} - {{ $cliente->numero_documento }}</p>
                             <p><strong><i class="fas fa-phone"></i> Teléfonos:</strong> {{ $cliente->telefono_1 }}
-                                {{ $cliente->telefono_2 ? ' / ' . $cliente->telefono_2 : '' }}
-                                {{ $cliente->telefono_3 ? ' / ' . $cliente->telefono_3 : '' }}
+                                {{ $cliente->telefono_2 ? '  - ' . $cliente->telefono_2 : '' }}
+                                {{ $cliente->telefono_3 ? '  - ' . $cliente->telefono_3 : '' }}
                             </p>
                         </div>
                         <div class="col-md-6">
@@ -54,7 +54,7 @@
                             
                             <div class="card-body">
                                 <h6 >
-                                    <i class="fas fa-tools"></i>Tipo: {{ $equipo->tipo }}
+                                    <i class="fas fa-tools"></i>Categoria: {{ Str::title(str_replace('_', ' ', $equipo->tipo)) }}
                                 </h6>
                                 <div class="row">
                                     <!-- Columna izquierda - Datos del equipo -->
