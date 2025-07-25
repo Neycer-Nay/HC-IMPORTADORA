@@ -34,9 +34,9 @@
                                     <option value="{{ $cliente->id }}" @if(request('cliente_id') == $cliente->id) selected @endif
                                         data-nombre="{{ $cliente->nombre }}"
                                         data-documento="{{ $cliente->tipo_documento }}: {{ $cliente->numero_documento }}"
-                                        data-telefono="{{ $cliente->telefono_1 }} | {{ $cliente->telefono_2 }} | {{ $cliente->telefono_3 }} "
+                                        data-telefono="{{ $cliente->telefono_1 }}  {{ $cliente->telefono_2 ? '  - ' . $cliente->telefono_2 : '' }}  {{ $cliente->telefono_3 ? '  - ' . $cliente->telefono_3 : '' }}"
                                         data-email="{{ $cliente->email ?? '-' }}"
-                                        data-direccion="{{ $cliente->direccion }} @if($cliente->ciudad), {{ $cliente->ciudad }} @endif">
+                                        data-direccion="{{ $cliente->ciudad }} @if($cliente->direccion), {{ $cliente->direccion }} @endif">
                                         {{ $cliente->nombre }} || {{ $cliente->numero_documento }} || {{ $cliente->telefono_1 }}
                                     </option>
                                 @endforeach

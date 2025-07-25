@@ -21,13 +21,13 @@
                     <div class="card-header">
                         <h5><i class="fas fa-info-circle"></i> Información General</h5>
                         <div class="card-header-action">
-                            <span class="badge badge-{{ 
-                                    $recepcion->estado == 'RECIBIDO' ? 'primary' :
-        ($recepcion->estado == 'EN_REPARACION' ? 'warning' :
-            ($recepcion->estado == 'REPARADO' ? 'success' : 'secondary'))
-                                }}">
-                                {{ str_replace('_', ' ', $recepcion->estado) }}
-                            </span>
+                            <!--<span class="badge badge-{{ 
+                                        $recepcion->estado == 'RECIBIDO' ? 'primary' :
+            ($recepcion->estado == 'EN_REPARACION' ? 'warning' :
+                ($recepcion->estado == 'REPARADO' ? 'success' : 'secondary'))
+                                    }}">
+                                    {{ str_replace('_', ' ', $recepcion->estado) }}
+                                </span>-->
                         </div>
                     </div>
                     <div class="card-body">
@@ -71,7 +71,7 @@
 
                                 <div class="card-body">
                                     <h6 class="mb-0">
-                                        <i class="fas fa-tools"></i>Tipo: {{ $equipo->tipo }}
+                                        <i class="fas fa-tools"></i>Categoria: {{ Str::title(str_replace('_', ' ',$equipo->tipo)) }}
 
                                     </h6>
                                     <div class="row">
@@ -82,7 +82,7 @@
                                                 <h6 class="text-primary"><i class="fas fa-info-circle"></i> Información Técnica
                                                 </h6>
                                                 <ul class="list-unstyled">
-                                                    <li><strong>N° de Serie:</strong> {{ $equipo->numero_serie ?? 'N/A' }}</li>
+                                                    <!--<li><strong>N° de Serie:</strong> {{ $equipo->numero_serie ?? 'N/A' }}</li>-->
 
                                                     @if($equipo->tipo == 'MOTOR_ELECTRICO')
                                                         <li><strong>Marca:</strong> {{ $equipo->marca ?? 'N/A' }}</li>
@@ -121,16 +121,16 @@
                                                 </ul>
 
                                                 <!-- Información adicional oculta temportalmente 
-                                                        <div class="mt-3">
-                                                            <h6 ><i class="fas fa-exclamation-triangle"></i>
-                                                                Información Adicional</h6>
-                                                            <ul class="list-unstyled">
-                                                                <li><strong>Partes Faltantes:</strong>
-                                                                    {{ $equipo->partes_faltantes ?? 'N/A' }}</li>
-                                                                <li><strong>Observaciones:</strong>
-                                                                    {{ $equipo->observaciones ?? 'N/A' }}</li>
-                                                            </ul>
-                                                        </div>-->
+                                                                <div class="mt-3">
+                                                                    <h6 ><i class="fas fa-exclamation-triangle"></i>
+                                                                        Información Adicional</h6>
+                                                                    <ul class="list-unstyled">
+                                                                        <li><strong>Partes Faltantes:</strong>
+                                                                            {{ $equipo->partes_faltantes ?? 'N/A' }}</li>
+                                                                        <li><strong>Observaciones:</strong>
+                                                                            {{ $equipo->observaciones ?? 'N/A' }}</li>
+                                                                    </ul>
+                                                                </div>-->
                                             </div>
                                         </div>
 
@@ -174,10 +174,18 @@
 
                 <!-- Botones de acción -->
                 <div class="text-right">
-
-                    <a href="{{ route('cotizaciones.edit', $recepcion->id) }}" class="btn btn-success">
-                        <i class="fas fa-file-invoice-dollar"></i> Crear Cotización
-                    </a>
+                    @if(!$cotizacion)
+                        <a href="{{ route('cotizaciones.createFromRecepcion', $recepcion->id) }}" class="btn btn-success">
+                            <i class="fas fa-file-invoice-dollar"></i> Crear Cotización
+                        </a>
+                    @else
+                        <a href="{{ route('cotizaciones.edit', $cotizacion->id) }}" class="btn btn-warning">
+                            <i class="fas fa-edit"></i> Editar Cotización
+                        </a>
+                        <a href="{{ route('cotizaciones.show', $cotizacion->recepcion->id) }}" class="btn btn-info">
+                            <i class="fas fa-eye"></i> Ver Cotización
+                        </a>
+                    @endif
                 </div>
             </div>
         </section>

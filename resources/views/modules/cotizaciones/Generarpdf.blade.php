@@ -144,24 +144,21 @@
                 CLIENTE</td>
         </tr>
         <tr>
-            <td><strong>Tipo:</strong>{{ $cliente->tipo ?? 'Particular' }}</td>
-
+            <td><strong>Tipo de cliente:</strong>{{ $cliente->tipo ?? 'Particular' }}</td>
             <td><strong>Solicitante:</strong>{{ $cliente->nombre }}</td>
-
-
+            <td><strong>N° Documento:</strong>{{ $cliente->numero_documento }}</td>
         </tr>
         <tr>
-            <td><strong>Celular:</strong>{{ $cliente->telefono_1 }}-{{ $cliente->telefono_2 }}-{{ $cliente->telefono_3 }}
+            <td>
+                <strong>Articulo:</strong>{{ $cotizacion->equipos->first()->equipo->nombre ?? 'N/A' }}
             </td>
+            <td><strong>Celular:</strong>{{ $cliente->telefono_1 }}  {{ $cliente->telefono_2 }}  {{ $cliente->telefono_3 }}
+            </td>
+            
             <td><strong>Fecha:</strong>{{ \Carbon\Carbon::parse($cotizacion->fecha)->format('d/m/Y') }}</td>
-
+            <td>             
         </tr>
-        <tr>
-            @foreach($cliente->equipos as $equipo)
-                <td><strong>Articulo:</strong>{{ $equipo->nombre }}</td>
-                <td><strong>N° Documento:</strong>{{ $cliente->numero_documento }}</td>
-            @endforeach
-        </tr>
+        
     </table>
 
     <!-- Información de equipos cotizados -->
@@ -178,10 +175,11 @@
             </tr>
             <tr>
                 <td><strong>Tipo:</strong> {{ $equipo->tipo }}</td>
-                <td><strong>Serie:</strong> {{ $equipo->numero_serie }}</td>
+                
                 <td><strong>Marca:</strong> {{ $equipo->marca }}</td>
                 <td><strong>Modelo:</strong> {{ $equipo->modelo }}</td>
                 <td><strong>Color:</strong> {{ $equipo->color ?? 'N/A' }}</td>
+                <td>-</td>
             </tr>
             <tr>
                 <td><strong>Voltaje:</strong> {{ $equipo->voltaje ?? 'N/A' }}</td>

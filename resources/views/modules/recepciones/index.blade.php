@@ -37,30 +37,30 @@
                                         <table class="table table-striped" id="table-1">
                                             <thead>
                                                 <tr>
-                                                    <th>ID</th>
+                                                    <th></th>
                                                     <th>N° Recepción</th>
                                                     <th>Fecha y hora</th>
                                                     <th>Cliente</th>
                                                     <th>Usuario</th>
-                                                    <th>Estado</th>
+                                                    <!--<th>Estado</th>-->
                                                     <th>Acciones</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @foreach($recepciones as $recepcion)
                                                     <tr>
-                                                        <td>{{ $recepcion->id }}</td>
+                                                        <td>{{ $loop->iteration }}</td>
                                                         <td>{{ $recepcion->numero_recepcion }}</td>
                                                         <td>{{ $recepcion->fecha_ingreso->format('d/m/Y') }}-{{ \Carbon\Carbon::parse($recepcion->hora_ingreso)->format('H:i') }}
                                                         </td>
                                                         <td>{{ $recepcion->cliente->nombre ?? 'N/A' }}</td>
                                                         <td>{{ $recepcion->usuario->nombre ?? 'N/A' }}</td>
-                                                        <td>
+                                                        <!--<td>
                                                             <span
                                                                 class="badge badge-{{  $recepcion->estado == ($recepcion->estado == 'EN_REPARACION' ? 'warning' : ($recepcion->estado == 'REPARADO' ? 'success' : 'secondary')) }}">
                                                                 {{ str_replace('_', ' ', $recepcion->estado) }}
                                                             </span>
-                                                        </td>
+                                                        </td>-->
                                                         <td>
                                                             <a href="{{ route('recepciones.show', $recepcion->id) }}"
                                                                 class="btn btn-info btn-sm" title="Ver">
@@ -110,7 +110,7 @@
                                                 <div class="card-body p-2">
                                                     <h5 class="card-title mb-1">N° Recepción: {{ $recepcion->numero_recepcion }}
                                                     </h5>
-                                                    <p class="mb-1"><strong>ID:</strong> {{ $recepcion->id }}</p>
+                                                    
                                                     <p class="mb-1"><strong>Fecha y hora:</strong>
                                                         {{ $recepcion->fecha_ingreso->format('d/m/Y') }} -
                                                         {{ \Carbon\Carbon::parse($recepcion->hora_ingreso)->format('H:i') }}
@@ -119,12 +119,12 @@
                                                         {{ $recepcion->cliente->nombre ?? 'N/A' }}</p>
                                                     <p class="mb-1"><strong>Usuario:</strong>
                                                         {{ $recepcion->usuario->nombre ?? 'N/A' }}</p>
-                                                    <p class="mb-1"><strong>Estado:</strong>
+                                                    <!--<p class="mb-1"><strong>Estado:</strong>
                                                         <span
                                                             class="badge badge-{{  $recepcion->estado == ($recepcion->estado == 'EN_REPARACION' ? 'warning' : ($recepcion->estado == 'REPARADO' ? 'success' : 'secondary')) }}">
                                                             {{ str_replace('_', ' ', $recepcion->estado) }}
                                                         </span>
-                                                    </p>
+                                                    </p>-->
                                                     <div>
                                                         <a href="{{ route('recepciones.show', $recepcion->id) }}"
                                                             class="btn btn-info btn-sm" title="Ver">

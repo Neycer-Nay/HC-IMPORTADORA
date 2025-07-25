@@ -5,7 +5,7 @@
 <div class="main-content">
     <section class="section">
         <div class="section-header">
-            <h1 style="color:#151414"><i class="fas fa-user-circle"></i> Detalle del Cliente</h1>
+            <h1 style="color:#151414">Detalle del Cliente</h1>
             <div class="section-header-breadcrumb">
                 <a href="{{ route('clientes.index') }}" class="btn btn-light">
                     <i class="fas fa-arrow-left"></i> Volver
@@ -22,11 +22,11 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6">
-                            <p><strong><i class="fas fa-tag"></i> Tipo:</strong> {{ $cliente->tipo }}</p>
+                            <p><strong><i class="fas fa-tag"></i> Tipo:</strong> {{ Str::title($cliente->tipo) }}</p>
                             <p><strong><i class="fas fa-id-card"></i> Documento:</strong> {{ $cliente->tipo_documento }} - {{ $cliente->numero_documento }}</p>
                             <p><strong><i class="fas fa-phone"></i> Teléfonos:</strong> {{ $cliente->telefono_1 }}
-                                {{ $cliente->telefono_2 ? ' / ' . $cliente->telefono_2 : '' }}
-                                {{ $cliente->telefono_3 ? ' / ' . $cliente->telefono_3 : '' }}
+                                {{ $cliente->telefono_2 ? '  - ' . $cliente->telefono_2 : '' }}
+                                {{ $cliente->telefono_3 ? '  - ' . $cliente->telefono_3 : '' }}
                             </p>
                         </div>
                         <div class="col-md-6">
@@ -54,7 +54,7 @@
                             
                             <div class="card-body">
                                 <h6 >
-                                    <i class="fas fa-tools"></i>Tipo: {{ $equipo->tipo }}
+                                    <i class="fas fa-tools"></i>Categoria: {{ Str::title(str_replace('_', ' ', $equipo->tipo)) }}
                                 </h6>
                                 <div class="row">
                                     <!-- Columna izquierda - Datos del equipo -->
@@ -63,7 +63,7 @@
                                             <h6 class="text-primary"><i class="fas fa-info-circle"></i> Información Técnica</h6>
                                             <ul class="list-unstyled">
                                                 <li><strong>N° Recepción:</strong> {{ $equipo->recepcion->numero_recepcion ?? 'Sin recepción asociada' }}</li>
-                                                <li><strong>Serie:</strong> {{ $equipo->numero_serie }}</li>
+                                                <!--<li><strong>Serie:</strong> {{ $equipo->numero_serie }}</li>-->
                                                 <li><strong>Marca:</strong> {{ $equipo->marca }}</li>
                                                 <li><strong>Modelo:</strong> {{ $equipo->modelo }}</li>
                                                 <li><strong>Color:</strong> {{ $equipo->color ?? 'N/A' }}</li>
@@ -134,19 +134,19 @@
                                 <div class="row align-items-center">
                                     <div class="col-md-8">
                                         <h6 class="mb-1">
-                                            <i class="fas fa-hashtag"></i> N° Recepción: {{ $recepcion->numero_recepcion }}
+                                            N° Recepción: {{ $recepcion->numero_recepcion }}
                                         </h6>
                                         <p class="mb-1">
-                                            <strong><i class="fas fa-calendar-alt"></i> Fecha y hora:</strong>
+                                            <strong> Fecha y hora:</strong>
                                             {{ \Carbon\Carbon::parse($recepcion->fecha_ingreso)->format('d/m/Y') }} -
                                             {{ \Carbon\Carbon::parse($recepcion->hora_ingreso)->format('H:i') }}
                                         </p>
-                                        <p class="mb-1">
+                                        <!--<p class="mb-1">
                                             <strong><i class="fas fa-flag"></i> Estado:</strong>
                                             <span class="badge badge-{{ $recepcion->estado == 'EN_REPARACION' ? 'warning' : ($recepcion->estado == 'REPARADO' ? 'success' : 'secondary') }}">
                                                 {{ str_replace('_', ' ', $recepcion->estado) }}
                                             </span>
-                                        </p>
+                                        </p>-->
                                     </div>
                                     <div class="col-md-4 text-right">
                                         <a href="{{ route('recepciones.show', $recepcion->id) }}"
