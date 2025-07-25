@@ -42,7 +42,7 @@
                                                     <th>Fecha y hora</th>
                                                     <th>Cliente</th>
                                                     <th>Usuario</th>
-                                                    <th>Estado</th>
+                                                    <!--<th>Estado</th>-->
                                                     <th>Acciones</th>
                                                 </tr>
                                             </thead>
@@ -55,12 +55,12 @@
                                                         </td>
                                                         <td>{{ $recepcion->cliente->nombre ?? 'N/A' }}</td>
                                                         <td>{{ $recepcion->usuario->nombre ?? 'N/A' }}</td>
-                                                        <td>
+                                                        <!--<td>
                                                             <span
                                                                 class="badge badge-{{  $recepcion->estado == ($recepcion->estado == 'EN_REPARACION' ? 'warning' : ($recepcion->estado == 'REPARADO' ? 'success' : 'secondary')) }}">
                                                                 {{ str_replace('_', ' ', $recepcion->estado) }}
                                                             </span>
-                                                        </td>
+                                                        </td>-->
                                                         <td>
                                                             <a href="{{ route('recepciones.show', $recepcion->id) }}"
                                                                 class="btn btn-info btn-sm" title="Ver">

@@ -3,8 +3,10 @@
 
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" href="{{ asset(path: 'img/logoICO.ico') }}" type="image/x-icon">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
     <title>HC BOBINADOS INDUSTRIAL</title>
+    
 
     <!-- General CSS Files -->
     <link rel="stylesheet" href="{{ asset(path: 'dist/assets/modules/bootstrap/css/bootstrap.min.css') }}">

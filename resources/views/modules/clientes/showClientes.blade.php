@@ -32,8 +32,10 @@
                                         <table class="table table-striped" id="table-1">
                                             <thead>
                                                 <tr>
+                                                    <th>#</th>
+                                                  
                                                     <th>Nombre</th>
-                                                    <th>Tipo</th>
+                                                    
                                                     <th>N° Documento</th>
                                                     <th>Teléfonos</th>
                                                     <th>Correo</th>
@@ -44,8 +46,10 @@
                                             <tbody>
                                                 @foreach($clientes as $cliente)
                                                     <tr>
-                                                        <td>{{ $cliente->nombre }}</td>
-                                                        <td>{{ $cliente->tipo }}</td>
+                                                        <td>{{ $loop->iteration }}</td>
+
+                                                        <td>{{ $cliente->nombre }} - <strong>{{ $cliente->tipo }}</strong></td>
+
                                                         <td>{{ $cliente->tipo_documento}}-{{ $cliente->numero_documento }}</td>
                                                         <td>{{ $cliente->telefono_1 }}{{ $cliente->telefono_2 ? ' - ' . $cliente->telefono_2 : '' }}{{ $cliente->telefono_3 ? ' - ' . $cliente->telefono_3 : '' }}
                                                         </td>

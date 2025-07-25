@@ -21,13 +21,13 @@
                     <div class="card-header">
                         <h5><i class="fas fa-info-circle"></i> Información General</h5>
                         <div class="card-header-action">
-                            <span class="badge badge-{{ 
+                            <!--<span class="badge badge-{{ 
                                     $recepcion->estado == 'RECIBIDO' ? 'primary' :
         ($recepcion->estado == 'EN_REPARACION' ? 'warning' :
             ($recepcion->estado == 'REPARADO' ? 'success' : 'secondary'))
                                 }}">
                                 {{ str_replace('_', ' ', $recepcion->estado) }}
-                            </span>
+                            </span>-->
                         </div>
                     </div>
                     <div class="card-body">

@@ -30,10 +30,11 @@
                     <label><strong>Articulo</strong> <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" name="equipos[__INDEX__][nombre]" required>
                 </div>
-                <div class="form-group col-md-6">
+                <!-- ocultar mientras tanto no se implemente el número de serie
+                 <div class="form-group col-md-6">
                     <label><strong>Número de Serie</strong></label>
                     <input type="text" class="form-control" name="equipos[__INDEX__][serie]">
-                </div>
+                </div>-->
 
                 <!-- Selector de categoría de equipo -->
                 <div class="form-group col-md-4">
@@ -54,7 +55,7 @@
                     <input type="text" class="form-control" name="equipos[__INDEX__][marca]" required>
                 </div>
                 <div class="form-group col-md-4" id="modelo__INDEX__" style="display: none;">
-                    <label><strong>Tipo Modelo</strong></label>
+                    <label><strong>Tipo modelo</strong></label>
                     <input type="text" class="form-control" name="equipos[__INDEX__][modelo]">
                 </div>
                 <div class="form-group col-md-4" id="color__INDEX__" style="display: none;">
@@ -83,7 +84,7 @@
                 <!-- Campos específicos para cada tipo -->
                 <!-- Motor Eléctrico -->
                 <div class="form-group col-md-3" id="hp__INDEX__" style="display: none;">
-                    <label><strong>HP (Caballos de fuerza)</strong></label>
+                    <label><strong>HP</strong></label>
                     <input type="number" class="form-control" name="equipos[__INDEX__][hp]">
                 </div>
                 <div class="form-group col-md-3" id="rpm__INDEX__" style="display: none;">
@@ -91,7 +92,7 @@
                     <input type="number" class="form-control" name="equipos[__INDEX__][rpm]">
                 </div>
                 <div class="form-group col-md-3" id="hz__INDEX__" style="display: none;">
-                    <label><strong>Hz (Hercios)</strong></label>
+                    <label><strong>Hz</strong></label>
                     <input type="number" class="form-control" name="equipos[__INDEX__][hz]">
                 </div>
                 <!--<div class="form-group col-md-3" id="kvaKw__INDEX__" style="display: none;">
@@ -101,16 +102,16 @@
 
                 <!-- Máquina Soldadora -->
                 <div class="form-group col-md-3" id="amp__INDEX__" style="display: none;">
-                    <label><strong>AMP (Amperio)</strong></label>
+                    <label><strong>AMP</strong></label>
                     <input type="number" class="form-control" name="equipos[__INDEX__][amperaje]">
                 </div>
                 <div class="form-group col-md-3" id="cablePositivo__INDEX__" style="display: none;">
                     <label><strong>Cable +</strong></label>
-                    <input type="text" class="form-control" name="equipos[__INDEX__][cable_positivo]">
+                    <input type="text" class="form-control" name="equipos[__INDEX__][cable_positivo]" value="No incluye" readonly>
                 </div>
                 <div class="form-group col-md-3" id="cableNegativo__INDEX__" style="display: none;">
                     <label><strong>Cable -</strong></label>
-                    <input type="text" class="form-control" name="equipos[__INDEX__][cable_negativo]">
+                    <input type="text" class="form-control" name="equipos[__INDEX__][cable_negativo]"value="No incluye" readonly>
                 </div>
 
                 <!-- Generador/Dinamo -->
@@ -1174,7 +1175,7 @@
 
         const campos = {
             comunes: ['marca', 'modelo', 'color', 'voltaje'],
-            MOTOR_ELECTRICO: ['hp', 'rpm', 'hz', 'kvaKw'],
+            MOTOR_ELECTRICO: ['hp', 'rpm', 'hz'],
             MAQUINA_SOLDADORA: ['amp', 'cablePositivo', 'cableNegativo'],
             GENERADOR_DINAMO: ['kvaKw', 'hz', 'rpm'],
             OTROS: ['potencia']

@@ -5,7 +5,7 @@
 <div class="main-content">
     <section class="section">
         <div class="section-header">
-            <h1 style="color:#151414"><i class="fas fa-user-circle"></i> Detalle del Cliente</h1>
+            <h1 style="color:#151414">Detalle del Cliente</h1>
             <div class="section-header-breadcrumb">
                 <a href="{{ route('clientes.index') }}" class="btn btn-light">
                     <i class="fas fa-arrow-left"></i> Volver
