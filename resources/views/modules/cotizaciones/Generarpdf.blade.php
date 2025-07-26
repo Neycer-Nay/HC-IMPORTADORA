@@ -174,7 +174,7 @@
                 <th colspan="5" style="background-color: #000d53; color: #fff;">NOMBRE DEL EQUIPO:{{ $equipo->nombre }}</th>
             </tr>
             <tr>
-                <td><strong>Tipo:</strong> {{ $equipo->tipo }}</td>
+                <td><strong>Tipo:</strong> {{  Str::title(str_replace('_', ' ', $equipo->tipo))}}</td>
                 
                 <td><strong>Marca:</strong> {{ $equipo->marca }}</td>
                 <td><strong>Modelo:</strong> {{ $equipo->modelo }}</td>
