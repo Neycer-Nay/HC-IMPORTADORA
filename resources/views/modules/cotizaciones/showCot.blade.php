@@ -4,7 +4,7 @@
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1><i class="fas fa-file-invoice-dollar"></i> Detalle de Cotización N°
+                <h1 style="color: #151414">Detalle Cotización N°:
                     {{ $cotizacion->recepcion->numero_recepcion }}
                 </h1>
                 <div class="section-header-breadcrumb">
@@ -234,6 +234,11 @@
                         </div>
                     </div>
                 @endforeach
+            </div>
+            <div class="text-right">
+                <a href="{{ route('cotizaciones.edit', $cotizacion->id) }}" class="btn btn-warning">
+                    <i class="fas fa-edit"></i> Editar Cotización
+                </a>
             </div>
         </section>
     </div>

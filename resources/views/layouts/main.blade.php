@@ -103,6 +103,11 @@
 
     <!-- JS de Cropper.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+    <script>
+        lightbox.option({
+            'albumLabel': 'Foto %1 de %2',  // Personaliza el texto aquí
+        });
+    </script>
 
     @yield('scripts')
 

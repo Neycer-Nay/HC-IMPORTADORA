@@ -4,7 +4,7 @@
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1 style="color:#151414"><i class="fas fa-clipboard-list"></i> Detalle de Recepción N°
+                <h1 style="color:#151414">Detalle Recepción N°:
                     {{ $recepcion->numero_recepcion }}
                 </h1>
                 <div class="section-header-breadcrumb">
