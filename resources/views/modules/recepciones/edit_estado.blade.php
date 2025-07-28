@@ -6,7 +6,7 @@
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1 style="color:#151414;">Editar Recepción</h1>
+                <h1 style="color:#151414;">Editar Recepción N°:{{ $recepcion->numero_recepcion }}</h1>
                 <div class="section-header-breadcrumb">
                     <a href="{{ route('recepciones.index') }}" class="btn btn-light">
                         <i class="fas fa-arrow-left"></i> Volver
@@ -23,7 +23,7 @@
                     <!-- Información de la Recepción (No editable) -->
                     <div class="card card-primary shadow-sm mb-4">
                         <div class="card-header">
-                            <h5>Información de la Recepción N°:{{ $recepcion->numero_recepcion }}</h5>
+                            <h5><i class="fas fa-info-circle"></i> Información General</h5>
                         </div>
                         <div class="card-body">
                             <div class="row">
@@ -32,16 +32,18 @@
                                     <p><strong><i class="fas fa-user"></i> Cliente:</strong>
                                         {{ $recepcion->cliente->nombre }}
                                     </p>
-                                    <p><strong><i class="fas fa-calendar-alt"></i> Fecha de Ingreso:</strong>
-                                        {{ $recepcion->fecha_ingreso ? \Carbon\Carbon::parse($recepcion->fecha_ingreso)->format('d/m/Y') : 'No especificada' }}
-                                    </p>
+                                    <p><strong><i class="fas fa-user-tie"></i> Atendido por:</strong>
+                                        {{ optional($recepcion->usuario)->nombre ?? 'N/A' }}</p>
+                                    
 
                                 </div>
                                 <div class="col-md-6">
+                                    <p><strong><i class="fas fa-calendar-alt"></i> Fecha de Ingreso:</strong>
+                                        {{ $recepcion->fecha_ingreso ? \Carbon\Carbon::parse($recepcion->fecha_ingreso)->format('d/m/Y') : 'No especificada' }}
+                                    </p>
                                     <p><strong><i class="fas fa-clock"></i> Hora Recepción:</strong>
                                         {{ \Carbon\Carbon::parse($recepcion->hora_ingreso)->format('H:i') }}</p>
-                                    <p><strong><i class="fas fa-user-tie"></i> Atendido por:</strong>
-                                        {{ optional($recepcion->usuario)->nombre ?? 'N/A' }}</p>
+                                    
                                 </div>
                                 <div class="col-12 mt-2">
                                     <p><strong><i class="fas fa-sticky-note"></i> Observaciones de la Recepción:</strong>

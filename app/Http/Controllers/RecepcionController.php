@@ -65,7 +65,7 @@ class RecepcionController extends Controller
         // Validación de datos
         $validated = $request->validate([
             'cliente_id' => 'required|exists:clientes,id',
-            'numero_recepcion' => 'required|unique:recepciones',
+            'numero_recepcion' => 'required|:recepciones',
             'fecha_ingreso' => 'required|date', // Cambiado a fecha_ingreso para coincidir con BD
             'hora_ingreso' => 'required',
             'observaciones' => 'nullable|string',
@@ -303,7 +303,42 @@ class RecepcionController extends Controller
      */
     public function destroy(Recepcion $recepcion)
     {
-        //
+        try {
+        // Eliminar cotización asociada (si existe)
+        if ($recepcion->cotizacion) {
+            // Si la cotización tiene detalles, elimínalos aquí
+            // Por ejemplo: $recepcion->cotizacion->detalles()->delete();
+            $recepcion->cotizacion->delete();
+        }
+
+        // Eliminar equipos y sus fotos
+        foreach ($recepcion->equipos as $equipo) {
+            // Eliminar fotos del equipo
+            foreach ($equipo->fotos as $foto) {
+                // Eliminar archivo físico
+                \Storage::disk('public')->delete($foto->ruta);
+                $foto->delete();
+            }
+            $equipo->delete();
+        }
+
+        // Finalmente, eliminar la recepción
+        $recepcion->delete();
+
+        return redirect()->route('recepciones.index')
+            ->with('swal', [
+                'icon' => 'success',
+                'title' => '¡Eliminado!',
+                'text' => 'Recepción eliminada correctamente'
+            ]);
+    } catch (\Exception $e) {
+        return redirect()->route('recepciones.index')
+            ->with('swal', [
+                'icon' => 'error',
+                'title' => 'Error',
+                'text' => 'Error al eliminar la recepción: ' . $e->getMessage()
+            ]);
+    }
     }
 
     private function storeImage($file, $equipoId)

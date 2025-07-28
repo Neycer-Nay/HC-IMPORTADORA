@@ -16,8 +16,9 @@
                 <table class="table table-striped" id="table-1">
                     <thead>
                         <tr>
+                            <th></th>
                             <th>Nombre</th>
-                            <th>Email</th>
+                            <th>Correo</th>
                             <th>Rol</th>
                             <th>Acciones</th>
                         </tr>
@@ -25,18 +26,19 @@
                     <tbody>
                         @foreach($users as $user)
                             <tr>
+                                <td>{{ $loop->iteration }}</td>
                                 <td>{{ $user->nombre }}</td>
                                 <td>{{ $user->email }}</td>
                                 <td>{{ $user->rol }}</td>
                                 <td>
                                     <a href="{{ route('usuarios.edit', $user->id) }}" class="btn btn-warning btn-sm"
-                                        title="Editar"><i class="fas fa-edit"></i></a>
+                                        title="Editar"><i class="fas fa-edit"></i> Editar</a>
                                     <form action="{{ route('usuarios.destroy', $user->id) }}" method="POST"
                                         style="display:inline-block;">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger btn-sm delete-btn"
-                                            data-name="{{ $user->nombre ?? 'usuario' }}"><i class="fas fa-trash"></i></button>
+                                            data-name="{{ $user->nombre ?? 'usuario' }}"><i class="fas fa-trash"></i> Eliminar</button>
                                     </form>
                                 </td>
                             </tr>
@@ -51,17 +53,17 @@
                     <div class="card mb-2">
                         <div class="card-body p-2">
                             <h5 class="card-title mb-1">{{ $user->nombre }}</h5>
-                            <p class="mb-1"><strong>Email:</strong> {{ $user->email }}</p>
+                            <p class="mb-1"><strong>Correo:</strong> {{ $user->email }}</p>
                             <p class="mb-1"><strong>Rol:</strong> {{ $user->rol }}</p>
                             <div>
                                 <a href="{{ route('usuarios.edit', $user->id) }}" class="btn btn-warning btn-sm"
-                                    title="Editar"><i class="fas fa-edit"></i></a>
+                                    title="Editar"><i class="fas fa-edit"></i> Editar</a>
                                 <form action="{{ route('usuarios.destroy', $user->id) }}" method="POST"
                                     style="display:inline-block;">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger btn-sm delete-btn"
-                                        data-name="{{ $user->nombre ?? 'usuario' }}"><i class="fas fa-trash"></i></button>
+                                        data-name="{{ $user->nombre ?? 'usuario' }}"><i class="fas fa-trash"></i> Eliminar</button>
                                 </form>
                             </div>
                         </div>

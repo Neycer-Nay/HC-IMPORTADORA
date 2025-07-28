@@ -5,7 +5,7 @@
 <div class="main-content">
     <section class="section">
         <div class="section-header">
-            <h1>Cambiar Contraseña</h1>
+            <h1 style="color:#151414">Actualizar Contraseña</h1>
             <div class="section-header-breadcrumb">
                 <a href="{{ route('usuarios.index') }}" class="btn btn-secondary">
                     <i class="fas fa-arrow-left"></i> Volver
