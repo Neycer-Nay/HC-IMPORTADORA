@@ -14,15 +14,15 @@ class UsuariosController extends Controller
     {
         $query = User::orderBy('id', 'desc');
 
-    // Si hay búsqueda, filtra por nombre
-    if ($request->filled('buscar')) {
-        $query->where('nombre', 'like', '%' . $request->buscar . '%');
-    }
+        // Si hay búsqueda, filtra por nombre
+        if ($request->filled('buscar')) {
+            $query->where('nombre', 'like', '%' . $request->buscar . '%');
+        }
 
-    // Mantén el término de búsqueda en la paginación
-    $users = $query->paginate(10)->appends($request->only('buscar'));
+        // Mantén el término de búsqueda en la paginación
+        $users = $query->paginate(10)->appends($request->only('buscar'));
 
-    return view('modules.usuarios.index', compact('users'));
+        return view('modules.usuarios.index', compact('users'));
     }
 
     public function create()
@@ -157,7 +157,9 @@ class UsuariosController extends Controller
     {
         $this->middleware(function ($request, $next) {
             if (auth()->user()->rol !== 'Gerente') {
-                abort(403, 'Solo los usuarior con rol gerente pueden acceder a esta sección.');
+                return response()->view('modules.usuarios.error', [
+                    'mensaje' => 'Solo los usuarios con rol gerente pueden acceder a esta sección.'
+                ], 403);
             }
             return $next($request);
         });

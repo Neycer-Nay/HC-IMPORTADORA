@@ -107,11 +107,13 @@
                 </div>
                 <div class="form-group col-md-3" id="cablePositivo__INDEX__" style="display: none;">
                     <label><strong>Cable +</strong></label>
-                    <input type="text" class="form-control" name="equipos[__INDEX__][cable_positivo]" value="No incluye" readonly>
+                    <input type="text" class="form-control" name="equipos[__INDEX__][cable_positivo]" value="No incluye"
+                        readonly>
                 </div>
                 <div class="form-group col-md-3" id="cableNegativo__INDEX__" style="display: none;">
                     <label><strong>Cable -</strong></label>
-                    <input type="text" class="form-control" name="equipos[__INDEX__][cable_negativo]"value="No incluye" readonly>
+                    <input type="text" class="form-control" name="equipos[__INDEX__][cable_negativo]" value="No incluye"
+                        readonly>
                 </div>
 
                 <!-- Generador/Dinamo -->
@@ -157,7 +159,10 @@
                             </a>
                         </li>
                     </ul>
-
+                    <div class="form-text mt-2">
+                        Puede seleccionar hasta 8 fotos incluyendo tomadas de camara y
+                        seleccionados (JPEG, PNG, JPG, GIF) - Máx. 8MB cada una
+                    </div>
 
                     <div class="tab-content" id="fotoTabContent__INDEX__">
                         <!-- Pestaña de archivos -->
@@ -176,10 +181,7 @@
                                         Toca o haz clic para subir tus fotos
                                     </div>
                                 </label>
-                                <div class="form-text mt-2">
-                                    Puede seleccionar hasta 8 fotos incluyendo tomadas de camara y
-                                    seleccionados (JPEG, PNG, JPG, GIF) - Máx. 8MB cada una
-                                </div>
+
                             </div>
                         </div>
                         <!-- Pestaña de cámara -->
@@ -209,9 +211,9 @@
                     </div>
 
                     <!-- Contenedor de previsualizaciones mejorado -->
-                     <label for="">Vista previa:</label>
+                    <label for="">Vista previa:</label>
                     <div id="allPreviews__INDEX__" class="preview-container">
-                        
+
                         <div class="empty-state" id="emptyState__INDEX__"
                             style="width: 100%; text-align: center; padding: 40px; color: #6c757d;">
                             <i class="fas fa-images fa-3x mb-3" style="opacity: 0.5;"></i>

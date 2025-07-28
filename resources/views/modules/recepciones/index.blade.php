@@ -51,26 +51,26 @@
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td>{{ $recepcion->numero_recepcion }}</td>
-                                                        <td>{{ $recepcion->fecha_ingreso->format('d/m/Y') }}-{{ \Carbon\Carbon::parse($recepcion->hora_ingreso)->format('H:i') }}
+                                                        <td>{{ $recepcion->fecha_ingreso->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($recepcion->hora_ingreso)->format('H:i') }}
                                                         </td>
                                                         <td>{{ $recepcion->cliente->nombre ?? 'N/A' }}</td>
                                                         <td>{{ $recepcion->usuario->nombre ?? 'N/A' }}</td>
                                                         <!--<td>
-                                                            <span
-                                                                class="badge badge-{{  $recepcion->estado == ($recepcion->estado == 'EN_REPARACION' ? 'warning' : ($recepcion->estado == 'REPARADO' ? 'success' : 'secondary')) }}">
-                                                                {{ str_replace('_', ' ', $recepcion->estado) }}
-                                                            </span>
-                                                        </td>-->
+                                                                                    <span
+                                                                                        class="badge badge-{{  $recepcion->estado == ($recepcion->estado == 'EN_REPARACION' ? 'warning' : ($recepcion->estado == 'REPARADO' ? 'success' : 'secondary')) }}">
+                                                                                        {{ str_replace('_', ' ', $recepcion->estado) }}
+                                                                                    </span>
+                                                                                </td>-->
                                                         <td>
                                                             <a href="{{ route('recepciones.show', $recepcion->id) }}"
                                                                 class="btn btn-info btn-sm" title="Ver">
-                                                                <i class="fas fa-eye"></i>
+                                                                <i class="fas fa-eye"></i> Ver
                                                             </a>
                                                             <a href="{{ route('recepciones.edit', $recepcion->id) }}"
                                                                 class="btn btn-warning btn-sm" title="Editar">
-                                                                <i class="fas fa-pencil-alt"></i>
+                                                                <i class="fas fa-pencil-alt"></i> Editar
                                                             </a>
-                                                        
+
 
                                                             @if($recepcion->cotizacion)
                                                                 <a href="{{ route('cotizaciones.show', $recepcion->id) }}"
@@ -83,16 +83,17 @@
                                                                     <i class="fas fa-plus"></i> Cotizar
                                                                 </a>
                                                             @endif
-
+                                                            <!-- Por el momento ocultare el boton de eliminar recepcion
                                                             <form action="{{ route('recepciones.destroy', $recepcion->id) }}"
-                                                                method="POST" style="display: inline-block;">
+                                                                method="POST" style="display: inline-block;"
+                                                                class="form-eliminar-recepcion">
                                                                 @csrf
                                                                 @method('DELETE')
                                                                 <button type="submit" class="btn btn-danger btn-sm"
-                                                                    title="Eliminar" onclick="return confirm('¿Estás seguro?')">
+                                                                    title="Eliminar">
                                                                     <i class="fas fa-trash"></i>
                                                                 </button>
-                                                            </form>
+                                                            </form> -->
                                                         </td>
                                                     </tr>
                                                 @endforeach
@@ -110,7 +111,7 @@
                                                 <div class="card-body p-2">
                                                     <h5 class="card-title mb-1">N° Recepción: {{ $recepcion->numero_recepcion }}
                                                     </h5>
-                                                    
+
                                                     <p class="mb-1"><strong>Fecha y hora:</strong>
                                                         {{ $recepcion->fecha_ingreso->format('d/m/Y') }} -
                                                         {{ \Carbon\Carbon::parse($recepcion->hora_ingreso)->format('H:i') }}
@@ -120,21 +121,21 @@
                                                     <p class="mb-1"><strong>Usuario:</strong>
                                                         {{ $recepcion->usuario->nombre ?? 'N/A' }}</p>
                                                     <!--<p class="mb-1"><strong>Estado:</strong>
-                                                        <span
-                                                            class="badge badge-{{  $recepcion->estado == ($recepcion->estado == 'EN_REPARACION' ? 'warning' : ($recepcion->estado == 'REPARADO' ? 'success' : 'secondary')) }}">
-                                                            {{ str_replace('_', ' ', $recepcion->estado) }}
-                                                        </span>
-                                                    </p>-->
+                                                                                <span
+                                                                                    class="badge badge-{{  $recepcion->estado == ($recepcion->estado == 'EN_REPARACION' ? 'warning' : ($recepcion->estado == 'REPARADO' ? 'success' : 'secondary')) }}">
+                                                                                    {{ str_replace('_', ' ', $recepcion->estado) }}
+                                                                                </span>
+                                                                            </p>-->
                                                     <div>
                                                         <a href="{{ route('recepciones.show', $recepcion->id) }}"
                                                             class="btn btn-info btn-sm" title="Ver">
-                                                            <i class="fas fa-eye"></i>
+                                                            <i class="fas fa-eye"></i> Ver
                                                         </a>
                                                         <a href="{{ route('recepciones.edit', $recepcion->id) }}"
                                                             class="btn btn-warning btn-sm" title="Editar">
-                                                            <i class="fas fa-pencil-alt"></i>
+                                                            <i class="fas fa-pencil-alt"></i> Editar
                                                         </a>
-                                                        
+
 
                                                         @if($recepcion->cotizacion)
                                                             <a href="{{ route('cotizaciones.show', $recepcion->id) }}"
@@ -148,15 +149,17 @@
                                                             </a>
                                                         @endif
 
+                                                        <!-- Por el momento ocultare el boton de eliminar recepcion
                                                         <form action="{{ route('recepciones.destroy', $recepcion->id) }}"
-                                                            method="POST" style="display: inline-block;">
+                                                            method="POST" style="display: inline-block;"
+                                                            class="form-eliminar-recepcion ">
                                                             @csrf
                                                             @method('DELETE')
-                                                            <button type="submit" class="btn btn-danger btn-sm" title="Eliminar"
-                                                                onclick="return confirm('¿Estás seguro?')">
+                                                            <button type="submit" class="btn btn-danger btn-sm"
+                                                                title="Eliminar">
                                                                 <i class="fas fa-trash"></i>
                                                             </button>
-                                                        </form>
+                                                        </form>-->
                                                     </div>
                                                 </div>
                                             </div>
@@ -173,18 +176,46 @@
             </div>
         </section>
     </div>
-    @push('scripts')
-        <script>
-            $(document).ready(function () {
-                $('#table-1').DataTable({
-                    "language": {
-                        "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json"
-                    },
-                    "order": [[0, "desc"]]
+@endsection
+@push('scripts')
+    <!-- Confirmación SweetAlert para eliminar -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.form-eliminar-recepcion').forEach(function (form) {
+                form.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    Swal.fire({
+                        title: '¿Estás seguro?',
+                        text: "Esta acción eliminará la recepción y todos sus datos relacionados.",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Sí, eliminar',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
                 });
             });
-        </script>
-    @endpush
+        });
+    </script>
+
+    <!-- DataTables -->
+    <script>
+        $(document).ready(function () {
+            $('#table-1').DataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json"
+                },
+                "order": [[0, "desc"]]
+            });
+        });
+    </script>
+
+    <!-- SweetAlert para mensajes de sesión -->
     @if(session('success'))
         <script>
             document.addEventListener('DOMContentLoaded', function () {
@@ -199,18 +230,6 @@
             });
         </script>
     @endif
-    @push('scripts')
-        <script>
-            $(document).ready(function () {
-                $('#table-1').DataTable({
-                    "language": {
-                        "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json"
-                    },
-                    "order": [[0, "desc"]]
-                });
-            });
-        </script>
-    @endpush
 
     @if(session('swal'))
         <script>
@@ -224,6 +243,7 @@
             });
         </script>
     @endif
+
     @if($recepciones->isEmpty() && request('buscar'))
         <script>
             document.addEventListener('DOMContentLoaded', function () {
@@ -236,4 +256,4 @@
             });
         </script>
     @endif
-@endsection
+@endpush

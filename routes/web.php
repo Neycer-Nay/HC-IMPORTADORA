@@ -73,6 +73,6 @@ Route::prefix('cotizaciones')->middleware('auth')->group(function () {
     Route::get('/{id}/show', [\App\Http\Controllers\CotizacionController::class, 'show'])->name('cotizaciones.show');
     Route::put('/{id}', [\App\Http\Controllers\CotizacionController::class, 'update'])->name('cotizaciones.update');
     Route::get('/{id}/pdf', [\App\Http\Controllers\CotizacionController::class, 'generarPdf'])->name('cotizaciones.pdf');
-    
+    Route::delete('/{id}', [\App\Http\Controllers\CotizacionController::class, 'destroy'])->name('cotizaciones.destroy');
 });
 

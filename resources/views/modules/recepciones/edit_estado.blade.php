@@ -6,7 +6,7 @@
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1 style="color:#151414;">Editar Recepción</h1>
+                <h1 style="color:#151414;">Editar Recepción N°:{{ $recepcion->numero_recepcion }}</h1>
                 <div class="section-header-breadcrumb">
                     <a href="{{ route('recepciones.index') }}" class="btn btn-light">
                         <i class="fas fa-arrow-left"></i> Volver
@@ -23,25 +23,27 @@
                     <!-- Información de la Recepción (No editable) -->
                     <div class="card card-primary shadow-sm mb-4">
                         <div class="card-header">
-                            <h5>Información de la Recepción N°:{{ $recepcion->numero_recepcion }}</h5>
+                            <h5><i class="fas fa-info-circle"></i> Información General</h5>
                         </div>
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-6">
-                                    
+
                                     <p><strong><i class="fas fa-user"></i> Cliente:</strong>
                                         {{ $recepcion->cliente->nombre }}
                                     </p>
+                                    <p><strong><i class="fas fa-user-tie"></i> Atendido por:</strong>
+                                        {{ optional($recepcion->usuario)->nombre ?? 'N/A' }}</p>
+                                    
+
+                                </div>
+                                <div class="col-md-6">
                                     <p><strong><i class="fas fa-calendar-alt"></i> Fecha de Ingreso:</strong>
                                         {{ $recepcion->fecha_ingreso ? \Carbon\Carbon::parse($recepcion->fecha_ingreso)->format('d/m/Y') : 'No especificada' }}
                                     </p>
-                                    
-                                </div>
-                                <div class="col-md-6">
                                     <p><strong><i class="fas fa-clock"></i> Hora Recepción:</strong>
-                                    {{ \Carbon\Carbon::parse($recepcion->hora_ingreso)->format('H:i') }}</p>
-                                    <p><strong><i class="fas fa-user-tie"></i> Atendido por:</strong>
-                                    {{ optional($recepcion->usuario)->nombre ?? 'N/A' }}</p>
+                                        {{ \Carbon\Carbon::parse($recepcion->hora_ingreso)->format('H:i') }}</p>
+                                    
                                 </div>
                                 <div class="col-12 mt-2">
                                     <p><strong><i class="fas fa-sticky-note"></i> Observaciones de la Recepción:</strong>
@@ -80,7 +82,7 @@
                                                 <input type="text" class="form-control" name="equipos[{{ $index }}][nombre]"
                                                     value="{{ $equipo->nombre }}" required>
                                             </div>
-                                            
+
 
                                             <!-- Tipo de equipo (No editable) -->
                                             <div class="form-group col-md-4">
@@ -247,117 +249,129 @@
                                                         </a>
                                                     </li>
                                                 </ul>
-
+                                                <div class="form-text mt-2">
+                                                    Puede seleccionar hasta 8 fotos incluyendo tomadas de camara y
+                                                    seleccionados (JPEG, PNG, JPG, GIF) - Máx. 8MB cada una
+                                                </div>
                                                 <div class="tab-content" id="fotoTabContent{{ $index }}">
                                                     <!-- Pestaña de archivos -->
                                                     <div class="tab-pane fade show active" id="archivo{{ $index }}"
                                                         role="tabpanel">
-                                                        <div class="custom-file mb-3 mt-3">
+                                                        <div class="custom-file mb-3 mt-3" style="height: 120px;">
                                                             <input type="file" class="custom-file-input"
                                                                 id="fileInput{{ $index }}" name="equipos[{{ $index }}][fotos][]"
-                                                                multiple accept="image/jpeg,image/png,image/jpg,image/gif">
-                                                            <label class="custom-file-label">Seleccionar nuevas fotos</label>
-                                                            <div class="form-text">Puede seleccionar hasta 8 fotos en total
-                                                                (JPEG, PNG, JPG, GIF) - Máx. 8MB cada una</div>
-                                                        </div>
-                                                    </div>
+                                                                multiple accept="image/jpeg,image/png,image/jpg,image/gif"
+                                                                style="height: 100%; opacity: 0; position: absolute; cursor: pointer;">
+                                                            <label
+                                                                class="custom-file-label text-black py-4 px-3 rounded shadow-sm border border-2 border-primary"
+                                                                style="height: 100%; display: flex; align-items: center; justify-content: center; cursor: pointer; border-style: dashed !important;">
+                                                                <div class="text-center">
+                                                                    <i class="fas fa-cloud-upload-alt d-block mb-2"
+                                                                        style="font-size: 1.5rem;"></i>
+                                                                    Toca o haz clic para subir tus fotos
 
-                                                    <!-- Pestaña de cámara -->
-                                                    <div class="tab-pane fade" id="camara{{ $index }}" role="tabpanel">
-                                                        <div class="camera-container mt-3">
-                                                            <div class="d-flex justify-content-center mb-3">
-                                                                <video id="cameraVideo{{ $index }}" width="300" height="225"
-                                                                    autoplay
-                                                                    style="border: 2px solid #ddd; border-radius: 8px; display: none;"></video>
-                                                            </div>
-                                                            <div class="text-center">
-                                                                <button type="button" class="btn btn-primary"
-                                                                    id="startCamera{{ $index }}">
-                                                                    <i class="fas fa-video"></i> Activar cámara
-                                                                </button>
-                                                                <button type="button" class="btn btn-success"
-                                                                    id="capturePhoto{{ $index }}" style="display: none;">
-                                                                    <i class="fas fa-camera"></i> Tomar foto
-                                                                </button>
-                                                                <button type="button" class="btn btn-danger"
-                                                                    id="stopCamera{{ $index }}" style="display: none;">
-                                                                    <i class="fas fa-stop"></i> Detener cámara
-                                                                </button>
-                                                            </div>
-                                                            <canvas id="cameraCanvas{{ $index }}" width="300" height="225"
-                                                                style="display: none;"></canvas>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                                </div>
 
-                                                <!-- Contenedor de previsualizaciones -->
-                                                <div id="allPreviews{{ $index }}" class="preview-container">
-                                                    <!-- Fotos existentes -->
-                                                    <div id="existingPreviews{{ $index }}">
-                                                        @foreach($equipo->fotos as $foto)
-                                                            <div class="preview-item" data-photo-id="{{ $foto->id }}">
-                                                                <img src="{{ asset('storage/' . $foto->ruta) }}"
-                                                                    onclick="showImageModal('{{ asset('storage/' . $foto->ruta) }}')"
-                                                                    title="Clic para ver en tamaño completo">
-                                                                <div class="preview-controls">
-                                                                    <button type="button" class="btn btn-warning btn-sm"
-                                                                        onclick="openPhotoEditor('{{ asset('storage/' . $foto->ruta) }}', {{ $index }}, 'existing', {{ $foto->id }})"
-                                                                        title="Editar foto">
-                                                                        <i class="fas fa-crop"></i>
+                                                            </label>
+
+                                                        </div>
+
+                                                        <!-- Pestaña de cámara -->
+                                                        <div class="tab-pane fade" id="camara{{ $index }}" role="tabpanel">
+                                                            <div class="camera-container mt-3">
+                                                                <div class="d-flex justify-content-center mb-3">
+                                                                    <video id="cameraVideo{{ $index }}" width="300" height="225"
+                                                                        autoplay
+                                                                        style="border: 2px solid #ddd; border-radius: 8px; display: none;"></video>
+                                                                </div>
+                                                                <div class="text-center">
+                                                                    <button type="button" class="btn btn-primary"
+                                                                        id="startCamera{{ $index }}">
+                                                                        <i class="fas fa-video"></i> Activar cámara
                                                                     </button>
-                                                                    <button type="button" class="btn btn-danger btn-sm"
-                                                                        onclick="deleteExistingPhoto(this, {{ $foto->id }})"
-                                                                        title="Eliminar foto">
-                                                                        <i class="fas fa-times"></i>
+                                                                    <button type="button" class="btn btn-success"
+                                                                        id="capturePhoto{{ $index }}" style="display: none;">
+                                                                        <i class="fas fa-camera"></i> Tomar foto
+                                                                    </button>
+                                                                    <button type="button" class="btn btn-danger"
+                                                                        id="stopCamera{{ $index }}" style="display: none;">
+                                                                        <i class="fas fa-stop"></i> Detener cámara
                                                                     </button>
                                                                 </div>
-                                                                <div class="preview-badge">
-                                                                    <i class="fas fa-image"></i> Existente
-                                                                </div>
+                                                                <canvas id="cameraCanvas{{ $index }}" width="300" height="225"
+                                                                    style="display: none;"></canvas>
                                                             </div>
-                                                        @endforeach
+                                                        </div>
                                                     </div>
 
-                                                    <!-- Estado vacío (solo si no hay fotos) -->
-                                                    @if($equipo->fotos->count() == 0)
-                                                        <div class="empty-state" id="emptyState{{ $index }}"
-                                                            style="width: 100%; text-align: center; padding: 40px; color: #6c757d;">
-                                                            <i class="fas fa-images fa-3x mb-3" style="opacity: 0.5;"></i>
-                                                            <p class="mb-0"><strong>No hay fotos agregadas</strong></p>
-                                                            <small>Selecciona archivos o toma fotos para previsualizarlas
-                                                                aquí</small>
+                                                    <!-- Contenedor de previsualizaciones -->
+                                                    <div id="allPreviews{{ $index }}" class="preview-container">
+                                                        <!-- Fotos existentes -->
+                                                        <div id="existingPreviews{{ $index }}">
+                                                            @foreach($equipo->fotos as $foto)
+                                                                <div class="preview-item" data-photo-id="{{ $foto->id }}">
+                                                                    <img src="{{ asset('storage/' . $foto->ruta) }}"
+                                                                        onclick="showImageModal('{{ asset('storage/' . $foto->ruta) }}')"
+                                                                        title="Clic para ver en tamaño completo">
+                                                                    <div class="preview-controls">
+                                                                        <button type="button" class="btn btn-warning btn-sm"
+                                                                            onclick="openPhotoEditor('{{ asset('storage/' . $foto->ruta) }}', {{ $index }}, 'existing', {{ $foto->id }})"
+                                                                            title="Editar foto">
+                                                                            <i class="fas fa-crop"></i>
+                                                                        </button>
+                                                                        <button type="button" class="btn btn-danger btn-sm"
+                                                                            onclick="deleteExistingPhoto(this, {{ $foto->id }})"
+                                                                            title="Eliminar foto">
+                                                                            <i class="fas fa-times"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                    <div class="preview-badge">
+                                                                        <i class="fas fa-image"></i> Existente
+                                                                    </div>
+                                                                </div>
+                                                            @endforeach
                                                         </div>
-                                                    @endif
 
-                                                    <!-- Previsualizaciones de archivos nuevos -->
-                                                    <div id="filePreviews{{ $index }}"></div>
-                                                    <!-- Previsualizaciones de cámara -->
-                                                    <div id="cameraPreviews{{ $index }}"></div>
+                                                        <!-- Estado vacío (solo si no hay fotos) -->
+                                                        @if($equipo->fotos->count() == 0)
+                                                            <div class="empty-state" id="emptyState{{ $index }}"
+                                                                style="width: 100%; text-align: center; padding: 40px; color: #6c757d;">
+                                                                <i class="fas fa-images fa-3x mb-3" style="opacity: 0.5;"></i>
+                                                                <p class="mb-0"><strong>No hay fotos agregadas</strong></p>
+                                                                <small>Selecciona archivos o toma fotos para previsualizarlas
+                                                                    aquí</small>
+                                                            </div>
+                                                        @endif
+
+                                                        <!-- Previsualizaciones de archivos nuevos -->
+                                                        <div id="filePreviews{{ $index }}"></div>
+                                                        <!-- Previsualizaciones de cámara -->
+                                                        <div id="cameraPreviews{{ $index }}"></div>
+                                                    </div>
+
+                                                    <!-- Campos ocultos para fotos de cámara -->
+                                                    <div id="cameraInputs{{ $index }}"></div>
                                                 </div>
-
-                                                <!-- Campos ocultos para fotos de cámara -->
-                                                <div id="cameraInputs{{ $index }}"></div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
                             @endforeach
-                        </div>
-                    </div>
-
-                    <!-- Botones de acción -->
-                    <div class="row mt-4">
-                        <div class="col-12">
-                            <div class="text-right">
-                                <a href="{{ route('recepciones.index', $recepcion) }}" class="btn btn-secondary">
-                                    <i class="fas fa-arrow-left"></i> Cancelar
-                                </a>
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-save"></i> Guardar Cambios
-                                </button>
                             </div>
                         </div>
-                    </div>
+
+                        <!-- Botones de acción -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <div class="text-right">
+                                    <a href="{{ route('recepciones.index', $recepcion) }}" class="btn btn-secondary">
+                                        <i class="fas fa-arrow-left"></i> Cancelar
+                                    </a>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save"></i> Guardar Cambios
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                 </form>
             </div>
         </section>
@@ -719,6 +733,25 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            @foreach($recepcion->equipos as $index => $equipo)
+                $('#fotoTabs{{ $index }} a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                    var target = $(e.target).attr("href"); // "#archivo{{ $index }}" o "#camara{{ $index }}"
+                    var fileInputDiv = $('#archivo{{ $index }} .custom-file');
+                    var cameraDiv = $('#camara{{ $index }} .camera-container');
+
+                    if (target === '#archivo{{ $index }}') {
+                        fileInputDiv.show();
+                        cameraDiv.hide();
+                    } else if (target === '#camara{{ $index }}') {
+                        fileInputDiv.hide();
+                        cameraDiv.show();
+                    }
+                });
+
+                // Inicializa el estado al cargar la página
+                $('#archivo{{ $index }} .custom-file').show();
+                $('#camara{{ $index }} .camera-container').hide();
+            @endforeach
             let equipoCount = {{ $recepcion->equipos->count() }};
             const equiposContainer = document.getElementById('equiposContainer');
             let deletedPhotos = [];
@@ -857,19 +890,19 @@
                             const div = document.createElement('div');
                             div.className = 'preview-item';
                             div.innerHTML = `
-                                        <img src="${e.target.result}" onclick="showImageModal('${e.target.result}')" title="Clic para ver en tamaño completo">
-                                        <div class="preview-controls">
-                                            <button type="button" class="btn btn-warning btn-sm" onclick="openPhotoEditor('${e.target.result}', ${index}, 'file', ${fileIndex})" title="Editar foto">
-                                                <i style="font-size: 20px;" class="fas fa-crop"></i>
-                                            </button>
-                                            <button type="button" class="btn btn-danger btn-sm" onclick="removePreview(this)" title="Eliminar foto">
-                                                <i style="font-size: 20px;" class="fas fa-times"></i>
-                                            </button>
-                                        </div>
-                                        <div class="preview-badge">
-                                            <i class="fas fa-file"></i> Nueva
-                                        </div>
-                                    `;
+                                                <img src="${e.target.result}" onclick="showImageModal('${e.target.result}')" title="Clic para ver en tamaño completo">
+                                                <div class="preview-controls">
+                                                    <button type="button" class="btn btn-warning btn-sm" onclick="openPhotoEditor('${e.target.result}', ${index}, 'file', ${fileIndex})" title="Editar foto">
+                                                        <i style="font-size: 20px;" class="fas fa-crop"></i>
+                                                    </button>
+                                                    <button type="button" class="btn btn-danger btn-sm" onclick="removePreview(this)" title="Eliminar foto">
+                                                        <i style="font-size: 20px;" class="fas fa-times"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="preview-badge">
+                                                    <i class="fas fa-file"></i> Nueva
+                                                </div>
+                                            `;
                             previewContainer.appendChild(div);
 
                             // Ocultar estado vacío
@@ -968,22 +1001,22 @@
                         fullscreenContainer = document.createElement('div');
                         fullscreenContainer.className = 'camera-fullscreen';
                         fullscreenContainer.innerHTML = `
-                                    <div class="camera-info">
-                                        <i class="fas fa-camera"></i> Equipo #${index + 1} - Tomar Foto
-                                    </div>
-                                    <button class="close-btn" onclick="closeCameraFullscreen(${index})">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                    <video id="fullscreenVideo${index}" autoplay playsinline></video>
-                                    <div class="controls">
-                                        <button type="button" class="btn btn-success btn-lg" onclick="captureFullscreenPhoto(${index})">
-                                            <i class="fas fa-camera"></i> Capturar
-                                        </button>
-                                        <button type="button" class="btn btn-danger btn-lg" onclick="closeCameraFullscreen(${index})">
-                                            <i class="fas fa-times"></i> Cancelar
-                                        </button>
-                                    </div>
-                                `;
+                                            <div class="camera-info">
+                                                <i class="fas fa-camera"></i> Equipo #${index + 1} - Tomar Foto
+                                            </div>
+                                            <button class="close-btn" onclick="closeCameraFullscreen(${index})">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                            <video id="fullscreenVideo${index}" autoplay playsinline></video>
+                                            <div class="controls">
+                                                <button type="button" class="btn btn-success btn-lg" onclick="captureFullscreenPhoto(${index})">
+                                                    <i class="fas fa-camera"></i> Capturar
+                                                </button>
+                                                <button type="button" class="btn btn-danger btn-lg" onclick="closeCameraFullscreen(${index})">
+                                                    <i class="fas fa-times"></i> Cancelar
+                                                </button>
+                                            </div>
+                                        `;
 
                         document.body.appendChild(fullscreenContainer);
                         document.body.style.overflow = 'hidden';
@@ -1032,13 +1065,13 @@
                             icon: 'error',
                             title: errorTitle,
                             html: `
-                                        <p>${errorMessage}</p>
-                                        <hr>
-                                        <small><strong>Detalles técnicos:</strong><br>
-                                        ${err.name}: ${err.message}<br>
-                                        Navegador: ${navigator.userAgent.split(' ')[0]}<br>
-                                        Protocolo: ${location.protocol}</small>
-                                    `,
+                                                <p>${errorMessage}</p>
+                                                <hr>
+                                                <small><strong>Detalles técnicos:</strong><br>
+                                                ${err.name}: ${err.message}<br>
+                                                Navegador: ${navigator.userAgent.split(' ')[0]}<br>
+                                                Protocolo: ${location.protocol}</small>
+                                            `,
                             width: '500px',
                             confirmButtonText: 'Entendido'
                         });
@@ -1106,19 +1139,19 @@
                             const div = document.createElement('div');
                             div.className = 'preview-item';
                             div.innerHTML = `
-                                        <img src="${e.target.result}" onclick="showImageModal('${e.target.result}')" title="Clic para ver en tamaño completo">
-                                        <div class="preview-controls">
-                                            <button type="button" class="btn btn-warning btn-sm" onclick="openPhotoEditor('${e.target.result}', ${equipoIndex}, 'camera', ${previewContainer.children.length})" title="Editar foto">
-                                                <i class="fas fa-crop"></i>
-                                            </button>
-                                            <button type="button" class="btn btn-danger btn-sm" onclick="removeCameraPhoto(this, ${equipoIndex}, ${cameraPhotoCount})" title="Eliminar foto">
-                                                <i class="fas fa-times"></i>
-                                            </button>
-                                        </div>
-                                        <div class="preview-badge">
-                                            <i class="fas fa-camera"></i> Cámara
-                                        </div>
-                                    `;
+                                                <img src="${e.target.result}" onclick="showImageModal('${e.target.result}')" title="Clic para ver en tamaño completo">
+                                                <div class="preview-controls">
+                                                    <button type="button" class="btn btn-warning btn-sm" onclick="openPhotoEditor('${e.target.result}', ${equipoIndex}, 'camera', ${previewContainer.children.length})" title="Editar foto">
+                                                        <i class="fas fa-crop"></i>
+                                                    </button>
+                                                    <button type="button" class="btn btn-danger btn-sm" onclick="removeCameraPhoto(this, ${equipoIndex}, ${cameraPhotoCount})" title="Eliminar foto">
+                                                        <i class="fas fa-times"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="preview-badge">
+                                                    <i class="fas fa-camera"></i> Cámara
+                                                </div>
+                                            `;
                             previewContainer.appendChild(div);
 
                             // Ocultar estado vacío
@@ -1439,9 +1472,9 @@
                 modal.id = 'imageModal';
                 modal.className = 'image-modal';
                 modal.innerHTML = `
-                            <span class="image-modal-close" onclick="closeImageModal()">&times;</span>
-                            <img class="image-modal-content" id="modalImage">
-                        `;
+                                    <span class="image-modal-close" onclick="closeImageModal()">&times;</span>
+                                    <img class="image-modal-content" id="modalImage">
+                                `;
                 document.body.appendChild(modal);
 
                 // Cerrar modal al hacer clic fuera de la imagen

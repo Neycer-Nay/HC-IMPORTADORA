@@ -35,7 +35,7 @@
                                                 <tr>
                                                     <th></th>                                                
                                                     <th>N° Cotización</th>
-                                                    <th>Fecha</th>
+                                                    <th>Fecha y hora</th>
                                                     <th>Cliente</th>
                                                     <th>Subtotal</th>
                                                     <th>Descuento</th>
@@ -48,15 +48,15 @@
                                                     <tr>  
                                                         <td>{{ $loop->iteration }}</td>                                                      
                                                         <td>{{ $cotizacion->recepcion->numero_recepcion }}</td>
-                                                        <td>{{ $cotizacion->fecha}}</td>
+                                                        <td>{{ $cotizacion->created_at->format('d/m/Y - H:i') }}</td>
                                                         <td>{{ $cotizacion->recepcion->cliente->nombre ?? 'N/A' }}</td>
                                                         <td>{{ number_format($cotizacion->subtotal, 2) }}Bs</td>
                                                         <td>{{ number_format($cotizacion->descuento, 2) }}Bs</td>
                                                         <td>{{ number_format($cotizacion->total, 2) }}Bs</td>
                                                         <td>
                                                             <a href="{{ route('cotizaciones.show', $cotizacion->recepcion->id) }}"
-                                                                class="btn btn-success btn-sm" title="Ver">
-                                                                <i class="fas fa-file-invoice-dollar"></i> Ver
+                                                                class="btn btn-info btn-sm" title="Ver">
+                                                                <i class="fas fa-eye"></i> Ver
                                                             </a>
                                                             
                                                             <a href="{{ route('cotizaciones.edit', $cotizacion->id) }}"
@@ -67,6 +67,13 @@
                                                             <a href="{{ route('cotizaciones.pdf', $cotizacion->recepcion->id) }}" class="btn btn-danger btn-sm" target="_blank">
                                                                 <i class="fas fa-file-pdf"></i> PDF
                                                             </a>
+                                                            <form action="{{ route('cotizaciones.destroy', $cotizacion->id) }}" method="POST" class="d-inline form-eliminar-cotizacion">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="submit" class="btn btn-danger btn-sm" title="Eliminar">
+                                                                    <i class="fas fa-trash"></i> Eliminar
+                                                                </button>
+                                                            </form>
                                                         </td>
                                                     </tr>
                                                 @endforeach
@@ -108,6 +115,13 @@
                                                         <a href="{{ route('cotizaciones.pdf', $cotizacion->recepcion->id) }}" class="btn btn-danger btn-sm" target="_blank">
                                                             <i class="fas fa-file-pdf"></i> PDF
                                                         </a>
+                                                        <form action="{{ route('cotizaciones.destroy', $cotizacion->id) }}" method="POST" class="d-inline form-eliminar-cotizacion">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-danger btn-sm" title="Eliminar" ">
+                                                                <i class="fas fa-trash"></i> Eliminar
+                                                            </button>
+                                                        </form>
                                                     </div>
                                                 </div>
                                             </div>
@@ -125,6 +139,32 @@
         </section>
     </div>
 @endsection
+@push('scripts')
+
+<!-- Confirmación SweetAlert para eliminar -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.form-eliminar-cotizacion').forEach(function (form) {
+                form.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    Swal.fire({
+                        title: '¿Estás seguro?',
+                        text: "Esta acción eliminará la cotización y todos sus datos relacionados.",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Sí, eliminar',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
+                });
+            });
+        });
+    </script>
 
  @if(session('swal'))
         <script>
@@ -140,3 +180,5 @@
             });
         </script>
     @endif
+
+@endpush

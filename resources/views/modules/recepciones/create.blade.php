@@ -118,7 +118,7 @@
                 </div>
                 <div class="card-body">
                     <div class="form-group row">
-                        <label class="col-form-label text-md-right col-12 col-md-3 col-lg-2"><strong>Número de Recepción
+                        <label class="col-form-label text-md-right col-12 col-md-3 col-lg-2"><strong>N° Recepción
                             </strong><span class="text-danger">*</span></label>
                         <div class="col-sm-12 col-md-7">
                             <input type="text" class="form-control" id="numero_recepcion" name="numero_recepcion"

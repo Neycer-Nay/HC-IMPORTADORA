@@ -4,7 +4,7 @@
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1 style="color:#151414"><i class="fas fa-clipboard-list"></i> Detalle de Recepción N°
+                <h1 style="color:#151414">Detalle Recepción N°:
                     {{ $recepcion->numero_recepcion }}
                 </h1>
                 <div class="section-header-breadcrumb">
@@ -33,16 +33,17 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6">
-                                <p><strong><i class="fas fa-calendar-alt"></i> Fecha Recepción:</strong>
-                                    {{ \Carbon\Carbon::parse($recepcion->fecha_ingreso)->format('d/m/Y') }}</p>
-                                <p><strong><i class="fas fa-clock"></i> Hora Recepción:</strong>
-                                    {{ \Carbon\Carbon::parse($recepcion->hora_ingreso)->format('H:i') }}</p>
-                            </div>
-                            <div class="col-md-6">
                                 <p><strong><i class="fas fa-user"></i> Cliente:</strong> {{ $recepcion->cliente->nombre }}
                                 </p>
                                 <p><strong><i class="fas fa-user-tie"></i> Atendido por:</strong>
                                     {{ optional($recepcion->usuario)->nombre ?? 'N/A' }}</p>
+                                
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong><i class="fas fa-calendar-alt"></i> Fecha Recepción:</strong>
+                                    {{ \Carbon\Carbon::parse($recepcion->fecha_ingreso)->format('d/m/Y') }}</p>
+                                <p><strong><i class="fas fa-clock"></i> Hora Recepción:</strong>
+                                    {{ \Carbon\Carbon::parse($recepcion->hora_ingreso)->format('H:i') }}</p>
                             </div>
                             <div class="col-12 mt-2">
                                 <p><strong><i class="fas fa-sticky-note"></i> Observaciones de la Recepción:</strong></p>
@@ -98,7 +99,7 @@
                                                         <li><strong>Modelo:</strong> {{ $equipo->modelo ?? 'N/A' }}</li>
                                                         <li><strong>Color:</strong> {{ $equipo->color ?? 'N/A' }}</li>
                                                         <li><strong>Voltaje:</strong> {{ $equipo->voltaje ?? 'N/A' }}</li>
-                                                        <li><strong>AMP:</strong> {{ $equipo->amperio ?? 'N/A' }}</li>
+                                                        <li><strong>AMP:</strong> {{ $equipo->amperaje ?? 'N/A' }}</li>
                                                         <li><strong>Cable +:</strong> {{ $equipo->cable_positivo ?? 'N/A' }}</li>
                                                         <li><strong>Cable -:</strong> {{ $equipo->cable_negativo ?? 'N/A' }}</li>
 

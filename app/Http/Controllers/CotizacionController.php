@@ -377,6 +377,29 @@ class CotizacionController extends Controller
         });
     }
 
+    public function destroy($id)
+    {
+        $cotizacion = Cotizacion::findOrFail($id);
+
+        // Eliminar equipos y sus relaciones
+        foreach ($cotizacion->equipos as $equipo) {
+            $equipo->repuestos()->delete();
+            $equipo->servicios()->delete();
+            $equipo->fotos()->detach();
+            $equipo->delete();
+        }
+
+        // Eliminar la cotización
+        $cotizacion->delete();
+
+        return redirect()->route('cotizaciones.index')
+            ->with('swal', [
+                'icon' => 'success',
+                'title' => 'Cotización eliminada',
+                'text' => 'La cotización fue eliminada correctamente.'
+            ]);
+    }
+
     public function show($id)
     {
         $cotizacion = Cotizacion::with([

@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('recepciones', function (Blueprint $table) {
             $table->id();
-            $table->string('numero_recepcion')->unique();
+            $table->string('numero_recepcion');
             $table->foreignId('cliente_id')->constrained('clientes');
             $table->foreignId('user_id') ->onDelete('set null'); // Usuario que registra
             $table->dateTime('fecha_ingreso')->useCurrent();
