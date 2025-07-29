@@ -4,7 +4,7 @@
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1 style="color:#151414">Detalle Recepción N°:
+                <h1 style="color:#151414">Detalle recepción N°:
                     {{ $recepcion->numero_recepcion }}
                 </h1>
                 <div class="section-header-breadcrumb">
@@ -72,7 +72,7 @@
 
                                 <div class="card-body">
                                     <h6 class="mb-0">
-                                        <i class="fas fa-tools"></i>Categoria: {{ Str::title(str_replace('_', ' ',$equipo->tipo)) }}
+                                        <i class="fas fa-tools "></i>Categoria: {{ Str::title(str_replace('_', ' ',$equipo->tipo)) }}
 
                                     </h6>
                                     <div class="row">
@@ -82,7 +82,7 @@
                                             <div class="equipo-info p-3">
                                                 <h6 class="text-primary"><i class="fas fa-info-circle"></i> Información Técnica
                                                 </h6>
-                                                <ul class="list-unstyled">
+                                                <ul class="list-unstyled equipo-datos">
                                                     <!--<li><strong>N° de Serie:</strong> {{ $equipo->numero_serie ?? 'N/A' }}</li>-->
 
                                                     @if($equipo->tipo == 'MOTOR_ELECTRICO')
@@ -172,8 +172,13 @@
                         @endforeach
                     </div>
                 </div>
+                <div class="text-right mb-3">
+                    <a href="{{ route('recepciones.edit', $recepcion->id) }}" class="btn btn-primary">
+                        <i class="fas fa-edit"></i> Editar Recepción
+                    </a>
 
-                <!-- Botones de acción -->
+                </div>
+                <!-- Botones de acción 
                 <div class="text-right">
                     @if(!$cotizacion)
                         <a href="{{ route('cotizaciones.createFromRecepcion', $recepcion->id) }}" class="btn btn-success">
@@ -187,7 +192,7 @@
                             <i class="fas fa-eye"></i> Ver Cotización
                         </a>
                     @endif
-                </div>
+                </div>-->
             </div>
         </section>
     </div>

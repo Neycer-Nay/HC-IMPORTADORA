@@ -504,7 +504,10 @@ select.form-control:not([size]):not([multiple]) {
 
 .colorinput-input:checked ~ .colorinput-color:before {
   opacity: 1; }
-
+.equipo-datos li {
+    font-size: 1rem; /* Puedes aumentar este valor según lo necesites */
+    margin-bottom: 0.4rem;
+}
 /* 3.3 List */
 .list-unstyled-border li {
   border-bottom: 1px solid #f9f9f9;

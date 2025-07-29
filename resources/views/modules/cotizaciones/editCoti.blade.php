@@ -72,7 +72,7 @@
                             <div class="card-body">
                                 <input type="hidden" name="equipos[{{ $loop->index }}][equipo_id]" value="{{ $equipo->id }}">
                                 <h6 class="mb-3">
-                                    <i class="fas fa-tools"></i> Tipo: {{ $equipo->tipo }}
+                                    <i class="fas fa-tools"></i> Categoria: {{ Str::title( str_replace('_', ' ', $equipo->tipo)) }}
                                 </h6>
 
                                 <div class="row">
@@ -80,7 +80,7 @@
                                     <div class="col-lg-5 border-end">
                                         <div class="equipo-info p-3">
                                             <h6 class="text-primary"><i class="fas fa-info-circle"></i> Información Técnica</h6>
-                                            <ul class="list-unstyled">
+                                            <ul class="list-unstyled equipo-datos">
                                                 
                                                 <li><strong>Marca:</strong> {{ $equipo->marca }}</li>
                                                 <li><strong>Modelo:</strong> {{ $equipo->modelo }}</li>
