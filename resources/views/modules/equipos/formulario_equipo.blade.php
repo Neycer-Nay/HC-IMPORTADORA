@@ -957,20 +957,67 @@
                 closeCameraFullscreen(index);
             });
         }
-
-        // Función global para remover preview
-        window.removePreview = function (button) {
-            const previewItem = button.closest('.preview-item');
-            const equipoContainer = previewItem.closest('.equipo-item');
-            const equipoIndex = Array.from(equipoContainer.parentNode.children).indexOf(equipoContainer);
-
-            previewItem.style.animation = 'fadeOut 0.3s ease';
-            setTimeout(() => {
-                previewItem.remove();
-                // Verificar si quedan fotos y mostrar estado vacío si es necesario
-                checkEmptyStateAfterRemoval(equipoIndex);
-            }, 300);
-        };
+       
+        // Función global para remover preview (mejorada)
+window.removePreview = function (button) {
+    const previewItem = button.closest('.preview-item');
+    const equipoContainer = previewItem.closest('.equipo-item');
+    const equipoIndex = Array.from(equipoContainer.parentNode.children).indexOf(equipoContainer);
+    
+    // Obtener el índice de la foto eliminada dentro del contenedor de archivos
+    const filePreviewContainer = document.getElementById(`filePreviews${equipoIndex}`);
+    const fileIndex = Array.from(filePreviewContainer.children).indexOf(previewItem);
+    
+    // Obtener el input de archivo
+    const fileInput = document.getElementById(`fileInput${equipoIndex}`);
+    
+    if (fileInput && fileInput.files) {
+        // Crear un nuevo DataTransfer para reconstruir la lista de archivos
+        const dt = new DataTransfer();
+        
+        // Agregar todos los archivos excepto el eliminado
+        Array.from(fileInput.files).forEach((file, index) => {
+            if (index !== fileIndex) {
+                dt.items.add(file);
+            }
+        });
+        
+        // Actualizar el input con los archivos restantes
+        fileInput.files = dt.files;
+        
+        // Actualizar el label del input
+        const label = fileInput.nextElementSibling;
+        if (fileInput.files.length === 0) {
+            label.innerHTML = `
+                <div class="text-center">
+                    <i class="fas fa-cloud-upload-alt d-block mb-2" style="font-size: 1.5rem;"></i>
+                    Toca o haz clic para subir tus fotos
+                </div>
+            `;
+        } else {
+            label.textContent = fileInput.files.length > 1 ? 
+                `${fileInput.files.length} archivos seleccionados` : 
+                fileInput.files[0].name;
+        }
+    }
+    
+    // Animación de salida y eliminación del preview
+    previewItem.style.animation = 'fadeOut 0.3s ease';
+    setTimeout(() => {
+        previewItem.remove();
+        // Verificar si quedan fotos y mostrar estado vacío si es necesario
+        checkEmptyStateAfterRemoval(equipoIndex);
+        
+        // Mostrar mensaje de confirmación
+        Swal.fire({
+            icon: 'info',
+            title: 'Foto eliminada',
+            text: 'La foto ha sido eliminada correctamente.',
+            timer: 1000,
+            showConfirmButton: false
+        });
+    }, 300);
+};
 
         // Función global para remover foto de cámara
         window.removeCameraPhoto = function (button, equipoIndex, photoIndex) {

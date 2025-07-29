@@ -61,7 +61,7 @@
                                     <div class="col-lg-5 border-end">
                                         <div class="equipo-info p-3">
                                             <h6 class="text-primary"><i class="fas fa-info-circle"></i> Información Técnica</h6>
-                                            <ul class="list-unstyled">
+                                            <ul class="list-unstyled equipo-datos">
                                                 <li><strong>N° Recepción:</strong> {{ $equipo->recepcion->numero_recepcion ?? 'Sin recepción asociada' }}</li>
                                                 <!--<li><strong>Serie:</strong> {{ $equipo->numero_serie }}</li>-->
                                                 <li><strong>Marca:</strong> {{ $equipo->marca }}</li>

@@ -80,7 +80,7 @@
                                     <div class="col-lg-5 border-end">
                                         <div class="equipo-info p-3">
                                             <h6 class="text-primary"><i class="fas fa-info-circle"></i> Información Técnica</h6>
-                                            <ul class="list-unstyled">
+                                            <ul class="list-unstyled equipo-datos">
                                                 
                                                 <li><strong>Marca:</strong> {{ $equipo->marca }}</li>
                                                 <li><strong>Modelo:</strong> {{ $equipo->modelo }}</li>
