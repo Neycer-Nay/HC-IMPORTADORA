@@ -130,7 +130,8 @@
                     MANTENIMIENTO Y REPARACIÓN DE MAQUINARIA ELÉCTRICA INDUSTRIAL<br>
                     Dir: 4to Anillo entre Av. Alemana y Av. Costanera<br>
                     Cel: 76578154 - 72868051<br>
-                    <strong>PRO-FORMA</strong>
+                    <strong>PRO-FORMA</strong><br>
+                    <strong>Fecha:</strong>{{ \Carbon\Carbon::parse($cotizacion->fecha)->format('d/m/Y') }}
                 </td>
             </tr>
         </table>
@@ -155,7 +156,7 @@
             <td><strong>Celular:</strong>{{ $cliente->telefono_1 }}  {{ $cliente->telefono_2 }}  {{ $cliente->telefono_3 }}
             </td>
             
-            <td><strong>Fecha:</strong>{{ \Carbon\Carbon::parse($cotizacion->fecha)->format('d/m/Y') }}</td>
+            <td></td>
             <td>             
         </tr>
         

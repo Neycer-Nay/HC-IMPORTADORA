@@ -56,7 +56,7 @@
                                                         <td>
                                                             <a href="{{ route('clientes.show', $cliente->id) }}"
                                                                 class="btn btn-info btn-sm" title="Ver">
-                                                                <i class="fas fa-eye"></i>
+                                                                <i class="fas fa-eye"></i> Ver
                                                             </a>
                                                         </td>
                                                     </tr>
@@ -86,7 +86,7 @@
                                                     <div>
                                                         <a href="{{ route('clientes.show', $cliente->id) }}"
                                                             class="btn btn-info btn-sm" title="Ver">
-                                                            <i class="fas fa-eye"></i>
+                                                            <i class="fas fa-eye"></i> Ver
                                                         </a>
                                                     </div>
                                                 </div>

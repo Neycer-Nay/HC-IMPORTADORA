@@ -59,20 +59,20 @@
                     <input type="text" class="form-control" name="equipos[__INDEX__][modelo]">
                 </div>
                 <div class="form-group col-md-4" id="color__INDEX__" style="display: none;">
-                    <label><strong>Colores</strong></label>
+                    <label><strong>Colores</strong><span class="text-danger">*</span></label>
                     <select class="form-control select-colores" name="equipos[__INDEX__][color][]" multiple>
-                        <option value="rojo">Rojo</option>
-                        <option value="azul">Azul</option>
-                        <option value="verde">Verde</option>
-                        <option value="amarillo">Amarillo</option>
-                        <option value="naranja">Naranja</option>
-                        <option value="morado">Morado</option>
-                        <option value="rosado">Rosado</option>
-                        <option value="negro">Negro</option>
-                        <option value="blanco">Blanco</option>
-                        <option value="gris">Gris</option>
-                        <option value="marrón">Marrón</option>
-                        <option value="cian">Cian</option>
+                        <option value="Rojo">Rojo</option>
+                        <option value="Azul">Azul</option>
+                        <option value="Verde">Verde</option>
+                        <option value="Amarillo">Amarillo</option>
+                        <option value="Naranja">Naranja</option>
+                        <option value="Morado">Morado</option>
+                        <option value="Rosado">Rosado</option>
+                        <option value="Negro">Negro</option>
+                        <option value="Blanco">Blanco</option>
+                        <option value="Gris">Gris</option>
+                        <option value="Marrón">Marrón</option>
+                        <option value="Cian">Cian</option>
                     </select>
                     <small class="form-text text-muted">Puedes seleccionar hasta 2 colores.</small>
                 </div>

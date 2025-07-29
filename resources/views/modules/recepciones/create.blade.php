@@ -2,6 +2,7 @@
 
 @section('contenido')
     <div class="main-content">
+        <!-- errores generales oculto ya que tengo sweetalert2 para los errores
         @if($errors->any())
             <div class="alert alert-danger">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -14,7 +15,7 @@
                     @endforeach
                 </ul>
             </div>
-        @endif
+        @endif-->
         <form action="{{ route('recepciones.store') }}" method="POST" enctype="multipart/form-data" class="needs-validation"
             novalidate>
             @csrf

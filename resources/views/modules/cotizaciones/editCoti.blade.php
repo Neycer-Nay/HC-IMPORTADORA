@@ -72,7 +72,7 @@
                             <div class="card-body">
                                 <input type="hidden" name="equipos[{{ $loop->index }}][equipo_id]" value="{{ $equipo->id }}">
                                 <h6 class="mb-3">
-                                    <i class="fas fa-tools"></i> Tipo: {{ $equipo->tipo }}
+                                    <i class="fas fa-tools"></i> Categoria: {{ Str::title( str_replace('_', ' ', $equipo->tipo)) }}
                                 </h6>
 
                                 <div class="row">

@@ -4,7 +4,7 @@
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1 style="color:#151414">Recepción de equipos</h1>
+                <h1 style="color:#151414">Recepciones</h1>
                 <div class="section-header-breadcrumb">
                     <a href="{{ route('recepciones.create') }}" class="btn btn-primary">
                         <i class="fas fa-plus"></i> Nueva Recepción
