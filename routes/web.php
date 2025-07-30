@@ -75,4 +75,6 @@ Route::prefix('cotizaciones')->middleware('auth')->group(function () {
     Route::get('/{id}/pdf', [\App\Http\Controllers\CotizacionController::class, 'generarPdf'])->name('cotizaciones.pdf');
     Route::delete('/{id}', [\App\Http\Controllers\CotizacionController::class, 'destroy'])->name('cotizaciones.destroy');
 });
-
+ Route::prefix('contabilidad/ingresos')->middleware('auth')->group(function () {
+    Route::get('/', [\App\Http\Controllers\IngresosController::class, 'index'])->name('ingresos.index');
+});
