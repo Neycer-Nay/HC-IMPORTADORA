@@ -77,4 +77,11 @@ Route::prefix('cotizaciones')->middleware('auth')->group(function () {
 });
  Route::prefix('contabilidad/ingresos')->middleware('auth')->group(function () {
     Route::get('/', [\App\Http\Controllers\IngresosController::class, 'index'])->name('ingresos.index');
+    Route::get('/create', [\App\Http\Controllers\IngresosController::class, 'create'])->name('ingresos.create');
+    Route::post('/', [\App\Http\Controllers\IngresosController::class, 'store'])->name('ingresos.store');
+    Route::get('/{id}/edit', [\App\Http\Controllers\IngresosController::class, 'edit'])->name('ingresos.edit');
+    Route::put('/{id}', [\App\Http\Controllers\IngresosController::class, 'update'])->name('ingresos.update');
+    Route::delete('/{id}', [\App\Http\Controllers\IngresosController::class, 'destroy'])->name('ingresos.destroy');
+    Route::get('/{id}/show', [\App\Http\Controllers\IngresosController::class, 'show'])->name('ingresos.show');
+    
 });
