@@ -85,3 +85,11 @@ Route::prefix('cotizaciones')->middleware('auth')->group(function () {
     Route::get('/{id}/show', [\App\Http\Controllers\IngresosController::class, 'show'])->name('ingresos.show');
     
 });
+Route::prefix('contabilidad/egresos')->middleware('auth')->group(function () {
+    Route::get('/', [\App\Http\Controllers\EgresosController::class, 'index'])->name('egresos.index');
+    Route::get('/create', [\App\Http\Controllers\EgresosController::class, 'create'])->name('egresos.create');
+    Route::post('/', [\App\Http\Controllers\EgresosController::class, 'store'])->name('egresos.store');
+    Route::get('/{id}/edit', [\App\Http\Controllers\EgresosController::class, 'edit'])->name('egresos.edit');
+    Route::put('/{id}', [\App\Http\Controllers\EgresosController::class, 'update'])->name('egresos.update');
+    Route::delete('/{id}', [\App\Http\Controllers\EgresosController::class, 'destroy'])->name('egresos.destroy');
+});

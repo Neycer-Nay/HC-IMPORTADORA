@@ -8,7 +8,7 @@ class IngresosController extends Controller
 {
     public function index()
     {
-         $ingresos = \App\Models\Ingreso::orderBy('created_at', 'desc')->get();
+        $ingresos = \App\Models\Ingreso::orderBy('created_at', 'desc')->paginate(10);
         return view('contabilidad.ingresos.ingresos', compact('ingresos'));
     }
 
@@ -26,11 +26,10 @@ class IngresosController extends Controller
             'glosa' => 'required|string|max:255',
             'razon_social' => 'required|string|max:255',
             'nro_recibo' => 'required|string|max:255',
-            'metodo_pago' => 'required|string|max:255',
-            'subtotal' => 'required|numeric',
-            'descuento' => 'nullable|numeric',
-            
-            'estado_pago' => 'required|string|max:255',
+            'metodo_pago' => 'required|in:Efectivo,Banco,Por cobrar',
+            'subtotal' => 'required|numeric|min:0',
+            'descuento' => 'nullable|numeric|min:0',
+            'estado_pago' => 'required|in:Anticipo,Saldo,Completo',
         ]);
         $data['total'] = $data['subtotal'] - ($data['descuento'] ?? 0);
         \App\Models\Ingreso::create($data);
@@ -53,11 +52,10 @@ class IngresosController extends Controller
             'glosa' => 'required|string|max:255',
             'razon_social' => 'required|string|max:255',
             'nro_recibo' => 'required|string|max:255',
-            'metodo_pago' => 'required|string|max:255',
-            'subtotal' => 'required|numeric',
-            'descuento' => 'nullable|numeric',
-            
-            'estado_pago' => 'required|string|max:255',
+            'metodo_pago' => 'required|in:Efectivo,Banco,Por cobrar',
+            'subtotal' => 'required|numeric|min:0',
+            'descuento' => 'nullable|numeric|min:0',
+            'estado_pago' => 'required|in:Anticipo,Saldo,Completo',
         ]);
         $data['total'] = $data['subtotal'] - ($data['descuento'] ?? 0);
         $ingreso = \App\Models\Ingreso::findOrFail($id);
@@ -80,5 +78,5 @@ class IngresosController extends Controller
         // Lógica para mostrar los detalles de un ingreso
         $ingreso = \App\Models\Ingreso::findOrFail($id);
         return view('contabilidad.ingresos.ingreso', compact('ingreso'));
-    } 
+    }
 }

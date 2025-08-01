@@ -51,16 +51,17 @@
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td>{{ $recepcion->numero_recepcion }}</td>
-                                                        <td>{{ $recepcion->fecha_ingreso->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($recepcion->hora_ingreso)->format('H:i') }}
+                                                        <td>{{ $recepcion->fecha_ingreso->format('d/m/Y') }} -
+                                                            {{ \Carbon\Carbon::parse($recepcion->hora_ingreso)->format('H:i') }}
                                                         </td>
                                                         <td>{{ $recepcion->cliente->nombre ?? 'N/A' }}</td>
                                                         <td>{{ $recepcion->usuario->nombre ?? 'N/A' }}</td>
                                                         <!--<td>
-                                                                                    <span
-                                                                                        class="badge badge-{{  $recepcion->estado == ($recepcion->estado == 'EN_REPARACION' ? 'warning' : ($recepcion->estado == 'REPARADO' ? 'success' : 'secondary')) }}">
-                                                                                        {{ str_replace('_', ' ', $recepcion->estado) }}
-                                                                                    </span>
-                                                                                </td>-->
+                                                                                            <span
+                                                                                                class="badge badge-{{  $recepcion->estado == ($recepcion->estado == 'EN_REPARACION' ? 'warning' : ($recepcion->estado == 'REPARADO' ? 'success' : 'secondary')) }}">
+                                                                                                {{ str_replace('_', ' ', $recepcion->estado) }}
+                                                                                            </span>
+                                                                                        </td>-->
                                                         <td>
                                                             <a href="{{ route('recepciones.show', $recepcion->id) }}"
                                                                 class="btn btn-info btn-sm" title="Ver">
@@ -84,16 +85,16 @@
                                                                 </a>
                                                             @endif
                                                             <!-- Por el momento ocultare el boton de eliminar recepcion
-                                                            <form action="{{ route('recepciones.destroy', $recepcion->id) }}"
-                                                                method="POST" style="display: inline-block;"
-                                                                class="form-eliminar-recepcion">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button type="submit" class="btn btn-danger btn-sm"
-                                                                    title="Eliminar">
-                                                                    <i class="fas fa-trash"></i>
-                                                                </button>
-                                                            </form> -->
+                                                                    <form action="{{ route('recepciones.destroy', $recepcion->id) }}"
+                                                                        method="POST" style="display: inline-block;"
+                                                                        class="form-eliminar-recepcion">
+                                                                        @csrf
+                                                                        @method('DELETE')
+                                                                        <button type="submit" class="btn btn-danger btn-sm"
+                                                                            title="Eliminar">
+                                                                            <i class="fas fa-trash"></i>
+                                                                        </button>
+                                                                    </form> -->
                                                         </td>
                                                     </tr>
                                                 @endforeach
@@ -121,11 +122,11 @@
                                                     <p class="mb-1"><strong>Usuario:</strong>
                                                         {{ $recepcion->usuario->nombre ?? 'N/A' }}</p>
                                                     <!--<p class="mb-1"><strong>Estado:</strong>
-                                                                                <span
-                                                                                    class="badge badge-{{  $recepcion->estado == ($recepcion->estado == 'EN_REPARACION' ? 'warning' : ($recepcion->estado == 'REPARADO' ? 'success' : 'secondary')) }}">
-                                                                                    {{ str_replace('_', ' ', $recepcion->estado) }}
-                                                                                </span>
-                                                                            </p>-->
+                                                                                        <span
+                                                                                            class="badge badge-{{  $recepcion->estado == ($recepcion->estado == 'EN_REPARACION' ? 'warning' : ($recepcion->estado == 'REPARADO' ? 'success' : 'secondary')) }}">
+                                                                                            {{ str_replace('_', ' ', $recepcion->estado) }}
+                                                                                        </span>
+                                                                                    </p>-->
                                                     <div>
                                                         <a href="{{ route('recepciones.show', $recepcion->id) }}"
                                                             class="btn btn-info btn-sm" title="Ver">
@@ -150,16 +151,16 @@
                                                         @endif
 
                                                         <!-- Por el momento ocultare el boton de eliminar recepcion
-                                                        <form action="{{ route('recepciones.destroy', $recepcion->id) }}"
-                                                            method="POST" style="display: inline-block;"
-                                                            class="form-eliminar-recepcion ">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="btn btn-danger btn-sm"
-                                                                title="Eliminar">
-                                                                <i class="fas fa-trash"></i>
-                                                            </button>
-                                                        </form>-->
+                                                                <form action="{{ route('recepciones.destroy', $recepcion->id) }}"
+                                                                    method="POST" style="display: inline-block;"
+                                                                    class="form-eliminar-recepcion ">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <button type="submit" class="btn btn-danger btn-sm"
+                                                                        title="Eliminar">
+                                                                        <i class="fas fa-trash"></i>
+                                                                    </button>
+                                                                </form>-->
                                                     </div>
                                                 </div>
                                             </div>

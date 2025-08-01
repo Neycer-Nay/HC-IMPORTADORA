@@ -14,7 +14,7 @@
             <div class="section-body">
                 <p style="font-size: 1.2em;">Aquí puedes gestionar los ingresos.</p>
             </div>
-            <div class="d-none d-md-block">
+            <div class=" d-md-block table-responsive">
                 <table class="table table-striped" id="table-1">
                     <thead>
                         <tr>
@@ -46,13 +46,11 @@
                                 <td>{{ number_format($ingreso->total, 2) }}Bs</td>
                                 <td>{{ $ingreso->estado_pago }}</td>
                             </tr>
-
                         @endforeach
-
                     </tbody>
                 </table>
                 <div class="d-flex justify-content-center">
-                    {{-- Paginación aquí si la necesitas --}}
+                    {{ $ingresos->links('pagination::bootstrap-4') }}
                 </div>
             </div>
         </section>
@@ -111,7 +109,7 @@
                                 <label>Descuento</label>
                                 <input type="number" step="0.01" class="form-control" name="descuento" value="0">
                             </div>
-                            
+
                             <div class="form-group col-md-6">
                                 <label>Estado de Pago</label>
                                 <select name="estado_pago" class="form-control" required>
@@ -134,20 +132,20 @@
 @endsection
 
 @push('scripts')
-     @if(session('success'))
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            Swal.fire({
-                position: 'center',
-                icon: 'success',
-                title: 'Ingreso registrado correctamente',
-                text: '{{ session('success') }}',
-                showConfirmButton: true,
-                timer: 3000
+    @if(session('success'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'Ingreso registrado correctamente',
+                    text: '{{ session('success') }}',
+                    showConfirmButton: true,
+                    timer: 3000
+                });
             });
-        });
-    </script>
-    {{ session()->forget('success') }}
-@endif
-    
+        </script>
+        {{ session()->forget('success') }}
+    @endif
+
 @endpush
