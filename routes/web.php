@@ -89,6 +89,9 @@ Route::prefix('contabilidad/egresos')->middleware('auth')->group(function () {
     Route::get('/', [\App\Http\Controllers\EgresosController::class, 'index'])->name('egresos.index');
     Route::get('/create', [\App\Http\Controllers\EgresosController::class, 'create'])->name('egresos.create');
     Route::post('/', [\App\Http\Controllers\EgresosController::class, 'store'])->name('egresos.store');
+    Route::post('/cuentas', [\App\Http\Controllers\EgresosController::class, 'storeCuenta'])->name('cuentas.store');
+    Route::get('/{id}/show', [\App\Http\Controllers\EgresosController::class, 'show'])->name('egresos.show');
+    Route::get('/cuentas/create', [\App\Http\Controllers\EgresosController::class, 'createCuenta'])->name('cuentas.create');
     Route::get('/{id}/edit', [\App\Http\Controllers\EgresosController::class, 'edit'])->name('egresos.edit');
     Route::put('/{id}', [\App\Http\Controllers\EgresosController::class, 'update'])->name('egresos.update');
     Route::delete('/{id}', [\App\Http\Controllers\EgresosController::class, 'destroy'])->name('egresos.destroy');
