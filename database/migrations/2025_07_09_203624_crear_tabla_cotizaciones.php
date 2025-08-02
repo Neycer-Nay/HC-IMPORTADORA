@@ -11,7 +11,7 @@ return new class extends Migration {
     public function up(): void
     {
         
-        // Nueva migracion para fotos de equipos en cotización donde  se cambia los json por una tabla de fotos
+        
         Schema::create('cotizaciones', function (Blueprint $table) {
             $table->id();
             $table->foreignId('recepcion_id')->constrained('recepciones');
@@ -22,7 +22,7 @@ return new class extends Migration {
             $table->timestamps();
         });
 
-        // Tabla principal de equipos en cotización (sin los campos JSON)
+        
         Schema::create('cotizacion_equipos', function (Blueprint $table) {
             $table->id();
             $table->foreignId('cotizacion_id')->constrained('cotizaciones')->onDelete('cascade');
@@ -53,7 +53,7 @@ return new class extends Migration {
         });
         
 
-        // Tabla para fotos (relación muchos a muchos)
+        
         Schema::create('cotizacion_equipo_fotos', function (Blueprint $table) {
             $table->id();
             $table->foreignId('cotizacion_equipo_id')->constrained('cotizacion_equipos')->onDelete('cascade');

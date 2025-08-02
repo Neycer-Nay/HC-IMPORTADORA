@@ -77,4 +77,22 @@ Route::prefix('cotizaciones')->middleware('auth')->group(function () {
 });
  Route::prefix('contabilidad/ingresos')->middleware('auth')->group(function () {
     Route::get('/', [\App\Http\Controllers\IngresosController::class, 'index'])->name('ingresos.index');
+    Route::get('/create', [\App\Http\Controllers\IngresosController::class, 'create'])->name('ingresos.create');
+    Route::post('/', [\App\Http\Controllers\IngresosController::class, 'store'])->name('ingresos.store');
+    Route::get('/{id}/edit', [\App\Http\Controllers\IngresosController::class, 'edit'])->name('ingresos.edit');
+    Route::put('/{id}', [\App\Http\Controllers\IngresosController::class, 'update'])->name('ingresos.update');
+    Route::delete('/{id}', [\App\Http\Controllers\IngresosController::class, 'destroy'])->name('ingresos.destroy');
+    Route::get('/{id}/show', [\App\Http\Controllers\IngresosController::class, 'show'])->name('ingresos.show');
+    
+});
+Route::prefix('contabilidad/egresos')->middleware('auth')->group(function () {
+    Route::get('/', [\App\Http\Controllers\EgresosController::class, 'index'])->name('egresos.index');
+    Route::get('/create', [\App\Http\Controllers\EgresosController::class, 'create'])->name('egresos.create');
+    Route::post('/', [\App\Http\Controllers\EgresosController::class, 'store'])->name('egresos.store');
+    Route::post('/cuentas', [\App\Http\Controllers\EgresosController::class, 'storeCuenta'])->name('cuentas.store');
+    Route::get('/{id}/show', [\App\Http\Controllers\EgresosController::class, 'show'])->name('egresos.show');
+    Route::get('/cuentas/create', [\App\Http\Controllers\EgresosController::class, 'createCuenta'])->name('cuentas.create');
+    Route::get('/{id}/edit', [\App\Http\Controllers\EgresosController::class, 'edit'])->name('egresos.edit');
+    Route::put('/{id}', [\App\Http\Controllers\EgresosController::class, 'update'])->name('egresos.update');
+    Route::delete('/{id}', [\App\Http\Controllers\EgresosController::class, 'destroy'])->name('egresos.destroy');
 });
