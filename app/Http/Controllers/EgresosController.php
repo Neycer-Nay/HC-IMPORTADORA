@@ -6,11 +6,47 @@ use Illuminate\Http\Request;
 
 class EgresosController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $cuentas = \App\Models\NombreCuenta::all();
-        $egresos = \App\Models\Egreso::orderBy('created_at', 'desc')->paginate(10);
-        return view('contabilidad.egresos.egresos', compact('cuentas', 'egresos'));
+        $query = \App\Models\Egreso::with('cuenta')->orderBy('created_at', 'desc');
+
+        // Filtro por fecha
+        if ($request->filled('fecha_inicio')) {
+            $query->whereDate('created_at', '>=', $request->fecha_inicio);
+        }
+        if ($request->filled('fecha_fin')) {
+            $query->whereDate('created_at', '<=', $request->fecha_fin);
+        }
+
+        // Filtro por cuenta
+        if ($request->filled('cuenta_id')) {
+            $query->where('cuenta_id', $request->cuenta_id);
+        }
+
+        // Filtro por método de pago
+        if ($request->filled('metodo_pago')) {
+            $query->where('metodo_pago', $request->metodo_pago);
+        }
+
+        $egresos = $query->get();
+
+        // Calcular totales
+        $totalEgresos = $egresos->sum('total');
+        $totalSubtotal = $egresos->sum('subtotal');
+        $totalDescuento = $egresos->sum('descuento');
+
+        // Obtener métodos de pago únicos para el filtro
+        $metodosPago = \App\Models\Egreso::distinct()->pluck('metodo_pago')->filter();
+
+        return view('contabilidad.egresos.egresos', compact(
+            'cuentas',
+            'egresos',
+            'totalEgresos',
+            'totalSubtotal',
+            'totalDescuento',
+            'metodosPago'
+        ));
     }
 
     public function store(Request $request)
@@ -20,11 +56,11 @@ class EgresosController extends Controller
             'glosa' => 'required|string|max:255',
             'razon_social' => 'required|string|max:255',
             'nro_factura' => 'required|string|max:255',
-            'responsable' => 'required|string|max:255',
+            'responsable' => 'required|in:Tito,Aldo,Augusto,Arnold,Plinio,Jose',
             'metodo_pago' => 'required|in:Efectivo,Banco,Por pagar',
             'subtotal' => 'required|numeric|min:0',
             'descuento' => 'nullable|numeric|min:0',
-            
+
         ]);
 
         $data['total'] = $data['subtotal'] - ($data['descuento'] ?? 0);

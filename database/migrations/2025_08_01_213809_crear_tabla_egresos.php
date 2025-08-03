@@ -22,6 +22,7 @@ return new class extends Migration {
             $table->string('glosa');
             $table->string('razon_social');
             $table->string('nro_factura');
+            $table->string('responsable'); 
             $table->string('metodo_pago');
             $table->decimal('subtotal', 15, 2);
             $table->decimal('descuento', 15, 2)->default(0);
