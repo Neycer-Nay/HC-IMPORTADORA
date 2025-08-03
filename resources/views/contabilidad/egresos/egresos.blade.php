@@ -225,10 +225,54 @@
                 },
                 "order": [[0, "desc"]], // Ordenar por fecha descendente
                 "pageLength": 25,
+                "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "Todos"]],
                 "responsive": true,
-                "dom": 'Bfrtip',
+                "dom": 'Blfrtip',
                 "buttons": [
-                    'copy', 'excel', 'pdf'
+                    {
+                        extend: 'copy',
+                        text: 'Copiar',
+                        className: 'btn btn-secondary'
+                    },
+                    {
+                        extend: 'excel',
+                        text: '<i class="fas fa-file-excel"></i> Excel',
+                        className: 'btn btn-success'
+                    },
+                    {
+    extend: 'pdf',
+    text: '<i class="fas fa-file-pdf"></i> PDF',
+    className: 'btn btn-danger',
+    orientation: 'landscape',
+    customize: function (doc) {
+        doc.images = doc.images || {};
+        doc.images.logo = 'data:image/png;base64,{{ base64_encode(file_get_contents(public_path("img/logoHc.png"))) }}';
+
+        doc.content.unshift({
+            columns: [
+                {
+                    image: 'logo',
+                    width: 100,
+                    alignment: 'left',
+                    margin: [0, 0, 0, 0]
+                },
+                {
+                    stack: [
+                        { text: 'HC BOBINADOS INDUSTRIAL', alignment: 'center', fontSize: 16, bold: true, margin: [0, 10, 0, 0] },
+                        { text: 'Reporte de Egresos', alignment: 'center', fontSize: 18, margin: [0, 5, 0, 0] }
+                    ],
+                    width: '*'
+                }
+            ],
+            margin: [0, 0, 0, 12]
+        });
+
+        // Elimina el título por defecto si aparece duplicado
+        if (doc.content.length > 1 && doc.content[1].text) {
+            doc.content.splice(1, 1);
+        }
+    }
+}
                 ]
             });
         });
