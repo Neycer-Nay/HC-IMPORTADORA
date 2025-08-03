@@ -9,12 +9,61 @@
                     <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#modalNuevoIngreso">
                         <i class="fas fa-plus"></i> Nuevo Ingreso
                     </a>
-                    <a href="#" class="btn btn-info ml-2" data-toggle="modal" data-target="#modalFiltroFecha">
-                        <i class="fas fa-filter"></i> Filtrar por Fecha
+                    <a href="#" class="btn btn-info ml-2" data-toggle="modal" data-target="#modalFiltros">
+                        <i class="fas fa-filter"></i> Filtros
                     </a>
                 </div>
             </div>
+            <!-- Tarjeta de Totales -->
             <div class="section-body">
+                <div class="row mb-4">
+                    
+                    <div class="col-lg-4 col-md-6 col-sm-6 col-12">
+                        <div class="card card-statistic-1">
+                            <div class="card-icon bg-success">
+                                <i class="fas fa-calculator"></i>
+                            </div>
+                            <div class="card-wrap">
+                                <div class="card-header">
+                                    <h4>Total Subtotal</h4>
+                                </div>
+                                <div class="card-body">
+                                    {{ number_format($totalSubtotal, 2) }} Bs
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-6 col-12">
+                        <div class="card card-statistic-1">
+                            <div class="card-icon bg-warning">
+                                <i class="fas fa-percentage"></i>
+                            </div>
+                            <div class="card-wrap">
+                                <div class="card-header">
+                                    <h4>Total Descuentos</h4>
+                                </div>
+                                <div class="card-body">
+                                    {{ number_format($totalDescuento, 2) }} Bs
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-6 col-12">
+                        <div class="card card-statistic-1">
+                            <div class="card-icon bg-primary">
+                                <i class="far fa-money-bill-alt"></i>
+                            </div>
+                            <div class="card-wrap">
+                                <div class="card-header">
+                                    <h4>Total de Ingresos</h4>
+                                </div>
+                                <div class="card-body">
+                                    {{ number_format($totalIngresos, 2) }} Bs
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <p style="font-size: 1.2em;">Aquí puedes gestionar los ingresos.</p>
             </div>
             <div class=" d-md-block table-responsive">
@@ -51,6 +100,16 @@
                             </tr>
                         @endforeach
                     </tbody>
+                    </tbody>
+                    <tfoot>
+                        <tr style="background-color: #f8f9fa; font-weight: bold; border-top: 2px solid #dee2e6;">
+                            <td colspan="6" class="text-right"><strong>TOTALES:</strong></td>
+                            <td><strong>{{ number_format($totalSubtotal, 2) }} Bs</strong></td>
+                            <td><strong>{{ number_format($totalDescuento, 2) }} Bs</strong></td>
+                            <td><strong>{{ number_format($totalIngresos, 2) }} Bs</strong></td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
                 </table>
 
             </div>
@@ -132,33 +191,67 @@
         </div>
     </div>
 
-    <!-- Modal Filtrar por Fecha -->
-    <div class="modal fade" id="modalFiltroFecha" tabindex="-1" role="dialog" aria-labelledby="modalFiltroFechaLabel"
+    <!-- Modal Filtros -->
+    <div class="modal fade" id="modalFiltros" tabindex="-1" role="dialog" aria-labelledby="modalFiltrosLabel"
         aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg" role="document">
             <form action="{{ route('ingresos.index') }}" method="GET">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="modalFiltroFechaLabel">Filtrar Ingresos por Fecha</h5>
+                        <h5 class="modal-title" id="modalFiltrosLabel">Filtrar Ingresos</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <div class="form-group">
-                            <label>Fecha Inicio</label>
-                            <input type="date" class="form-control" name="fecha_inicio"
-                                value="{{ request('fecha_inicio') }}">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Fecha Inicio</label>
+                                    <input type="date" class="form-control" name="fecha_inicio"
+                                        value="{{ request('fecha_inicio') }}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Fecha Fin</label>
+                                    <input type="date" class="form-control" name="fecha_fin"
+                                        value="{{ request('fecha_fin') }}">
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label>Fecha Fin</label>
-                            <input type="date" class="form-control" name="fecha_fin" value="{{ request('fecha_fin') }}">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Tipo de Ingreso</label>
+                                    <select class="form-control" name="tipo_ingreso">
+                                        <option value="">Todos los tipos</option>
+                                        @foreach($tiposIngreso as $tipo)
+                                            <option value="{{ $tipo }}" {{ request('tipo_ingreso') == $tipo ? 'selected' : '' }}>
+                                                {{ $tipo }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Método de Pago</label>
+                                    <select class="form-control" name="metodo_pago">
+                                        <option value="">Todos los métodos</option>
+                                        @foreach($metodosPago as $metodo)
+                                            <option value="{{ $metodo }}" {{ request('metodo_pago') == $metodo ? 'selected' : '' }}> {{ $metodo }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-info">Aplicar Filtro</button>
-                        <a href="{{ route('ingresos.index') }}" class="btn btn-warning">Limpiar Filtro</a>
+                        <button type="submit" class="btn btn-info">Aplicar Filtros</button>
+                        <a href="{{ route('ingresos.index') }}" class="btn btn-warning">Limpiar Filtros</a>
                     </div>
                 </div>
             </form>
@@ -202,7 +295,16 @@
                     {
                         extend: 'excel',
                         text: '<i class="fas fa-file-excel"></i> Excel',
-                        className: 'btn btn-success'
+                        className: 'btn btn-success',
+                        customizeData: function (data) {
+                            data.body.push([
+                                '', '', '', '', '', '', // columnas vacías según tu tabla
+                                '{{ number_format($totalSubtotal, 2) }} Bs',
+                                '{{ number_format($totalDescuento, 2) }} Bs',
+                                '{{ number_format($totalIngresos, 2) }} Bs',
+                                ''
+                            ]);
+                        }
                     },
                     {
                         extend: 'pdf',
@@ -234,6 +336,42 @@
 
                             // Elimina el título por defecto de DataTables
                             doc.content.splice(1, 1);
+
+                            // Agregar totales al final del PDF
+                            doc.content.push({
+                                text: '\n',
+                                margin: [0, 10, 0, 0]
+                            });
+
+                            doc.content.push({
+                                table: {
+                                    widths: ['*', 'auto', 'auto', 'auto'],
+                                    body: [
+                                        [
+                                            { text: '', border: [false, false, false, false] },
+                                            { text: 'Subtotal', style: 'tableHeader', alignment: 'center', bold: true },
+                                            { text: 'Descuento', style: 'tableHeader', alignment: 'center', bold: true },
+                                            { text: 'Total', style: 'tableHeader', alignment: 'center', bold: true }
+                                        ],
+                                        [
+                                            { text: 'TOTALES:', style: 'tableHeader', alignment: 'right', bold: true },
+                                            { text: '{{ number_format($totalSubtotal, 2) }} Bs', style: 'tableHeader', alignment: 'center', bold: true },
+                                            { text: '{{ number_format($totalDescuento, 2) }} Bs', style: 'tableHeader', alignment: 'center', bold: true },
+                                            { text: '{{ number_format($totalIngresos, 2) }} Bs', style: 'tableHeader', alignment: 'center', bold: true }
+                                        ]
+                                    ]
+                                },
+                                layout: {
+                                    fillColor: '#f8f9fa',
+                                    hLineWidth: function (i, node) {
+                                        return 2;
+                                    },
+                                    vLineWidth: function (i, node) {
+                                        return 1;
+                                    }
+                                },
+                                margin: [0, 5, 0, 0]
+                            });
                         }
                     }
                 ]

@@ -9,8 +9,9 @@ class EgresosController extends Controller
     public function index(Request $request)
     {
         $cuentas = \App\Models\NombreCuenta::all();
-        $query = \App\Models\Egreso::orderBy('created_at', 'desc');
+        $query = \App\Models\Egreso::with('cuenta')->orderBy('created_at', 'desc');
 
+        // Filtro por fecha
         if ($request->filled('fecha_inicio')) {
             $query->whereDate('created_at', '>=', $request->fecha_inicio);
         }
@@ -18,8 +19,34 @@ class EgresosController extends Controller
             $query->whereDate('created_at', '<=', $request->fecha_fin);
         }
 
+        // Filtro por cuenta
+        if ($request->filled('cuenta_id')) {
+            $query->where('cuenta_id', $request->cuenta_id);
+        }
+
+        // Filtro por método de pago
+        if ($request->filled('metodo_pago')) {
+            $query->where('metodo_pago', $request->metodo_pago);
+        }
+
         $egresos = $query->get();
-        return view('contabilidad.egresos.egresos', compact('cuentas', 'egresos'));
+
+        // Calcular totales
+        $totalEgresos = $egresos->sum('total');
+        $totalSubtotal = $egresos->sum('subtotal');
+        $totalDescuento = $egresos->sum('descuento');
+
+        // Obtener métodos de pago únicos para el filtro
+        $metodosPago = \App\Models\Egreso::distinct()->pluck('metodo_pago')->filter();
+
+        return view('contabilidad.egresos.egresos', compact(
+            'cuentas',
+            'egresos',
+            'totalEgresos',
+            'totalSubtotal',
+            'totalDescuento',
+            'metodosPago'
+        ));
     }
 
     public function store(Request $request)

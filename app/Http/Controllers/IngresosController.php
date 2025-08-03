@@ -10,6 +10,7 @@ class IngresosController extends Controller
     {
         $query = \App\Models\Ingreso::orderBy('created_at', 'desc');
 
+        // Filtro por fecha
         if ($request->filled('fecha_inicio')) {
             $query->whereDate('created_at', '>=', $request->fecha_inicio);
         }
@@ -17,10 +18,37 @@ class IngresosController extends Controller
             $query->whereDate('created_at', '<=', $request->fecha_fin);
         }
 
+        // Filtro por tipo de ingreso
+        if ($request->filled('tipo_ingreso')) {
+            $query->where('tipo_ingreso', $request->tipo_ingreso);
+        }
+
+        // Filtro por método de pago
+        if ($request->filled('metodo_pago')) {
+            $query->where('metodo_pago', $request->metodo_pago);
+        }
+
         $ingresos = $query->get();
 
+        // Calcular totales
+        $totalIngresos = $ingresos->sum('total');
+        $totalSubtotal = $ingresos->sum('subtotal');
+        $totalDescuento = $ingresos->sum('descuento');
+
+        // Obtener tipos de ingreso únicos para el filtro
+        $tiposIngreso = \App\Models\Ingreso::distinct()->pluck('tipo_ingreso')->filter();
         
-        return view('contabilidad.ingresos.ingresos', compact('ingresos'));
+        // Obtener métodos de pago únicos para el filtro
+        $metodosPago = \App\Models\Ingreso::distinct()->pluck('metodo_pago')->filter();
+
+        return view('contabilidad.ingresos.ingresos', compact(
+            'ingresos',
+            'totalIngresos',
+            'totalSubtotal',
+            'totalDescuento',
+            'tiposIngreso',
+            'metodosPago'
+        ));
     }
 
     public function create()

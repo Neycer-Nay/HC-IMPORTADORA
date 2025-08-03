@@ -44,11 +44,11 @@
                     <i class="fas fa-calculator"></i> <span>Contabilidad</span>
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="#"><i class="fas fa-file-invoice-dollar"></i> Recibos</a></li>
+                    <!--<li><a class="nav-link" href="#"><i class="fas fa-file-invoice-dollar"></i> Recibos</a></li>-->
                     <li><a class="nav-link" href="{{ route('ingresos.index') }}"><i class="fas fa-arrow-down"></i> Ingresos</a></li>
                     <li><a class="nav-link" href="{{ route('egresos.index') }}"><i class="fas fa-arrow-up"></i> Egresos</a></li>
                     <li><a class="nav-link" href="{{ route('libro-diario.index') }}"><i class="fas fa-book"></i> Libro Diario</a></li>
-                    <li><a class="nav-link" href="#"><i class="fas fa-chart-line"></i> Reportes</a></li>
+                    <!--<li><a class="nav-link" href="#"><i class="fas fa-chart-line"></i> Reportes</a></li>-->
                     <li><a class="nav-link" href="#"><i class="fas fa-money-check-alt"></i> Sueldos</a></li>
                 </ul>
             </li>

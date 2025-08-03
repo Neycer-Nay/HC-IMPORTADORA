@@ -11,12 +11,61 @@
                     <a href="#" class="btn btn-primary ml-2" data-toggle="modal" data-target="#modalNuevaCuenta">Agregar
                         Cuenta
                     </a>
-                    <a href="#" class="btn btn-info ml-2" data-toggle="modal" data-target="#modalFiltroFecha">
-                        <i class="fas fa-filter"></i> Filtrar por Fecha
+                    <a href="#" class="btn btn-info ml-2" data-toggle="modal" data-target="#modalFiltros">
+                        <i class="fas fa-filter"></i> Filtros
                     </a>
                 </div>
             </div>
+            <!-- Tarjetas de Totales -->
             <div class="section-body">
+                <div class="row mb-4">
+                    
+                    <div class="col-lg-4 col-md-6 col-sm-6 col-12">
+                        <div class="card card-statistic-1">
+                            <div class="card-icon bg-info">
+                                <i class="fas fa-calculator"></i>
+                            </div>
+                            <div class="card-wrap">
+                                <div class="card-header">
+                                    <h4>Total Subtotal</h4>
+                                </div>
+                                <div class="card-body">
+                                    {{ number_format($totalSubtotal, 2) }} Bs
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-6 col-12">
+                        <div class="card card-statistic-1">
+                            <div class="card-icon bg-warning">
+                                <i class="fas fa-percentage"></i>
+                            </div>
+                            <div class="card-wrap">
+                                <div class="card-header">
+                                    <h4>Total Descuentos</h4>
+                                </div>
+                                <div class="card-body">
+                                    {{ number_format($totalDescuento, 2) }} Bs
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-6 col-12">
+                        <div class="card card-statistic-1">
+                            <div class="card-icon bg-danger">
+                                <i class="far fa-money-bill-alt"></i>
+                            </div>
+                            <div class="card-wrap">
+                                <div class="card-header">
+                                    <h4>Total de Egresos</h4>
+                                </div>
+                                <div class="card-body">
+                                    {{ number_format($totalEgresos, 2) }} Bs
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <p style="font-size: 1.2em;">Aquí puedes gestionar los egresos.</p>
             </div>
             <div class="table-responsive">
@@ -53,6 +102,15 @@
                         @endforeach
 
                     </tbody>
+                    </tbody>
+                    <tfoot>
+                        <tr style="background-color: #f8f9fa; font-weight: bold; border-top: 2px solid #dee2e6;">
+                            <td colspan="7" class="text-right"><strong>TOTALES:</strong></td>
+                            <td><strong>{{ number_format($totalSubtotal, 2) }} Bs</strong></td>
+                            <td><strong>{{ number_format($totalDescuento, 2) }} Bs</strong></td>
+                            <td><strong>{{ number_format($totalEgresos, 2) }} Bs</strong></td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </section>
@@ -166,33 +224,67 @@
         </div>
     </div>
 
-    <!-- Modal Filtrar por Fecha -->
-    <div class="modal fade" id="modalFiltroFecha" tabindex="-1" role="dialog" aria-labelledby="modalFiltroFechaLabel"
+    <!-- Modal Filtros -->
+    <div class="modal fade" id="modalFiltros" tabindex="-1" role="dialog" aria-labelledby="modalFiltrosLabel"
         aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg" role="document">
             <form action="{{ route('egresos.index') }}" method="GET">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="modalFiltroFechaLabel">Filtrar Egresos por Fecha</h5>
+                        <h5 class="modal-title" id="modalFiltrosLabel">Filtrar Egresos</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <div class="form-group">
-                            <label>Fecha Inicio</label>
-                            <input type="date" class="form-control" name="fecha_inicio"
-                                value="{{ request('fecha_inicio') }}">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Fecha Inicio</label>
+                                    <input type="date" class="form-control" name="fecha_inicio"
+                                        value="{{ request('fecha_inicio') }}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Fecha Fin</label>
+                                    <input type="date" class="form-control" name="fecha_fin"
+                                        value="{{ request('fecha_fin') }}">
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label>Fecha Fin</label>
-                            <input type="date" class="form-control" name="fecha_fin" value="{{ request('fecha_fin') }}">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Nombre Cuenta</label>
+                                    <select class="form-control" name="cuenta_id">
+                                        <option value="">Todas las cuentas</option>
+                                        @foreach($cuentas as $cuenta)
+                                            <option value="{{ $cuenta->id }}" {{ request('cuenta_id') == $cuenta->id ? 'selected' : '' }}>
+                                                {{ $cuenta->nombre_cuenta }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Método de Pago</label>
+                                    <select class="form-control" name="metodo_pago">
+                                        <option value="">Todos los métodos</option>
+                                        @foreach($metodosPago as $metodo)
+                                            <option value="{{ $metodo }}" {{ request('metodo_pago') == $metodo ? 'selected' : '' }}> {{ $metodo }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-info">Aplicar Filtro</button>
-                        <a href="{{ route('egresos.index') }}" class="btn btn-warning">Limpiar Filtro</a>
+                        <button type="submit" class="btn btn-info">Aplicar Filtros</button>
+                        <a href="{{ route('egresos.index') }}" class="btn btn-warning">Limpiar Filtros</a>
                     </div>
                 </div>
             </form>
@@ -237,42 +329,87 @@
                     {
                         extend: 'excel',
                         text: '<i class="fas fa-file-excel"></i> Excel',
-                        className: 'btn btn-success'
+                        className: 'btn btn-success',
+                        customizeData: function (data) {
+                            data.body.push([
+                                '', '', '', '', '', '', // columnas vacías según tu tabla
+                                '{{ number_format($totalSubtotal, 2) }} Bs',
+                                '{{ number_format($totalDescuento, 2) }} Bs',
+                                '{{ number_format($totalEgresos, 2) }} Bs'
+                            ]);
+                        }
                     },
                     {
-    extend: 'pdf',
-    text: '<i class="fas fa-file-pdf"></i> PDF',
-    className: 'btn btn-danger',
-    orientation: 'landscape',
-    customize: function (doc) {
-        doc.images = doc.images || {};
-        doc.images.logo = 'data:image/png;base64,{{ base64_encode(file_get_contents(public_path("img/logoHc.png"))) }}';
+                        extend: 'pdf',
+                        text: '<i class="fas fa-file-pdf"></i> PDF',
+                        className: 'btn btn-danger',
+                        orientation: 'landscape',
+                        customize: function (doc) {
+                            doc.images = doc.images || {};
+                            doc.images.logo = 'data:image/png;base64,{{ base64_encode(file_get_contents(public_path("img/logoHc.png"))) }}';
 
-        doc.content.unshift({
-            columns: [
-                {
-                    image: 'logo',
-                    width: 100,
-                    alignment: 'left',
-                    margin: [0, 0, 0, 0]
-                },
-                {
-                    stack: [
-                        { text: 'HC BOBINADOS INDUSTRIAL', alignment: 'center', fontSize: 16, bold: true, margin: [0, 10, 0, 0] },
-                        { text: 'Reporte de Egresos', alignment: 'center', fontSize: 18, margin: [0, 5, 0, 0] }
-                    ],
-                    width: '*'
-                }
-            ],
-            margin: [0, 0, 0, 12]
-        });
+                            doc.content.unshift({
+                                columns: [
+                                    {
+                                        image: 'logo',
+                                        width: 100,
+                                        alignment: 'left',
+                                        margin: [0, 0, 0, 0]
+                                    },
+                                    {
+                                        stack: [
+                                            { text: 'HC BOBINADOS INDUSTRIAL', alignment: 'center', fontSize: 16, bold: true, margin: [0, 10, 0, 0] },
+                                            { text: 'Reporte de Egresos', alignment: 'center', fontSize: 18, margin: [0, 5, 0, 0] }
+                                        ],
+                                        width: '*'
+                                    }
+                                ],
+                                margin: [0, 0, 0, 12]
+                            });
 
-        // Elimina el título por defecto si aparece duplicado
-        if (doc.content.length > 1 && doc.content[1].text) {
-            doc.content.splice(1, 1);
-        }
-    }
-}
+                            // Elimina el título por defecto si aparece duplicado
+                            if (doc.content.length > 1 && doc.content[1].text) {
+                                doc.content.splice(1, 1);
+                            }
+
+                            // Agregar totales al final del PDF
+                            doc.content.push({
+                                text: '\n',
+                                margin: [0, 10, 0, 0]
+                            });
+
+                            doc.content.push({
+                                table: {
+                                    widths: ['*', 'auto', 'auto', 'auto'],
+                                    body: [
+
+                                        [
+                                            { text: '', border: [false, false, false, false] },
+                                            { text: 'Subtotal', style: 'tableHeader', alignment: 'center', bold: true },
+                                            { text: 'Descuento', style: 'tableHeader', alignment: 'center', bold: true },
+                                            { text: 'Total', style: 'tableHeader', alignment: 'center', bold: true }
+                                        ],
+                                        [
+                                            { text: 'TOTALES:', style: 'tableHeader', alignment: 'right', bold: true },
+                                            { text: '{{ number_format($totalSubtotal, 2) }} Bs', style: 'tableHeader', alignment: 'center', bold: true },
+                                            { text: '{{ number_format($totalDescuento, 2) }} Bs', style: 'tableHeader', alignment: 'center', bold: true },
+                                            { text: '{{ number_format($totalEgresos, 2) }} Bs', style: 'tableHeader', alignment: 'center', bold: true }
+                                        ]
+                                    ]
+                                },
+                                layout: {
+                                    fillColor: '#f8f9fa',
+                                    hLineWidth: function (i, node) {
+                                        return 2;
+                                    },
+                                    vLineWidth: function (i, node) {
+                                        return 1;
+                                    }
+                                },
+                                margin: [0, 5, 0, 0]
+                            });
+                        }
+                    }
                 ]
             });
         });
