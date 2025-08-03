@@ -6,9 +6,20 @@ use Illuminate\Http\Request;
 
 class IngresosController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $ingresos = \App\Models\Ingreso::orderBy('created_at', 'desc')->paginate(10);
+        $query = \App\Models\Ingreso::orderBy('created_at', 'desc');
+
+        if ($request->filled('fecha_inicio')) {
+            $query->whereDate('created_at', '>=', $request->fecha_inicio);
+        }
+        if ($request->filled('fecha_fin')) {
+            $query->whereDate('created_at', '<=', $request->fecha_fin);
+        }
+
+        $ingresos = $query->get();
+
+        
         return view('contabilidad.ingresos.ingresos', compact('ingresos'));
     }
 

@@ -6,6 +6,7 @@ use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\EquipoController;
 use App\Http\Controllers\RecepcionController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\LibroDiarioController;
 
 
 // Crear un usuario administrador, solo usar una vez
@@ -95,4 +96,8 @@ Route::prefix('contabilidad/egresos')->middleware('auth')->group(function () {
     Route::get('/{id}/edit', [\App\Http\Controllers\EgresosController::class, 'edit'])->name('egresos.edit');
     Route::put('/{id}', [\App\Http\Controllers\EgresosController::class, 'update'])->name('egresos.update');
     Route::delete('/{id}', [\App\Http\Controllers\EgresosController::class, 'destroy'])->name('egresos.destroy');
+});
+
+Route::prefix('contabilidad/libro-diario')->middleware('auth')->group(function () {
+    Route::get('/', [LibroDiarioController::class, 'index'])->name('libro-diario.index');
 });

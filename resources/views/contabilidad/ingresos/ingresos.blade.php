@@ -9,13 +9,16 @@
                     <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#modalNuevoIngreso">
                         <i class="fas fa-plus"></i> Nuevo Ingreso
                     </a>
+                    <a href="#" class="btn btn-info ml-2" data-toggle="modal" data-target="#modalFiltroFecha">
+                        <i class="fas fa-filter"></i> Filtrar por Fecha
+                    </a>
                 </div>
             </div>
             <div class="section-body">
                 <p style="font-size: 1.2em;">Aquí puedes gestionar los ingresos.</p>
             </div>
             <div class=" d-md-block table-responsive">
-                <table class="table table-striped" id="table-1">
+                <table class="table table-striped" id="table-ingresos">
                     <thead>
                         <tr>
 
@@ -49,11 +52,9 @@
                         @endforeach
                     </tbody>
                 </table>
-                
+
             </div>
-            <div class="d-flex justify-content-center">
-                    {{ $ingresos->links('pagination::bootstrap-4') }}
-                </div>
+
         </section>
     </div>
 
@@ -130,6 +131,39 @@
             </form>
         </div>
     </div>
+
+    <!-- Modal Filtrar por Fecha -->
+    <div class="modal fade" id="modalFiltroFecha" tabindex="-1" role="dialog" aria-labelledby="modalFiltroFechaLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <form action="{{ route('ingresos.index') }}" method="GET">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalFiltroFechaLabel">Filtrar Ingresos por Fecha</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Fecha Inicio</label>
+                            <input type="date" class="form-control" name="fecha_inicio"
+                                value="{{ request('fecha_inicio') }}">
+                        </div>
+                        <div class="form-group">
+                            <label>Fecha Fin</label>
+                            <input type="date" class="form-control" name="fecha_fin" value="{{ request('fecha_fin') }}">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-info">Aplicar Filtro</button>
+                        <a href="{{ route('ingresos.index') }}" class="btn btn-warning">Limpiar Filtro</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 @endsection
 
 @push('scripts')
@@ -148,5 +182,20 @@
         </script>
         {{ session()->forget('success') }}
     @endif
-
+    <script>
+        $(document).ready(function () {
+            $('#table-ingresos').DataTable({
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
+                },
+                "order": [[0, "desc"]], // Ordenar por fecha descendente
+                "pageLength": 25,
+                "responsive": true,
+                "dom": 'Bfrtip',
+                "buttons": [
+                    'copy', 'excel', 'pdf'
+                ]
+            });
+        });
+    </script>
 @endpush

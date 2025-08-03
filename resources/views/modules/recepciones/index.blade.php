@@ -179,6 +179,23 @@
     </div>
 @endsection
 @push('scripts')
+
+<!-- SweetAlert para mensajes de sesión -->
+    @if(session('success'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'Recepción registrada',
+                    text: '{{ session('success') }}',
+                    showConfirmButton: true,
+                    timer: 3000
+                });
+            });
+        </script>
+    @endif
+
     <!-- Confirmación SweetAlert para eliminar -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -204,34 +221,9 @@
         });
     </script>
 
-    <!-- DataTables -->
-    <script>
-        $(document).ready(function () {
-            $('#table-1').DataTable({
-                "language": {
-                    "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json"
-                },
-                "order": [[0, "desc"]]
-            });
-        });
-    </script>
+    
 
-    <!-- SweetAlert para mensajes de sesión -->
-    @if(session('success'))
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                Swal.fire({
-                    position: 'center',
-                    icon: 'success',
-                    title: 'Recepción registrada',
-                    text: '{{ session('success') }}',
-                    showConfirmButton: true,
-                    timer: 3000
-                });
-            });
-        </script>
-    @endif
-
+    
     @if(session('swal'))
         <script>
             document.addEventListener('DOMContentLoaded', function () {

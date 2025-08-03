@@ -11,6 +11,9 @@
                     <a href="#" class="btn btn-primary ml-2" data-toggle="modal" data-target="#modalNuevaCuenta">Agregar
                         Cuenta
                     </a>
+                    <a href="#" class="btn btn-info ml-2" data-toggle="modal" data-target="#modalFiltroFecha">
+                        <i class="fas fa-filter"></i> Filtrar por Fecha
+                    </a>
                 </div>
             </div>
             <div class="section-body">
@@ -48,7 +51,7 @@
                                 <td>{{ number_format($egreso->total, 2) }}</td>
                             </tr>
                         @endforeach
-                        
+
                     </tbody>
                 </table>
             </div>
@@ -79,7 +82,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="form-group col-md-6"> 
+                            <div class="form-group col-md-6">
                                 <label>Glosa</label>
                                 <input type="text" class="form-control" name="glosa" required>
                             </div>
@@ -93,7 +96,15 @@
                             </div>
                             <div class="form-group col-md-6">
                                 <label>Responsable</label>
-                                <input type="text" class="form-control" name="responsable" required>
+                                <select name="responsable" id="responsable" class="form-control" required>
+                                    <option value="">Seleccione...</option>
+                                    <option value="Tito">Tito</option>
+                                    <option value="Aldo">Aldo</option>
+                                    <option value="Augusto">Augusto</option>
+                                    <option value="Arnold">Arnold</option>
+                                    <option value="Plinio">Plinio</option>
+                                    <option value="Jose">Jose</option>
+                                </select>
                             </div>
                             <div class="form-group col-md-6">
                                 <label>Método de Pago</label>
@@ -154,6 +165,40 @@
             </form>
         </div>
     </div>
+
+    <!-- Modal Filtrar por Fecha -->
+    <div class="modal fade" id="modalFiltroFecha" tabindex="-1" role="dialog" aria-labelledby="modalFiltroFechaLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <form action="{{ route('egresos.index') }}" method="GET">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalFiltroFechaLabel">Filtrar Egresos por Fecha</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Fecha Inicio</label>
+                            <input type="date" class="form-control" name="fecha_inicio"
+                                value="{{ request('fecha_inicio') }}">
+                        </div>
+                        <div class="form-group">
+                            <label>Fecha Fin</label>
+                            <input type="date" class="form-control" name="fecha_fin" value="{{ request('fecha_fin') }}">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-info">Aplicar Filtro</button>
+                        <a href="{{ route('egresos.index') }}" class="btn btn-warning">Limpiar Filtro</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
 @endsection
 
 @push('scripts')
@@ -162,7 +207,7 @@
             document.addEventListener('DOMContentLoaded', function () {
                 Swal.fire({
                     position: 'center',
-                    icon: 'success', 
+                    icon: 'success',
                     title: 'Registro exitoso',
                     text: '{{ session('success') }}',
                     showConfirmButton: true,
@@ -172,5 +217,20 @@
         </script>
         {{ session()->forget('success') }}
     @endif
-
+    <script>
+        $(document).ready(function () {
+            $('#table-egresos').DataTable({
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
+                },
+                "order": [[0, "desc"]], // Ordenar por fecha descendente
+                "pageLength": 25,
+                "responsive": true,
+                "dom": 'Bfrtip',
+                "buttons": [
+                    'copy', 'excel', 'pdf'
+                ]
+            });
+        });
+    </script>
 @endpush

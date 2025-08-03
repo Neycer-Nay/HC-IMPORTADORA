@@ -13,6 +13,7 @@ class Egreso extends Model
         'glosa',
         'razon_social',
         'nro_factura',
+        'responsable',
         'metodo_pago',
         'subtotal',
         'descuento',
