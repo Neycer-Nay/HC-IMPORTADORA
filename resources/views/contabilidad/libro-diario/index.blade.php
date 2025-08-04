@@ -28,7 +28,7 @@
                         <div class="card bg-danger text-white">
                             <div class="card-body">
                                 <h6>Total Egresos</h6>
-                                <h4>{{ number_format(num: $totalEgresos, 2) }} Bs</h4>
+                                <h4>{{ number_format($totalEgresos, 2) }} Bs</h4>
                             </div>
                         </div>
                     </div>
