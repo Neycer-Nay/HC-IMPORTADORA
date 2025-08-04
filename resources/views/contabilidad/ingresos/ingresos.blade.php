@@ -64,7 +64,7 @@
                         </div>
                     </div>
                 </div>
-                <p style="font-size: 1.2em;">Aquí puedes gestionar los ingresos.</p>
+                <p style="font-size: 1.2em;">Puedes exportar los ingresos en formato Excel y PDF.</p>
             </div>
             <div class=" d-md-block table-responsive">
                 <table class="table table-striped" id="table-ingresos">

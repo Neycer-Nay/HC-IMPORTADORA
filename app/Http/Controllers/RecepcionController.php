@@ -50,7 +50,12 @@ class RecepcionController extends Controller
     {
 
         $ultimaRecepcion = Recepcion::latest()->first();
-        $numeroRecepcion = $ultimaRecepcion ? 'REC-' . (str_pad((int) Str::after($ultimaRecepcion->numero_recepcion, 'REC-') + 1, 5, '0', STR_PAD_LEFT)) : 'REC-05555';
+        if ($ultimaRecepcion) {
+            $ultimoNumero = (int) Str::after($ultimaRecepcion->numero_recepcion, 'REC-00');
+            $numeroRecepcion = 'REC-00' . str_pad($ultimoNumero + 1, 4, '0', STR_PAD_LEFT);
+        } else {
+            $numeroRecepcion = 'REC-005512';
+        }
 
         $usuario = Auth::user();
         $clientes = Cliente::all();
@@ -310,41 +315,41 @@ class RecepcionController extends Controller
     public function destroy(Recepcion $recepcion)
     {
         try {
-        // Eliminar cotización asociada (si existe)
-        if ($recepcion->cotizacion) {
-            // Si la cotización tiene detalles, elimínalos aquí
-            // Por ejemplo: $recepcion->cotizacion->detalles()->delete();
-            $recepcion->cotizacion->delete();
-        }
-
-        // Eliminar equipos y sus fotos
-        foreach ($recepcion->equipos as $equipo) {
-            // Eliminar fotos del equipo
-            foreach ($equipo->fotos as $foto) {
-                // Eliminar archivo físico
-                \Storage::disk('public')->delete($foto->ruta);
-                $foto->delete();
+            // Eliminar cotización asociada (si existe)
+            if ($recepcion->cotizacion) {
+                // Si la cotización tiene detalles, elimínalos aquí
+                // Por ejemplo: $recepcion->cotizacion->detalles()->delete();
+                $recepcion->cotizacion->delete();
             }
-            $equipo->delete();
+
+            // Eliminar equipos y sus fotos
+            foreach ($recepcion->equipos as $equipo) {
+                // Eliminar fotos del equipo
+                foreach ($equipo->fotos as $foto) {
+                    // Eliminar archivo físico
+                    \Storage::disk('public')->delete($foto->ruta);
+                    $foto->delete();
+                }
+                $equipo->delete();
+            }
+
+            // Finalmente, eliminar la recepción
+            $recepcion->delete();
+
+            return redirect()->route('recepciones.index')
+                ->with('swal', [
+                    'icon' => 'success',
+                    'title' => '¡Eliminado!',
+                    'text' => 'Recepción eliminada correctamente'
+                ]);
+        } catch (\Exception $e) {
+            return redirect()->route('recepciones.index')
+                ->with('swal', [
+                    'icon' => 'error',
+                    'title' => 'Error',
+                    'text' => 'Error al eliminar la recepción: ' . $e->getMessage()
+                ]);
         }
-
-        // Finalmente, eliminar la recepción
-        $recepcion->delete();
-
-        return redirect()->route('recepciones.index')
-            ->with('swal', [
-                'icon' => 'success',
-                'title' => '¡Eliminado!',
-                'text' => 'Recepción eliminada correctamente'
-            ]);
-    } catch (\Exception $e) {
-        return redirect()->route('recepciones.index')
-            ->with('swal', [
-                'icon' => 'error',
-                'title' => 'Error',
-                'text' => 'Error al eliminar la recepción: ' . $e->getMessage()
-            ]);
-    }
     }
 
     private function storeImage($file, $equipoId)
