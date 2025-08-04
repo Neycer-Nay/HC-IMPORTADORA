@@ -380,20 +380,31 @@
 
                             doc.content.push({
                                 table: {
-                                    widths: ['*', 'auto', 'auto', 'auto'],
+                                    widths: ['4%', '4%', '12%', '12%', '8%', '10%', '10%', '9.33%', '9.33%', '9.34%'],
                                     body: [
-
                                         [
                                             { text: '', border: [false, false, false, false] },
-                                            { text: 'Subtotal', style: 'tableHeader', alignment: 'center', bold: true },
-                                            { text: 'Descuento', style: 'tableHeader', alignment: 'center', bold: true },
-                                            { text: 'Total', style: 'tableHeader', alignment: 'center', bold: true }
+                                            { text: '', border: [false, false, false, false] },
+                                            { text: '', border: [false, false, false, false] },
+                                            { text: '', border: [false, false, false, false] },
+                                            { text: '', border: [false, false, false, false] },
+                                            { text: '', border: [false, false, false, false] },
+                                            { text: '', border: [false, false, false, false] },
+                                            { text: 'subtotal', style: 'tableHeader', border: [false, false, false, false] },
+                                            { text: 'descuento', style: 'tableHeader', border: [false, false, false, false] },
+                                            { text: 'total', style: 'tableHeader', border: [false, false, false, false] }
                                         ],
                                         [
-                                            { text: 'TOTALES:', style: 'tableHeader', alignment: 'right', bold: true },
-                                            { text: '{{ number_format($totalSubtotal, 2) }} Bs', style: 'tableHeader', alignment: 'center', bold: true },
-                                            { text: '{{ number_format($totalDescuento, 2) }} Bs', style: 'tableHeader', alignment: 'center', bold: true },
-                                            { text: '{{ number_format($totalEgresos, 2) }} Bs', style: 'tableHeader', alignment: 'center', bold: true }
+                                            { text: '', border: [false, false, false, false] },
+                                            { text: '', border: [false, false, false, false] },
+                                            { text: '', border: [false, false, false, false] },
+                                            { text: '', border: [false, false, false, false] },
+                                            { text: '', border: [false, false, false, false] },
+                                            { text: '', border: [false, false, false, false] },
+                                            { text: 'TOTALES:', style: 'tableHeader', alignment: 'right', border: [false, false, false, false] },
+                                            { text: '{{ number_format($totalSubtotal, 2) }} Bs', style: 'tableHeader', alignment: 'center', border: [false, false, false, false] },
+                                            { text: '{{ number_format($totalDescuento, 2) }} Bs', style: 'tableHeader', alignment: 'center', border: [false, false, false, false] },
+                                            { text: '{{ number_format($totalEgresos, 2) }} Bs', style: 'tableHeader', alignment: 'center', border: [false, false, false, false] }
                                         ]
                                     ]
                                 },
