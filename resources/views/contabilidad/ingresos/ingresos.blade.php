@@ -325,7 +325,7 @@
                                     },
                                     {
                                         stack: [
-                                            { text: 'HC BOBINADOS INDUSTRIAL', alignment: 'center', fontSize: 16, bold: true, margin: [0, 10, 0, 0] },
+                                            { text: 'HC SERVICIOS INDUSTRIAL', alignment: 'center', fontSize: 16, bold: true, margin: [0, 10, 0, 0] },
                                             { text: 'Reporte de Ingresos', alignment: 'center', fontSize: 18, margin: [0, 5, 0, 0] }
                                         ],
                                         width: '*'
