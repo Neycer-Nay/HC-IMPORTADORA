@@ -101,3 +101,10 @@ Route::prefix('contabilidad/egresos')->middleware(['auth', 'rol.contable'])->gro
 Route::prefix('contabilidad/libro-diario')->middleware(['auth', 'rol.contable'])->group(function () {
     Route::get('/', [LibroDiarioController::class, 'index'])->name('libro-diario.index');
 });
+
+Route::prefix('contabilidad/sueldos')->middleware(['auth', 'rol.contable'])->group(function () {
+    Route::get('/', [\App\Http\Controllers\SueldosController::class, 'index'])->name('sueldos.index');
+    Route::post('/trabajador', [\App\Http\Controllers\SueldosController::class, 'storeTrabajador'])->name('sueldos.storeTrabajador');
+    Route::post('/pago', [\App\Http\Controllers\SueldosController::class, 'storePago'])->name('sueldos.storePago');
+    Route::get('/trabajadores', [\App\Http\Controllers\SueldosController::class, 'getTrabajadores'])->name('sueldos.getTrabajadores');
+});

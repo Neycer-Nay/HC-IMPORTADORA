@@ -60,7 +60,7 @@
                             <li><a class="nav-link" href="{{ route('libro-diario.index') }}"><i class="fas fa-book"></i> Libro
                                     Diario</a></li>
                             <!--<li><a class="nav-link" href="#"><i class="fas fa-chart-line"></i> Reportes</a></li>-->
-                            <li><a class="nav-link" href="#"><i class="fas fa-money-check-alt"></i> Sueldos</a></li>
+                            <li><a class="nav-link" href="{{ route('sueldos.index') }}"><i class="fas fa-money-check-alt"></i> Sueldos</a></li>
                         </ul>
                     </li>
                 @endif
