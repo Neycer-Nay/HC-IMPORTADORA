@@ -95,9 +95,7 @@
                                 </td>
                             </tr>
                         @empty
-                            <tr>
-                                <td colspan="9" class="text-center">No hay movimientos registrados</td>
-                            </tr>
+                            
                         @endforelse
                     </tbody>
                     @if(count($libroDiario) > 0)

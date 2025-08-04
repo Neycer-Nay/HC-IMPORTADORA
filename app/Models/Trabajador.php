@@ -13,7 +13,16 @@ class Trabajador extends Model
 
     protected $fillable = [
         'nombre',
-        'cargo'
+        'cargo',
+        'sueldo_base',
+        'activo',
+        'fecha_ingreso'
+    ];
+
+    protected $casts = [
+        'sueldo_base' => 'decimal:2',
+        'activo' => 'boolean',
+        'fecha_ingreso' => 'date'
     ];
 
     public function sueldos()
