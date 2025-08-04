@@ -66,7 +66,7 @@
                         </div>
                     </div>
                 </div>
-                <p style="font-size: 1.2em;">Aquí puedes gestionar los egresos.</p>
+                <p style="font-size: 1.2em;">Puedes exportar los egresos en formato Excel y PDF.</p>
             </div>
             <div class="table-responsive">
                 <table class="table table-striped" id="table-egresos">

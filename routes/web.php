@@ -76,7 +76,7 @@ Route::prefix('cotizaciones')->middleware('auth')->group(function () {
     Route::get('/{id}/pdf', [\App\Http\Controllers\CotizacionController::class, 'generarPdf'])->name('cotizaciones.pdf');
     Route::delete('/{id}', [\App\Http\Controllers\CotizacionController::class, 'destroy'])->name('cotizaciones.destroy');
 });
- Route::prefix('contabilidad/ingresos')->middleware('auth')->group(function () {
+ Route::prefix('contabilidad/ingresos')->middleware(['auth', 'rol.contable'])->group(function () {
     Route::get('/', [\App\Http\Controllers\IngresosController::class, 'index'])->name('ingresos.index');
     Route::get('/create', [\App\Http\Controllers\IngresosController::class, 'create'])->name('ingresos.create');
     Route::post('/', [\App\Http\Controllers\IngresosController::class, 'store'])->name('ingresos.store');
@@ -86,7 +86,7 @@ Route::prefix('cotizaciones')->middleware('auth')->group(function () {
     Route::get('/{id}/show', [\App\Http\Controllers\IngresosController::class, 'show'])->name('ingresos.show');
     
 });
-Route::prefix('contabilidad/egresos')->middleware('auth')->group(function () {
+Route::prefix('contabilidad/egresos')->middleware(['auth', 'rol.contable'])->group(function () {
     Route::get('/', [\App\Http\Controllers\EgresosController::class, 'index'])->name('egresos.index');
     Route::get('/create', [\App\Http\Controllers\EgresosController::class, 'create'])->name('egresos.create');
     Route::post('/', [\App\Http\Controllers\EgresosController::class, 'store'])->name('egresos.store');
@@ -98,6 +98,6 @@ Route::prefix('contabilidad/egresos')->middleware('auth')->group(function () {
     Route::delete('/{id}', [\App\Http\Controllers\EgresosController::class, 'destroy'])->name('egresos.destroy');
 });
 
-Route::prefix('contabilidad/libro-diario')->middleware('auth')->group(function () {
+Route::prefix('contabilidad/libro-diario')->middleware(['auth', 'rol.contable'])->group(function () {
     Route::get('/', [LibroDiarioController::class, 'index'])->name('libro-diario.index');
 });
