@@ -103,9 +103,10 @@ Route::prefix('contabilidad/libro-diario')->middleware(['auth', 'rol.contable'])
 });
 
 Route::prefix('contabilidad/sueldos')->middleware(['auth', 'rol.contable'])->group(function () {
-    Route::get('/', [\App\Http\Controllers\SueldosController::class, 'index'])->name('sueldos.index');
-    Route::delete('sueldos/{id}', [\App\Http\Controllers\SueldosController::class, 'destroy'])->name('sueldos.destroy');
-    Route::post('/trabajador', [\App\Http\Controllers\SueldosController::class, 'storeTrabajador'])->name('sueldos.storeTrabajador');
-    Route::post('/pago', [\App\Http\Controllers\SueldosController::class, 'storePago'])->name('sueldos.storePago');
-    Route::get('/trabajadores', [\App\Http\Controllers\SueldosController::class, 'getTrabajadores'])->name('sueldos.getTrabajadores');
+    Route::get('/', [\App\Http\Controllers\SueldosHcController::class, 'index'])->name('sueldos.index');
+    Route::post('/trabajadores', [\App\Http\Controllers\SueldosHcController::class, 'storeTrabajador'])->name('trabajadores.store');
+    Route::post('/pagos', [\App\Http\Controllers\SueldosHcController::class, 'storeSueldo'])->name('sueldos.store');
+    Route::delete('/sueldos/{id}', [\App\Http\Controllers\SueldosHcController::class, 'destroy'])->name('sueldos.destroy');
+    Route::delete('/trabajadores/{id}', [\App\Http\Controllers\SueldosHcController::class, 'destroyTrabajador'])->name('trabajadores.destroy');
+    Route::get('/api/trabajadores', [\App\Http\Controllers\SueldosHcController::class, 'getTrabajadores'])->name('trabajadores.api');
 });
