@@ -95,7 +95,7 @@
                                 </td>
                             </tr>
                         @empty
-                            
+
                         @endforelse
                     </tbody>
                     @if(count($libroDiario) > 0)
@@ -225,7 +225,7 @@
                                     },
                                     {
                                         stack: [
-                                            { text: 'HC BOBINADOS INDUSTRIAL', alignment: 'center', fontSize: 16, bold: true, margin: [0, 10, 0, 0] },
+                                            { text: 'HC SERVICIO INDUSTRIAL', alignment: 'center', fontSize: 16, bold: true, margin: [0, 10, 0, 0] },
                                             { text: 'Libro Diario', alignment: 'center', fontSize: 18, margin: [0, 5, 0, 0] }
                                         ],
                                         width: '*'
@@ -233,11 +233,17 @@
                                 ],
                                 margin: [0, 0, 0, 12]
                             });
-
+                            var tablaPrincipal = doc.content.find(function (c) {
+                                return c.table && c.table.body && c.table.body.length > 1;
+                            });
+                            if (tablaPrincipal) {
+                                tablaPrincipal.table.widths = ['*', '*', '*', '*', '*', '*', '*', '*', '*'];
+                            }
                             // Agrega los totales al final del PDF
                             doc.content.push({
                                 table: {
-                                    widths: ['3%', '4%', '11%', '12%', '8%', '10%', '10%', '10%', '10%'],
+                                    // Cambia los valores fijos por '*'
+                                    widths: ['*', '*', '*', '*', '*', '*', '*', '*', '*'],
                                     body: [
                                         [
                                             { text: '', border: [false, false, false, false] },

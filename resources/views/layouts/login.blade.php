@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <link rel="icon" href="{{ asset(path: 'img/logoICO.ico') }}" type="image/x-icon">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-    <title>HC BOBINADOS INDUSTRIAL</title>
+    <title>HC SERVICIOS INDUSTRIAL</title>
     
 
     <!-- General CSS Files -->

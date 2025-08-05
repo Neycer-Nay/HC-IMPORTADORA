@@ -17,7 +17,7 @@
             <!-- Tarjeta de Totales -->
             <div class="section-body">
                 <div class="row mb-4">
-                    
+
                     <div class="col-lg-4 col-md-6 col-sm-6 col-12">
                         <div class="card card-statistic-1">
                             <div class="card-icon bg-success">
@@ -81,6 +81,7 @@
                             <th>Descuento</th>
                             <th>Total</th>
                             <th>Estado Pago</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -97,13 +98,23 @@
                                 <td>{{ number_format($ingreso->descuento, 2) }}Bs</td>
                                 <td>{{ number_format($ingreso->total, 2) }}Bs</td>
                                 <td>{{ $ingreso->estado_pago }}</td>
+                                <td>
+                                    <form action="{{ route('ingresos.destroy', $ingreso->id) }}" method="POST"
+                                        style="display: inline;" class="form-eliminar">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm" title="Eliminar">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
                     </tbody>
                     <tfoot>
                         <tr style="background-color: #f8f9fa; font-weight: bold; border-top: 2px solid #dee2e6;">
-                            <td colspan="6" class="text-right"><strong>TOTALES:</strong></td>
+                            <td colspan="7" class="text-right"><strong>TOTALES:</strong></td>
                             <td><strong>{{ number_format($totalSubtotal, 2) }} Bs</strong></td>
                             <td><strong>{{ number_format($totalDescuento, 2) }} Bs</strong></td>
                             <td><strong>{{ number_format($totalIngresos, 2) }} Bs</strong></td>
@@ -266,7 +277,7 @@
                 Swal.fire({
                     position: 'center',
                     icon: 'success',
-                    title: 'Ingreso registrado correctamente',
+                    title: 'Acción completada',
                     text: '{{ session('success') }}',
                     showConfirmButton: true,
                     timer: 3000
@@ -296,6 +307,14 @@
                         extend: 'excel',
                         text: '<i class="fas fa-file-excel"></i> Excel',
                         className: 'btn btn-success',
+                         exportOptions: {
+                            columns: ':not(:last-child)',
+                            modifier: {
+                                search: 'applied',
+                                order: 'applied',
+                                page: 'all'
+                            }
+                        },
                         customizeData: function (data) {
                             data.body.push([
                                 '', '', '', '', '', '', // columnas vacías según tu tabla
@@ -311,6 +330,14 @@
                         text: '<i class="fas fa-file-pdf"></i> PDF',
                         className: 'btn btn-danger',
                         orientation: 'landscape',
+                         exportOptions: {
+                            columns: ':not(:last-child)',
+                            modifier: {
+                                search: 'applied',
+                                order: 'applied',
+                                page: 'all'
+                            }
+                        },
                         customize: function (doc) {
                             doc.images = doc.images || {};
                             doc.images.logo = 'data:image/png;base64,{{ base64_encode(file_get_contents(public_path("img/logoHc.png"))) }}';
@@ -325,10 +352,11 @@
                                     },
                                     {
                                         stack: [
-                                            { text: 'HC BOBINADOS INDUSTRIAL', alignment: 'center', fontSize: 16, bold: true, margin: [0, 10, 0, 0] },
+                                            { text: 'HC SERVICIO INDUSTRIAL', alignment: 'center', fontSize: 16, bold: true, margin: [0, 10, 0, 0] },
                                             { text: 'Reporte de Ingresos', alignment: 'center', fontSize: 18, margin: [0, 5, 0, 0] }
                                         ],
-                                        width: '*'
+                                        width: '100%',
+                                        alignment: 'center'
                                     }
                                 ],
                                 margin: [0, 0, 0, 12]
@@ -345,7 +373,7 @@
 
                             doc.content.push({
                                 table: {
-                                    widths: ['4%', '4%', '10%', '12%', '8%', '10%', '10%', '11%', '11%', '11%'],
+                                    widths: ['4%', '4%', '4%', '4%', '8%', '10%', '10%', '11%', '11%', '11%'],
                                     body: [
                                         [
                                             { text: '', border: [false, false, false, false] },
@@ -387,6 +415,26 @@
                         }
                     }
                 ]
+            });
+        });
+
+        // Función para confirmar eliminación
+        $(document).on('submit', '.form-eliminar', function (e) {
+            e.preventDefault();
+            const form = this;
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: '¿Estás seguro de que quieres eliminar este ingreso? Esta acción no se puede deshacer y también se actualizará el libro diario automáticamente.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
             });
         });
     </script>

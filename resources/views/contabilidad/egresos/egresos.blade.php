@@ -19,7 +19,7 @@
             <!-- Tarjetas de Totales -->
             <div class="section-body">
                 <div class="row mb-4">
-                    
+
                     <div class="col-lg-4 col-md-6 col-sm-6 col-12">
                         <div class="card card-statistic-1">
                             <div class="card-icon bg-info">
@@ -82,6 +82,7 @@
                             <th>Subtotal</th>
                             <th>Descuento</th>
                             <th>Total</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -98,6 +99,16 @@
                                 <td>{{ number_format($egreso->subtotal, 2) }}</td>
                                 <td>{{ number_format($egreso->descuento, 2) }}</td>
                                 <td>{{ number_format($egreso->total, 2) }}</td>
+                                <td>
+                                    <form action="{{ route('egresos.destroy', $egreso->id) }}" method="POST"
+                                        style="display: inline;" class="form-eliminar">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm" title="Eliminar">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
                             </tr>
                         @endforeach
 
@@ -105,7 +116,7 @@
                     </tbody>
                     <tfoot>
                         <tr style="background-color: #f8f9fa; font-weight: bold; border-top: 2px solid #dee2e6;">
-                            <td colspan="7" class="text-right"><strong>TOTALES:</strong></td>
+                            <td colspan="8" class="text-right"><strong>TOTALES:</strong></td>
                             <td><strong>{{ number_format($totalSubtotal, 2) }} Bs</strong></td>
                             <td><strong>{{ number_format($totalDescuento, 2) }} Bs</strong></td>
                             <td><strong>{{ number_format($totalEgresos, 2) }} Bs</strong></td>
@@ -260,9 +271,7 @@
                                     <select class="form-control" name="cuenta_id">
                                         <option value="">Todas las cuentas</option>
                                         @foreach($cuentas as $cuenta)
-                                            <option value="{{ $cuenta->id }}" {{ request('cuenta_id') == $cuenta->id ? 'selected' : '' }}>
-                                                {{ $cuenta->nombre_cuenta }}
-                                            </option>
+                                            <option value="{{ $cuenta->id }}" {{ request('cuenta_id') == $cuenta->id ? 'selected' : '' }}> {{ $cuenta->nombre_cuenta }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -300,7 +309,7 @@
                 Swal.fire({
                     position: 'center',
                     icon: 'success',
-                    title: 'Registro exitoso',
+                    title: 'Acción completada',
                     text: '{{ session('success') }}',
                     showConfirmButton: true,
                     timer: 3000
@@ -330,6 +339,14 @@
                         extend: 'excel',
                         text: '<i class="fas fa-file-excel"></i> Excel',
                         className: 'btn btn-success',
+                        exportOptions: {
+                            columns: ':not(:last-child)',
+                            modifier: {
+                                search: 'applied',
+                                order: 'applied',
+                                page: 'all'
+                            }
+                        },
                         customizeData: function (data) {
                             data.body.push([
                                 '', '', '', '', '', '', // columnas vacías según tu tabla
@@ -344,6 +361,14 @@
                         text: '<i class="fas fa-file-pdf"></i> PDF',
                         className: 'btn btn-danger',
                         orientation: 'landscape',
+                        exportOptions: {
+                            columns: ':not(:last-child)',
+                            modifier: {
+                                search: 'applied',
+                                order: 'applied',
+                                page: 'all'
+                            }
+                        },
                         customize: function (doc) {
                             doc.images = doc.images || {};
                             doc.images.logo = 'data:image/png;base64,{{ base64_encode(file_get_contents(public_path("img/logoHc.png"))) }}';
@@ -358,7 +383,7 @@
                                     },
                                     {
                                         stack: [
-                                            { text: 'HC BOBINADOS INDUSTRIAL', alignment: 'center', fontSize: 16, bold: true, margin: [0, 10, 0, 0] },
+                                            { text: 'HC SERVICIOS INDUSTRIAL', alignment: 'center', fontSize: 16, bold: true, margin: [0, 10, 0, 0] },
                                             { text: 'Reporte de Egresos', alignment: 'center', fontSize: 18, margin: [0, 5, 0, 0] }
                                         ],
                                         width: '*'
@@ -422,6 +447,40 @@
                         }
                     }
                 ]
+            });
+        });
+
+        // Función para confirmar eliminación
+        function confirmarEliminacion(tipo) {
+            return Swal.fire({
+                title: '¿Estás seguro?',
+                text: '¿Estás seguro de que quieres eliminar este ' + tipo + '? Esta acción no se puede deshacer y también se actualizará el libro diario automáticamente.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                return result.isConfirmed;
+            });
+        }
+        $(document).on('submit', '.form-eliminar', function (e) {
+            e.preventDefault();
+            const form = this;
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: 'Esta acción no se puede deshacer y también se actualizará el libro diario automáticamente.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
             });
         });
     </script>
