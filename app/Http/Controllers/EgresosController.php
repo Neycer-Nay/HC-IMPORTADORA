@@ -82,5 +82,12 @@ class EgresosController extends Controller
         return redirect()->route('egresos.index')->with('success', 'Cuenta agregada correctamente.');
     }
 
+    public function destroy($id)
+    {
+        // Lógica para eliminar un egreso
+        $egreso = \App\Models\Egreso::findOrFail($id);
+        $egreso->delete();
 
+        return redirect()->route('egresos.index')->with('success', 'Egreso eliminado exitosamente.');
+    }
 }

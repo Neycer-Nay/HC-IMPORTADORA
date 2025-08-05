@@ -12,7 +12,7 @@ class SueldosController extends Controller
     public function index(Request $request)
     {
         $query = Sueldo::with('trabajador');
-        
+
         // Filtros aplicados
         $filtros = [
             'trabajador_id' => $request->trabajador_id,
@@ -21,7 +21,7 @@ class SueldosController extends Controller
             'tipo_pago' => $request->tipo_pago,
             'nombre_trabajador' => $request->nombre_trabajador
         ];
-        
+
         // Filtro por trabajador
         $filtroTrabajador = null;
         if ($request->has('trabajador_id') && !empty($request->trabajador_id)) {
@@ -31,7 +31,7 @@ class SueldosController extends Controller
 
         // Filtro por nombre de trabajador (búsqueda parcial)
         if ($request->has('nombre_trabajador') && !empty($request->nombre_trabajador)) {
-            $query->whereHas('trabajador', function($q) use ($request) {
+            $query->whereHas('trabajador', function ($q) use ($request) {
                 $q->where('nombre', 'LIKE', '%' . $request->nombre_trabajador . '%');
             });
         }
@@ -40,7 +40,7 @@ class SueldosController extends Controller
         if ($request->has('fecha_inicio') && !empty($request->fecha_inicio)) {
             $query->where('fecha_pago', '>=', $request->fecha_inicio);
         }
-        
+
         if ($request->has('fecha_fin') && !empty($request->fecha_fin)) {
             $query->where('fecha_pago', '<=', $request->fecha_fin);
         }
@@ -51,23 +51,23 @@ class SueldosController extends Controller
         }
 
         $sueldos = $query->orderBy('fecha_pago', 'desc')->orderBy('created_at', 'desc')->get();
-        
+
         // Calcular totales basados en los registros filtrados
         $totalSalarios = $sueldos->sum('salario');
         $totalAnticipos = $sueldos->where('tipo_pago', 'anticipo')->sum('total_pagable');
         $totalDescuentos = $sueldos->sum('descuentos');
         $totalHorasExtras = $sueldos->sum('horas_extras');
         $totalPagable = $sueldos->sum('total_pagable');
-        
+
         // Obtener todos los trabajadores para el filtro
         $trabajadores = Trabajador::orderBy('nombre')->get();
-        
+
         // Obtener períodos únicos para el filtro
         $periodos = Sueldo::distinct()
             ->whereNotNull('periodo_mes_anio')
             ->orderBy('periodo_mes_anio', 'desc')
             ->pluck('periodo_mes_anio');
-        
+
         return view('contabilidad.sueldos.sueldos', compact(
             'sueldos',
             'trabajadores',
@@ -118,7 +118,7 @@ class SueldosController extends Controller
 
         // Obtener el trabajador para usar su sueldo base
         $trabajador = Trabajador::findOrFail($request->trabajador_id);
-        
+
         // Generar período automáticamente
         $periodo = date('Y-m', strtotime($request->fecha_pago));
 
@@ -127,14 +127,14 @@ class SueldosController extends Controller
             if (empty($request->anticipos) || $request->anticipos <= 0) {
                 return back()->withErrors(['anticipos' => 'Debe especificar un monto de anticipo mayor a 0'])->withInput();
             }
-            
+
             // Verificar que el anticipo no exceda el 80% del sueldo base
             $maxAnticipo = $trabajador->sueldo_base * 0.8;
             $anticiposYaDados = Sueldo::where('trabajador_id', $request->trabajador_id)
                 ->where('periodo_mes_anio', $periodo)
                 ->where('tipo_pago', 'anticipo')
                 ->sum('total_pagable');
-                
+
             if (($anticiposYaDados + $request->anticipos) > $maxAnticipo) {
                 return back()->withErrors(['anticipos' => 'El anticipo excede el 80% del sueldo base mensual'])->withInput();
             }
@@ -146,7 +146,7 @@ class SueldosController extends Controller
                 ->where('periodo_mes_anio', $periodo)
                 ->where('tipo_pago', 'anticipo')
                 ->sum('total_pagable');
-                
+
             if ($anticiposPrevios == 0) {
                 return back()->withErrors(['tipo_pago' => 'No hay anticipos registrados para este período'])->withInput();
             }
@@ -157,7 +157,7 @@ class SueldosController extends Controller
         $sueldo->mes = $request->mes;
         $sueldo->periodo_mes_anio = $periodo;
         $sueldo->tipo_pago = $request->tipo_pago;
-        
+
         // Usar sueldo base del trabajador si no se especifica uno diferente
         $sueldo->salario = $request->salario ?? $trabajador->sueldo_base;
         $sueldo->anticipos = $request->anticipos ?? 0;
@@ -165,7 +165,7 @@ class SueldosController extends Controller
         $sueldo->horas_extras = $request->horas_extras ?? 0;
         $sueldo->fecha_pago = $request->fecha_pago;
         $sueldo->observaciones = $request->observaciones;
-        
+
         // El total_pagable y saldo_pendiente se calculan automáticamente en el modelo
         $sueldo->save();
 
@@ -183,5 +183,14 @@ class SueldosController extends Controller
     {
         $trabajadores = Trabajador::all();
         return response()->json($trabajadores);
+    }
+
+    public function destroy($id)
+    {
+        $sueldo = Sueldo::findOrFail($id);
+        $sueldo->delete();
+
+        // Los totales se recalculan automáticamente en el método index al recargar la vista
+        return redirect()->route('sueldos.index')->with('success', 'Registro de sueldo eliminado correctamente');
     }
 }
