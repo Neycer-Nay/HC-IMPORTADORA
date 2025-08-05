@@ -138,10 +138,10 @@
             </div>
         </div>
 
-        Estado de Recepciones y Gráficos 
-        <div class="row">
+         
+        <!-- <div class="row">
             <div class="col-lg-8">
-                <!-- <div class="card">
+                <div class="card">
                     <div class="card-header">
                         <h4>Estado de Recepciones</h4>
                     </div>
@@ -149,7 +149,7 @@
                         <canvas id="recepcionesChart" height="180"></canvas>
                     </div>
                 </div>
-            </div>-->
+            </div>
             <div class="col-lg-4">
                 <div class="card">
                     <div class="card-header">
@@ -181,7 +181,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
 
         <!-- Actividad Reciente y Equipos por Tipo -->
         <div class="row">
